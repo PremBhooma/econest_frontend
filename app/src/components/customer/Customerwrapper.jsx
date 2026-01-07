@@ -415,10 +415,10 @@ function Customerwrapper() {
                   dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
                 />
               </div>
-              <Datefilter
+              {/* <Datefilter
                 onFilterChange={handleDateFilterChange}
                 onClearFilter={handleDateFilterChange}
-              />
+              /> */}
               <div ref={containerRef} className="relative">
                 <button
                   onClick={() => setShowColumnToggle(!showColumnToggle)}
