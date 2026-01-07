@@ -670,8 +670,8 @@ function Addnewcustomerwrapper() {
       </div>
       <div className="flex flex-col gap-4 border border-[#ebecef] rounded-xl bg-white p-8">
         <div className="grid grid-cols-2 gap-4">
-          
-          
+
+
 
           <Textinput
             placeholder="Enter First Name"
@@ -922,7 +922,7 @@ function Addnewcustomerwrapper() {
             labelClassName="text-sm font-medium text-gray-600 mb-1"
             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
           />
-          <Textinput
+          {/* <Textinput
             placeholder="Enter Name of Power of Attorney"
             label="Name of Power of Attorney (POA) Holder"
             value={nameOfPoa}
@@ -987,7 +987,7 @@ function Addnewcustomerwrapper() {
               labelClassName="text-sm font-medium text-gray-600 mb-1"
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
             />
-          )}
+          )} */}
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
           <div className="flex flex-col gap-2">
