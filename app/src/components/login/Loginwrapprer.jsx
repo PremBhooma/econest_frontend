@@ -93,7 +93,7 @@ function Loginwrapprer() {
       <div className="w-full lg:w-1/2 px-6 py-8 flex flex-col justify-center relative">
         <div className="max-w-[464px] mx-auto w-full">
           <div className="mb-6 ">
-            <img crossOrigin="anonymous" src="./assets/login/Abode_Developers_Logo.png" alt="Logo" className="mb-4 max-w-[150px] " />
+            <img crossOrigin="anonymous" src="./assets/logo.png" alt="Logo" className="mb-4 max-w-[150px] " />
             <h4 className="text-xl font-semibold mb-2">Sign In to your Account</h4>
             <p className="text-neutral-500 dark:text-neutral-300 text-sm">
               Welcome back! Please enter your details.
