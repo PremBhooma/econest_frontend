@@ -4,7 +4,7 @@ import Errorpanel from '../../shared/Errorpanel.jsx';
 import { toast } from 'react-toastify';
 import { Button, Card, Group, Loadingoverlay, NumberInput, Text, Textinput } from '@nayeshdaggula/tailify';
 
-function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProject }) {
+function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProject, isEdit }) {
 
     const [isLoadingEffect, setIsLoadingEffect] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -36,11 +36,14 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
             return false;
         }
 
-        Projectapi.post('update-project', {
+        const apiEndpoint = isEdit ? 'update-project' : 'add-project';
+        const payload = {
             project_name: projectName,
             project_address: projectAddress,
-            uuid: projectData.uuid ? projectData.uuid : null,
-        })
+            ...(isEdit && { uuid: projectData?.uuid }),
+        };
+
+        Projectapi.post(apiEndpoint, payload)
             .then((response) => {
                 let data = response.data;
                 if (data.status === 'error') {
@@ -48,7 +51,7 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
                     setIsLoadingEffect(false);
                     return false;
                 }
-                toast.success("Project information Updated Successfully");
+                toast.success(isEdit ? "Project information Updated Successfully" : "Project Created Successfully");
                 setIsLoadingEffect(false);
                 refreshProject();
                 closeUpdateProjectModal();
@@ -62,11 +65,14 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
     }
 
     useEffect(() => {
-        if (projectData) {
+        if (isEdit && projectData) {
             setProjectName(projectData.project_name);
             setProjectAddress(projectData.project_address);
+        } else {
+            setProjectName('');
+            setProjectAddress('');
         }
-    }, [projectData])
+    }, [projectData, isEdit])
 
     return (
         <>
@@ -75,7 +81,9 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
             <Card withBorder={false} className='!shadow-none' padding='0'>
                 <Card.Section padding='0'>
                     <Group justify="space-between" align="center" className='pb-3 items-center px-2'>
-                        <Text color='#2b2b2b' c={"#000000"} className="!font-semibold text-[18px]">Update Information</Text>
+                        <Text color='#2b2b2b' c={"#000000"} className="!font-semibold text-[18px]">
+                            {isEdit ? "Update Information" : "Add New Project"}
+                        </Text>
 
                         <Button onClick={closeUpdateProjectModal} size="sm" variant="default" className='!px-2 !py-1.5 !text-red-500 hover:!border-red-500'>
                             <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
@@ -87,7 +95,7 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
                 <Card.Section className="h-fit max-h-[80vh] overflow-auto !p-2">
                     <div className='mb-3 grid grid-cols-1 gap-3'>
                         <Textinput
-                            placeholder='Enter Company Name'
+                            placeholder='Enter Project Name'
                             labelClassName='!font-semibold'
                             label="Project Name"
                             w={"100%"}
