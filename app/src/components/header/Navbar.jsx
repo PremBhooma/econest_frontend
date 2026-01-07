@@ -57,12 +57,12 @@ function Navbar() {
 
   return (
     <nav className="bg-white shadow-lg fixed w-full z-50">
-      <div className="mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto px-4">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex-shrink-0">
             <NavLink to="/dashboard">
-              <img crossOrigin="anonymous" src="/assets/dashboard/logo.png" alt="CRM Logo" className="h-fit w-[130px]" />
+              <img crossOrigin="anonymous" src="/assets/dashboard/logo.png" alt="CRM Logo" className="h-12 w-auto object-contain" />
             </NavLink>
           </div>
 
