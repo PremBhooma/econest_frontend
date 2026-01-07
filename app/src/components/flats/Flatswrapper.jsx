@@ -562,7 +562,7 @@ function Flatswrapper() {
                 </div>
               )}
 
-              <Select
+              {/* <Select
                 data={groupOwners}
                 value={selectedGroupOwner}
                 isLoading={isLoadingEffect}
@@ -573,7 +573,7 @@ function Flatswrapper() {
                 selectWrapperClass="!bg-white !rounded-sm !shadow-none !border !border-[#ebecef] !py-1.5"
                 dropDownClass=" overflow-y-hidden"
                 clearable
-              />
+              /> */}
               <Select
                 data={[
                   { value: "true", label: "Yes" },
