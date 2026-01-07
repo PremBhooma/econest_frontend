@@ -93,7 +93,7 @@ function Loginwrapprer() {
               crossOrigin="anonymous"
               src="./assets/logo.png"
               alt="Econest Logo"
-              className="h-10 w-auto mb-8"
+              className="h-12 w-auto mb-4"
             />
 
             <h1 className="text-3xl font-bold text-gray-900 tracking-tight mb-2">
@@ -111,7 +111,7 @@ function Loginwrapprer() {
                 placeholder="Enter your email"
                 value={email}
                 onChange={updateEmail}
-                inputClassName="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white"
+                inputClassName="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#0083bf] focus:ring-2 focus:ring-sky-100 outline-none transition-all duration-200 bg-white"
                 labelClassName="text-sm font-semibold text-gray-700 mb-1.5 block"
                 error={emailError}
               />
@@ -122,7 +122,7 @@ function Loginwrapprer() {
                   placeholder="Enter your password"
                   value={password}
                   onChange={updatePassword}
-                  inputClassName="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 outline-none transition-all duration-200 bg-white"
+                  inputClassName="w-full px-4 py-3 rounded-lg border border-gray-200 focus:border-[#0083bf] focus:ring-2 focus:ring-sky-100 outline-none transition-all duration-200 bg-white"
                   labelClassName="text-sm font-semibold text-gray-700 mb-1.5 block"
                   error={passwordError}
                 />
@@ -133,7 +133,7 @@ function Loginwrapprer() {
                   <input
                     id="remember-me"
                     type="checkbox"
-                    className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded cursor-pointer"
+                    className="h-4 w-4 text-[#0083bf] focus:ring-[#0083bf] border-gray-300 rounded cursor-pointer"
                   />
                   <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-700 cursor-pointer">
                     Remember me
@@ -149,7 +149,7 @@ function Loginwrapprer() {
               <Button
                 type="submit"
                 onClick={Loginaccess}
-                className={`w-full bg-[#2563EB] hover:bg-[#1D4ED8] text-white py-3 rounded-lg text-base font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${isLoadingEffect ? "opacity-70 cursor-not-allowed" : ""
+                className={`w-full bg-[#0083bf] hover:bg-[#006e9e] text-white py-3 rounded-lg text-base font-semibold transition-all duration-200 shadow-sm hover:shadow-md ${isLoadingEffect ? "opacity-70 cursor-not-allowed" : ""
                   }`}
                 disabled={isLoadingEffect}
               >
