@@ -1,0 +1,564 @@
+
+import React, { useEffect, useState } from 'react';
+import dayjs from "dayjs";
+import Flatapi from '../api/Flatapi';
+import Paymentapi from '../api/Paymentapi';
+import Errorpanel from '@/components/shared/Errorpanel.jsx';
+import noImageStaticImage from "../../../public/assets/no_image.png";
+import { IconArrowLeft } from '@tabler/icons-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import { Textinput, Loadingoverlay, Select, Datepicker, Textarea, Fileinput, Button } from '@nayeshdaggula/tailify';
+import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
+
+function capitalize(str) {
+    if (!str) return '';
+    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+
+function Addnewpayment() {
+    const navigate = useNavigate();
+    const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
+    const employeeId = employeeInfo?.id || null;
+
+    const [amount, setAmount] = useState('');
+    const [amountError, setAmountError] = useState('');
+    const updateAmount = (e) => {
+        let value = e.target.value;
+        if (isNaN(value)) return;
+        setAmount(value);
+        setAmountError('');
+    };
+
+    const [paymentType, setPaymentType] = useState(null);
+    const [paymentTypeError, setPaymentTypeError] = useState('');
+    const updatePaymentType = (value) => {
+        setPaymentType(value);
+        setPaymentTypeError('');
+    };
+
+    const [paymentTowards, setPaymentTowards] = useState(null);
+    const [paymentTowardsError, setPaymentTowardsError] = useState('');
+    const updatePaymentTowards = (value) => {
+        setPaymentTowards(value);
+        setPaymentTowardsError('');
+    };
+
+    const [paymentMethod, setPaymentMethod] = useState(null);
+    const [paymentMethodError, setPaymentMethodError] = useState('');
+    const updatePaymentMethod = (value) => {
+        setPaymentMethod(value);
+        setPaymentMethodError('');
+        setBank('');
+    };
+
+    const [bank, setBank] = useState('');
+    const [bankError, setBankError] = useState('');
+    const updateBank = (e) => {
+        setBank(e.target.value);
+        setBankError('');
+    };
+
+    const [paymentDate, setPaymentDate] = useState('');
+    const [paymentDateError, setPaymentDateError] = useState('');
+    const updatePaymentDate = (value) => {
+        setPaymentDate(value);
+        setPaymentDateError('');
+    };
+
+    const [transactionId, setTransactionId] = useState('');
+    const [transactionIdError, setTransactionIdError] = useState('');
+    const updateTransactionId = (e) => {
+        setTransactionId(e.currentTarget.value);
+        setTransactionIdError('');
+    };
+
+    const [receipt, setReceipt] = useState("");
+    const [receiptUrl, setReceiptUrl] = useState("");
+    const [receiptError, setReceiptError] = useState("");
+    const updateFeaturedImage = (event) => {
+        const file = event.target.files[0];
+        if (file) {
+            setReceipt(file);
+            setReceiptUrl(URL.createObjectURL(file));
+            setReceiptError("");
+        }
+    };
+
+    const [comment, setComment] = useState('');
+    const [commentError, setCommentError] = useState('');
+    const updateComment = (e) => {
+        setComment(e.currentTarget.value);
+        setCommentError('');
+    };
+
+    const [errorMessage, setErrorMessage] = useState('');
+    const [isLoadingEffect, setIsLoadingEffect] = useState(false);
+
+    // Search type state
+    const [searchType, setSearchType] = useState('flatNo');
+    const [searchQuery, setSearchQuery] = useState('');
+    const [results, setResults] = useState([]);
+    const [selectedFlat, setSelectedFlat] = useState(null);
+    const [selectedFlatError, setSelectedFlatError] = useState('');
+    const [loading, setLoading] = useState(false);
+    const [showDropdown, setShowDropdown] = useState(false);
+    const [debounceTimer, setDebounceTimer] = useState(null);
+
+    const handleSearchTypeChange = (e) => {
+        setSearchType(e.target.value);
+        setSearchQuery('');
+        setResults([]);
+        setSelectedFlat(null);
+        setSelectedFlatError('');
+        setShowDropdown(false);
+    };
+
+    const updateSearchQuery = (e) => {
+        const value = e.target.value;
+        setSearchQuery(value);
+
+        if (debounceTimer) clearTimeout(debounceTimer);
+
+        const timer = setTimeout(() => {
+            if (value.trim().length > 0) {
+                getFlatsData(value);
+                setShowDropdown(true);
+            } else {
+                setResults([]);
+                setShowDropdown(false);
+            }
+        }, 500);
+
+        setDebounceTimer(timer);
+    };
+
+    const handleSelectFlat = (flat) => {
+        setSearchQuery(flat?.label);
+        setSelectedFlat(flat);
+        setShowDropdown(false);
+        setSelectedFlatError('');
+    };
+
+    useEffect(() => {
+        if (!searchQuery) {
+            setSelectedFlat(null);
+            setResults([]);
+            setShowDropdown(false);
+        }
+    }, [searchQuery]);
+
+    async function getFlatsData(query) {
+        try {
+            setLoading(true);
+            const params = searchType === 'flatNo' ? { flat_no: query } : { searchQuery: query };
+            const response = await Flatapi.get(`search-sold-flats`, {
+                params,
+                headers: {
+                    "Content-Type": "application/json",
+                },
+            });
+
+            const data = response?.data;
+            if (data?.status === "error") {
+                setErrorMessage({
+                    message: data.message,
+                    server_res: data,
+                });
+                setResults([]);
+                return false;
+            }
+            setResults(data?.data || []);
+            return true;
+        } catch (error) {
+            console.log(error);
+            setErrorMessage({
+                message: error.message,
+                server_res: error.response?.data || null,
+            });
+            return false;
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    const handleSubmit = async () => {
+        setIsLoadingEffect(true);
+
+        // Validation
+        if (!selectedFlat) {
+            setSelectedFlatError('Please select a flat/customer');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        if (amount === '') {
+            setAmountError('Amount is required');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        if (!paymentType) {
+            setPaymentTypeError('Select payment type');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        if (!paymentTowards) {
+            setPaymentTowardsError('Select payment towards');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        if (paymentMethod === null) {
+            setPaymentMethodError('Select payment method');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        if (paymentMethod === "DD" || paymentMethod === "Bank Deposit") {
+            if (bank === '') {
+                setBankError('Enter the bank name');
+                setIsLoadingEffect(false);
+                return false;
+            }
+        }
+        if (!paymentDate) {
+            setPaymentDateError('Select payment date');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        if (transactionId === "") {
+            setTransactionIdError('Enter transaction id');
+            setIsLoadingEffect(false);
+            return false;
+        }
+        // if (comment === "") {
+        //     setCommentError("Enter comments");
+        //     setIsLoadingEffect(false);
+        //     return false;
+        // }
+
+        const formatDateOnly = (date) => {
+            if (!date) return null;
+            const d = new Date(date);
+            const year = d.getFullYear();
+            const month = String(d.getMonth() + 1).padStart(2, "0");
+            const day = String(d.getDate()).padStart(2, "0");
+            return `${year}-${month}-${day}`;
+        };
+
+        const formdata = new FormData();
+        formdata.append("amount", amount);
+        formdata.append('payment_type', paymentType);
+        formdata.append('payment_towards', paymentTowards);
+        formdata.append("payment_method", paymentMethod);
+        formdata.append("bank", bank);
+        formdata.append("paymentdate", formatDateOnly(paymentDate));
+        formdata.append("transactionid", transactionId);
+        formdata.append("receipt", receipt);
+        formdata.append("comment", comment);
+        formdata.append("flat_id", selectedFlat?.id || null);
+        formdata.append("customer_id", selectedFlat?.customer?.id || null);
+        formdata.append("employee_id", employeeId);
+
+        try {
+            const res = await Paymentapi.post('/addpayment', formdata, {
+                headers: {
+                    "Content-Type": "multipart/form-data",
+                },
+            });
+            const data = res.data;
+            if (data.status === "error") {
+                setErrorMessage({
+                    message: data.message,
+                    server_res: data,
+                });
+                setIsLoadingEffect(false);
+                return false;
+            }
+            setIsLoadingEffect(false);
+            toast.success("Payment added successfully");
+            navigate('/payments');
+        } catch (error) {
+            console.log('Error:', error);
+            const finalresponse = {
+                message: error.message,
+                server_res: error.response?.data || null,
+            };
+            setErrorMessage(finalresponse);
+            setIsLoadingEffect(false);
+            return false;
+        }
+    };
+
+    const infoItems = selectedFlat?.customer ? [
+        { label: 'Name', value: `${capitalize(selectedFlat.customer.first_name) || ''} ${capitalize(selectedFlat.customer.last_name) || ''}` },
+        { label: 'Email', value: selectedFlat.customer.email },
+        { label: 'Phone Number', value: `+${selectedFlat.customer.phone_code} ${selectedFlat.customer.phone_number}` },
+    ] : [];
+
+    return (
+        <div className="w-full">
+            <div className="border-b border-gray-200 pb-4 mb-2">
+                <div className="flex justify-between items-center">
+                    <h1 className="text-gray-800 text-lg font-semibold max-sm:text-xl">Add New Payment</h1>
+                    <Link to={'/payments'} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-1 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
+                        <IconArrowLeft className='mt-0.5' size={18} color="#0083bf" />Back
+                    </Link>
+                </div>
+            </div>
+            <div className=' relative flex flex-col justify-between gap-8 border border-[#ebecef] rounded-xl bg-white px-8 py-4'>
+
+                <div className='w-full flex flex-row gap-14'>
+                    <div className="w-1/2 mt-6">
+                        <div className='grid grid-cols-2 gap-2'>
+                            <Textinput
+                                placeholder="Enter Amount"
+                                label="Amount"
+                                error={amountError}
+                                value={amount}
+                                onChange={updateAmount}
+                                labelClassName="text-sm font-medium text-gray-600 mb-1"
+                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                            />
+                            <Select
+                                label="Payment Type"
+                                labelClass="text-sm font-medium text-gray-600 mb-1"
+                                placeholder="Select Payment Type"
+                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                                className="w-full"
+                                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
+                                selectWrapperClass="!shadow-none"
+                                error={paymentTypeError}
+                                value={paymentType}
+                                onChange={updatePaymentType}
+                                data={[
+                                    { value: 'Customer Pay', label: 'Customer Pay' },
+                                    { value: 'Loan Pay', label: 'Loan Pay' },
+                                ]}
+                            />
+                            <Select
+                                label="Payment Towards"
+                                labelClass="text-sm font-medium text-gray-600 mb-1"
+                                placeholder="Select Payment Towards"
+                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                                className="w-full"
+                                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
+                                selectWrapperClass="!shadow-none"
+                                error={paymentTowardsError}
+                                value={paymentTowards}
+                                onChange={updatePaymentTowards}
+                                data={[
+                                    { value: 'Flat', label: 'Flat' },
+                                    { value: 'GST', label: 'GST' },
+                                    { value: 'Corpus fund', label: 'Corpus fund' },
+                                    { value: 'Registration', label: 'Registration' },
+                                    { value: 'TDS', label: 'TDS' },
+                                    { value: 'Maintenance', label: 'Maintenance' },
+                                ]}
+                            />
+                            <Select
+                                label='Payment Method'
+                                labelClass="text-sm font-medium text-gray-600 mb-1"
+                                placeholder="Select Payment Method"
+                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                                className="w-full"
+                                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
+                                selectWrapperClass='!shadow-none'
+                                error={paymentMethodError}
+                                value={paymentMethod}
+                                onChange={updatePaymentMethod}
+                                data={[
+                                    { value: "DD", label: "DD" },
+                                    { value: "UPI", label: "UPI" },
+                                    { value: "Bank Deposit", label: "Bank Deposit" },
+                                    { value: "Cheque", label: "Cheque" },
+                                    { value: "Online Transfer (IMPS, NFT)", label: "Online Transfer (IMPS, NFT)" },
+                                ]}
+                            />
+                            {(paymentMethod === "DD" || paymentMethod === "Bank Deposit") && (
+                                <Textinput
+                                    placeholder="Enter bank name"
+                                    label="Bank"
+                                    error={bankError}
+                                    value={bank}
+                                    onChange={updateBank}
+                                    labelClassName="text-sm font-medium text-gray-600 mb-1"
+                                    inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                                />
+                            )}
+                            <Datepicker
+                                label="Date of Payment"
+                                value={paymentDate}
+                                onChange={updatePaymentDate}
+                                error={paymentDateError}
+                                labelClassName="text-sm font-medium text-gray-600 mb-1"
+                                inputClassName="2xl:py-3 2xl:text-[20px]"
+                            />
+                            <Textinput
+                                placeholder="Enter transaction id"
+                                label="Transaction Id"
+                                error={transactionIdError}
+                                value={transactionId}
+                                onChange={updateTransactionId}
+                                labelClassName="text-sm font-medium text-gray-600 mb-1"
+                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                            />
+                            <Fileinput
+                                label="Receipt(optional)"
+                                accept="image/*,application/pdf"
+                                labelClassName="text-sm font-medium text-gray-600 mb-1"
+                                multiple={false}
+                                clearable
+                                value={receipt}
+                                error={receiptError}
+                                onChange={updateFeaturedImage}
+                            />
+                            <div className='col-span-2'>
+                                <Textarea
+                                    placeholder="Enter comments"
+                                    label="Comments"
+                                    error={commentError}
+                                    value={comment}
+                                    onChange={updateComment}
+                                    labelClassName="text-sm font-medium text-gray-600 mb-1"
+                                    inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="w-1/2 flex flex-col gap-4 mt-6">
+                        {/* Search Type Selection */}
+                        <div className='flex flex-col gap-4 w-full ' >
+                            <h1 className='text-sm font-bold text-gray-700 '>Search by Flat No or Customer</h1>
+                            <div className="flex gap-6 mb-4">
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        value="flatNo"
+                                        checked={searchType === 'flatNo'}
+                                        onChange={handleSearchTypeChange}
+                                        className="form-radio text-[#0083bf] focus:ring-[#0083bf]"
+                                    />
+                                    <span className="text-sm font-medium text-gray-600">Search by Flat No</span>
+                                </label>
+                                <label className="flex items-center gap-2">
+                                    <input
+                                        type="radio"
+                                        value="customer"
+                                        checked={searchType === 'customer'}
+                                        onChange={handleSearchTypeChange}
+                                        className="form-radio text-[#0083bf] focus:ring-[#0083bf]"
+                                    />
+                                    <span className="text-sm font-medium text-gray-600">Search by Customer</span>
+                                </label>
+                            </div>
+
+                            {/* Search Input and Dropdown */}
+                            <div className="flex flex-col gap-2 relative w-full max-w-md">
+                                <div className="text-sm font-medium text-gray-600">
+                                    {searchType === 'flatNo' ? 'Search for Flat' : 'Search for Customer'}
+                                </div>
+                                <input
+                                    placeholder={searchType === 'flatNo' ? 'Enter Flat No' : 'Enter Customer Name/Email'}
+                                    value={searchQuery}
+                                    onChange={updateSearchQuery}
+                                    className="w-full border border-[#ced4da] px-3 py-2 rounded-md outline-none placeholder:text-[14px] placeholder:text-black/50 text-[14px] text-black/60"
+                                />
+                                {showDropdown && (
+                                    <div className="absolute top-full left-0 w-full z-10 mt-1">
+                                        <div className="bg-white border border-[#ced4da] rounded-md max-h-48 overflow-y-auto">
+                                            {loading ? (
+                                                <div className="p-3 text-sm text-gray-500">Loading...</div>
+                                            ) : results.length > 0 ? (
+                                                <ul>
+                                                    {results.map((item) => (
+                                                        <li
+                                                            key={item.value}
+                                                            className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-[14px] text-black/60"
+                                                            onClick={() => handleSelectFlat(item)}
+                                                        >
+                                                            {item.label}
+                                                        </li>
+                                                    ))}
+                                                </ul>
+                                            ) : (
+                                                <div className="p-3 text-sm text-gray-500">No Result</div>
+                                            )}
+                                        </div>
+                                    </div>
+                                )}
+                                {selectedFlatError && (
+                                    <p className="text-xs text-red-600 font-medium">{selectedFlatError}</p>
+                                )}
+                            </div>
+                        </div>
+                        {/* Selected Flat/Customer Details */}
+                        {selectedFlat && (
+                            <div className="flex flex-col gap-6 w-full">
+                                <div className="bg-white border border-[#ced4da] rounded-md p-4">
+                                    <div className="text-lg font-semibold text-gray-800 mb-2">
+                                        Flat No: {selectedFlat?.flat_no}
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                                        <div><span className="font-medium">Block:</span> {selectedFlat?.block_name || 'N/A'}</div>
+                                        <div><span className="font-medium">Facing:</span> {selectedFlat?.facing}</div>
+                                        <div><span className="font-medium">Floor:</span> {selectedFlat?.floor_no}</div>
+                                        <div><span className="font-medium">Size:</span> {selectedFlat?.square_feet} sqft</div>
+                                        <div><span className="font-medium">Furnished:</span> {selectedFlat?.furnished_status}</div>
+                                        <div><span className="font-medium">Type:</span> {selectedFlat?.type}</div>
+                                        <div><span className="font-medium">Bedrooms:</span> {selectedFlat?.bedrooms}</div>
+                                        <div><span className="font-medium">Bathrooms:</span> {selectedFlat?.bathrooms}</div>
+                                        <div><span className="font-medium">Balconies:</span> {selectedFlat?.balconies}</div>
+                                        <div><span className="font-medium">Parking:</span> {selectedFlat?.parking ? "Yes" : "No"}</div>
+                                    </div>
+                                </div>
+                                {selectedFlat.customer && (
+                                    <div className="bg-white border border-[#ced4da] rounded-md p-4">
+                                        <div className="flex flex-col md:flex-row gap-4">
+                                            <div className="w-full md:w-[120px] flex justify-center items-center">
+                                                <img
+                                                    crossOrigin="anonymous"
+                                                    src={selectedFlat.customer.profile_pic_url || noImageStaticImage}
+                                                    alt="Profile"
+                                                    className="w-full h-[130px] rounded-lg object-cover border border-gray-300"
+                                                />
+                                            </div>
+                                            <div className="flex-1 grid grid-cols-1 gap-3">
+                                                {infoItems.map(({ label, value }) => (
+                                                    <div key={label} className="flex flex-col gap-y-1">
+                                                        <p className="text-sm text-gray-600">{label}</p>
+                                                        <p className="text-sm text-gray-900 font-semibold break-all">{value || '-'}</p>
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Payment Form Fields */}
+                <div className="flex justify-end mt-auto">
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={isLoadingEffect}
+                        className="cursor-pointer text-xs text-white !bg-[#0083bf]"
+                    >
+                        + Add Payment
+                    </Button>
+                </div>
+                {isLoadingEffect && (
+                    <div className='absolute top-0 left-0 w-full h-full bg-[#2b2b2bcc] flex flex-row justify-center items-center z-50'>
+                        <Loadingoverlay visible={isLoadingEffect} overlayBg='' />
+                    </div>
+                )}
+            </div>
+            {errorMessage && (
+                <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />
+            )}
+            <ToastContainer position="top-right" autoClose={3000} />
+        </div>
+    );
+}
+
+export default Addnewpayment;

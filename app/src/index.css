@@ -1,0 +1,33 @@
+@import "tailwindcss";
+@source "../node_modules/@nayeshdaggula/tailify";
+
+@custom-variant dark (&:where([data-tailify-theme-variant=dark], [data-tailify-theme-variant=dark] *));
+
+/* Ensure dark mode applies to `body` */
+[data-tailify-theme-variant="dark"] body {
+  @apply bg-neutral-900 text-white;
+}
+
+[data-tailify-theme-variant="light"] body {
+  @apply bg-white text-black;
+}
+
+.sidebar-submenu {
+  display: none;
+}
+.sidebar-submenu.open {
+  display: block;
+}
+
+@source "../node_modules/@nayeshdaggula/tailify";
+
+@custom-variant dark (&:where([data-tailify-theme-variant=dark], [data-tailify-theme-variant=dark] *));
+
+/* Ensure dark mode applies to `body` */
+[data-tailify-theme-variant="dark"] body {
+  @apply bg-neutral-900 text-white;
+}
+
+[data-tailify-theme-variant="light"] body {
+  @apply bg-white text-black;
+}
