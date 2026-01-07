@@ -687,11 +687,11 @@ function Flatswrapper() {
                       Customer
                     </th>
                   )}
-                  {visibleColumns.groupowner && (
+                  {/* {visibleColumns.groupowner && (
                     <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[220px]">
                       Group/Owner
                     </th>
-                  )}
+                  )} */}
                   {visibleColumns.mortgage && (
                     <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
                       Mortgage
@@ -870,13 +870,13 @@ function Flatswrapper() {
                           )}
                         </td>
                       )}
-                      {visibleColumns.groupowner && (
+                      {/* {visibleColumns.groupowner && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[220px]">
                           <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
                             {flat?.group_owner?.name ? flat?.group_owner?.name : "---"}
                           </p>
                         </td>
-                      )}
+                      )} */}
                       {visibleColumns.mortgage && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
                           <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
@@ -886,9 +886,9 @@ function Flatswrapper() {
                       )}
                       {visibleColumns.project && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal">
-                              {flat?.project_name || "-"}
-                            </p>
+                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal">
+                            {flat?.project_name || "-"}
+                          </p>
                         </td>
                       )}
                       {visibleColumns.flatNo && (

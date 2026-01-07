@@ -595,20 +595,10 @@ function Editflat() {
                 placeholder="Enter Deed No"
               />
               <Select
-                data={[
-                  { value: "Studio", label: "Studio" },
-                  { value: "OneBHK", label: "1 BHK" },
-                  { value: "OnePointFiveBHK", label: "1.5 BHK" },
-                  { value: "TwoBHK", label: "2 BHK" },
-                  { value: "TwoPointFiveBHK", label: "2.5 BHK" },
-                  { value: "ThreeBHK", label: "3 BHK" },
-                  { value: "ThreePointFiveBHK", label: "3.5 BHK" },
-                  { value: "FourBHK", label: "4 BHK" },
-                  { value: "FourPointFiveBHK", label: "4.5 BHK" },
-                  { value: "FiveBHK", label: "5 BHK" },
-                  { value: "Penthouse", label: "Penthouse" },
-                  { value: "Duplex", label: "Duplex" },
-                ]}
+               data={[
+                { value: "TwoBHK", label: "2 BHK" },
+                { value: "ThreeBHK", label: "3 BHK" },
+              ]}
                 placeholder="Select flat type"
                 value={flatType}
                 label="Flat Type"

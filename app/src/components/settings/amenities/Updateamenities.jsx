@@ -90,18 +90,8 @@ function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAme
                     <div className='mb-3 grid grid-cols-1 gap-3'>
                         <Select
                             data={[
-                                { value: "Studio", label: "Studio" },
-                                { value: "1 BHK", label: "1 BHK" },
-                                { value: "1.5 BHK", label: "1.5 BHK" },
-                                { value: "2 BHK", label: "2 BHK" },
-                                { value: "2.5 BHK", label: "2.5 BHK" },
-                                { value: "3 BHK", label: "3 BHK" },
-                                { value: "3.5 BHK", label: "3.5 BHK" },
-                                { value: "4 BHK", label: "4 BHK" },
-                                { value: "4.5 BHK", label: "4.5 BHK" },
-                                { value: "5 BHK", label: "5 BHK" },
-                                { value: "Penthouse", label: "Penthouse" },
-                                { value: "Duplex", label: "Duplex" },
+                                { value: "TwoBHK", label: "2 BHK" },
+                                { value: "ThreeBHK", label: "3 BHK" },
                             ]}
                             placeholder="Select flat type"
                             labelClass='!font-semibold !text-[14px]'

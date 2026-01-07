@@ -519,7 +519,7 @@ function Addflat() {
               onChange={updateBlock}
               selectWrapperClass="!shadow-none"
             />
-            <Select
+            {/* <Select
               data={groupOwners}
               label="Group/Owner"
               value={selectedOwner}
@@ -530,7 +530,7 @@ function Addflat() {
               className="!m-0 !p-0 w-full"
               dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
               selectWrapperClass="!shadow-none"
-            />
+            /> */}
             <Select
               data={[
                 { value: "true", label: "Yes" },
@@ -553,7 +553,7 @@ function Addflat() {
               error={squareFeetError}
               placeholder="Enter Square Feet"
             />
-            <Textinput
+            {/* <Textinput
               label="UDL"
               value={UDL}
               onChange={updateUDL}
@@ -566,21 +566,11 @@ function Addflat() {
               onChange={updateDeedNo}
               error={deedNoError}
               placeholder="Enter Deed No"
-            />
+            /> */}
             <Select
               data={[
-                { value: "Studio", label: "Studio" },
-                { value: "OneBHK", label: "1 BHK" },
-                { value: "OnePointFiveBHK", label: "1.5 BHK" },
                 { value: "TwoBHK", label: "2 BHK" },
-                { value: "TwoPointFiveBHK", label: "2.5 BHK" },
                 { value: "ThreeBHK", label: "3 BHK" },
-                { value: "ThreePointFiveBHK", label: "3.5 BHK" },
-                { value: "FourBHK", label: "4 BHK" },
-                { value: "FourPointFiveBHK", label: "4.5 BHK" },
-                { value: "FiveBHK", label: "5 BHK" },
-                { value: "Penthouse", label: "Penthouse" },
-                { value: "Duplex", label: "Duplex" },
               ]}
               placeholder="Select flat type"
               value={flatType}
@@ -592,7 +582,7 @@ function Addflat() {
               onChange={updateFlatType}
               selectWrapperClass="!shadow-none"
             />
-            <Textinput
+            {/* <Textinput
               label="Bedrooms"
               value={bedrooms}
               onChange={updateBedrooms}
@@ -605,7 +595,7 @@ function Addflat() {
               onChange={updateBathrooms}
               error={bathroomsError}
               placeholder="Enter Bathrooms"
-            />
+            /> 
             <Textinput
               label="Balconies"
               value={balconies}
@@ -619,7 +609,7 @@ function Addflat() {
               onChange={updateParkingSquareFeet}
               error={parkingSquareFeetError}
               placeholder="Enter Square Feet"
-            />
+            /> */}
             <Select
               data={[
                 { value: "North", label: "North" },
@@ -700,7 +690,7 @@ function Addflat() {
               dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
               selectWrapperClass="!shadow-none"
             /> */}
-            <Select
+            {/* <Select
               data={[
                 { value: "Furnished", label: "Furnished" },
                 { value: "SemiFurnished", label: "SemiFurnished" },
@@ -716,7 +706,7 @@ function Addflat() {
               dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
               onChange={updateFurnishingStatus}
               selectWrapperClass="!shadow-none"
-            />
+            /> 
             <Textinput
               label="Google Map Link"
               value={googleMapLink}
@@ -732,7 +722,7 @@ function Addflat() {
                 error={descriptionError}
                 placeholder="Enter Description"
               />
-            </div>
+            </div>*/}
           </div>
           {isLoadingEffect ? (
             isLoadingEffect && (
