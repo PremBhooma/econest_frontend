@@ -94,6 +94,7 @@ function Flatswrapper() {
     customer: true,
     groupowner: true,
     mortgage: true,
+    project: true,
     flatNo: true,
     block: true,
     floorNo: true,
@@ -590,10 +591,10 @@ function Flatswrapper() {
               />
               {!selectedCustomer && (
                 <>
-                  <Datefilter
+                  {/* <Datefilter
                     onFilterChange={handleDateFilterChange}
                     onClearFilter={handleDateFilterChange}
-                  />
+                  /> */}
                   <div className="">
                     <Select
                       data={[
@@ -694,6 +695,11 @@ function Flatswrapper() {
                   {visibleColumns.mortgage && (
                     <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
                       Mortgage
+                    </th>
+                  )}
+                  {visibleColumns.project && (
+                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[200px]">
+                      Project
                     </th>
                   )}
                   {visibleColumns.flatNo && (
@@ -876,6 +882,13 @@ function Flatswrapper() {
                           <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
                             {flat?.mortgage === true ? "Yes" : "No"}
                           </p>
+                        </td>
+                      )}
+                      {visibleColumns.project && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
+                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal">
+                              {flat?.project_name || "-"}
+                            </p>
                         </td>
                       )}
                       {visibleColumns.flatNo && (

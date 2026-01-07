@@ -337,8 +337,15 @@ function Addflat() {
       return false;
     }
 
+    if (!selectedProject) {
+      setIsLoadingEffect(false);
+      setSelectedProjectError("Select Project");
+      return false;
+    }
+
     const formData = {
       employee_id: employee_id,
+      project_uuid: selectedProject,
       flatNo: flatNo,
       block: block,
       floorNo: FloorNo,
@@ -401,9 +408,50 @@ function Addflat() {
       });
   };
 
+  const [projects, setProjects] = useState([]);
+  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedProjectError, setSelectedProjectError] = useState("");
+  const handleProjectChange = (value) => {
+    setSelectedProject(value);
+    setSelectedProjectError("");
+  };
+
+  const fetchProjects = async () => {
+    setIsLoadingEffect(true);
+    Projectapi.get("get-all-projects")
+      .then((response) => {
+        const data = response.data;
+        if (data.status === "error") {
+           // Handle error if needed, or just log
+           console.error("Error fetching projects:", data.message);
+        } else {
+            const projectOptions = (data.data || []).map(p => ({
+                value: p.uuid,
+                label: p.project_name
+            }));
+            setProjects(projectOptions);
+            
+            // Optional: Select the first project by default if available
+            // if (projectOptions.length > 0) {
+            //     setSelectedProject(projectOptions[0].value);
+            // }
+        }
+         // Don't turn off loading here as other fetches might be running, 
+         // or handle loading state more granularly. 
+         // For now, let's just let the other independent fetches handle their own loading or global loading.
+         // Actually, since we set isLoadingEffect(true) at start of this function, we should ideally turn it off or manage it.
+         // But existing code has multiple fetches in useEffect. simpler to just not block UI too much.
+      })
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+      });
+      // Not disabling loading here to avoid conflict with other parallel fetches if they share same loading state
+  };
+
   useEffect(() => {
     fetchblocks();
     fetchGroupOwners();
+    fetchProjects();
   }, []);
 
   return (
@@ -422,6 +470,19 @@ function Addflat() {
       <div className="relative bg-white p-6 rounded-[4px] border-[0.6px] border-[#979797]/40">
         <div className="space-y-4">
           <div className="grid grid-cols-3 gap-4">
+            <Select
+              data={projects}
+              placeholder="Select Project"
+              value={selectedProject}
+              label="Project"
+              error={selectedProjectError}
+              searchable
+              inputClassName="focus:ring-0 focus:border-[#E72D65] focus:outline-none !mt-0"
+              className="!m-0 !p-0 w-full"
+              dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
+              onChange={handleProjectChange}
+              selectWrapperClass="!shadow-none"
+            />
             <Textinput
               label="Flat No"
               value={flatNo}
