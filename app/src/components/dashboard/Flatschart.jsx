@@ -100,9 +100,9 @@ const Flatschart = () => {
     }, [selectedYear]);
 
     return (
-        <div className="p-4 rounded-md bg-white shadow-sm">
-            <div className="flex items-center justify-between mb-4">
-                <h2 className="text-lg font-semibold">Flats Chart</h2>
+        <div className="p-5 rounded-xl bg-white shadow-sm border border-neutral-200 h-full">
+            <div className="flex items-center justify-between mb-6">
+                <h2 className="text-lg font-semibold text-neutral-900">Flats Sold</h2>
                 <select
                     className="border rounded p-2"
                     value={selectedYear}

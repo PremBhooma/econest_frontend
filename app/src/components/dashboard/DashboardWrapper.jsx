@@ -347,485 +347,325 @@ function DashboardWrapper() {
 
   return (
     <>
-      <div className="w-full">
+      <div className="w-full space-y-8">
         {errorMessage && (
-          <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-lg mb-6 mx-3">
-            <p className="font-semibold">Error:</p>
-            <p>{errorMessage.message}</p>
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg flex items-center gap-2">
+            <XCircle size={18} />
+            <div>
+              <p className="font-semibold">Error</p>
+              <p className="text-sm">{errorMessage.message}</p>
+            </div>
           </div>
         )}
 
-        <div className="flex flex-col w-full gap-6">
-          <div className='bg-[#fff] px-4 py-3 pb-3 shadow-sm rounded-md'>
-            <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start gap-3 p-3 w-[100%]">
-              <h6 className="text-[20px] 2xl:text-[22px] font-semibold dark:text-white">{greeting}, {employeeInfo?.name || "Abode"}!</h6>
-              <h6 className="text-[20px] 2xl:text-[22px] font-semibold dark:text-white">Dashboard</h6>
-            </div>
-            <div className="space-y-6 w-[100%] pb-3 px-3">
-              <div className="grid grid-cols-1 md:grid-cols-5 lg:grid-cols-5 xl:grid-cols-5 gap-2">
-                {statsCards?.map((card, index) => (
-                  <div
-                    key={index}
-                    className={`card shadow-sm border border-gray-200 dark:border-neutral-600 bg-[#ffffff] rounded-md transition-transform hover:scale-95`}
-                  >
-                    <div className="card-body p-4">
-                      <div className="flex items-center justify-between mb-4">
-                        <div>
-                          <p className="font-medium text-neutral-700 dark:text-white mb-1 text-sm 2xl:text-[15px]">
-                            {card.title}
-                          </p>
-                          <h3 className="text-2xl font-bold text-neutral-900 dark:text-white">
-                            {card.value}
-                          </h3>
-                        </div>
-                        <div className={`w-10 h-10 ${card.iconBg} rounded-full flex justify-center items-center shadow-sm`}>
-                          <span className="text-white">{card.icon}</span>
-                        </div>
+        {/* Header Section */}
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-2xl font-bold text-neutral-900 tracking-tight">Dashboard</h1>
+            <p className="text-neutral-500 mt-1">{greeting}, {employeeInfo?.name || "User"}!</p>
+          </div>
+          {/* Action Buttons could go here */}
+        </div>
+
+        {/* Stats Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+          {statsCards?.map((card, index) => (
+            <div
+              key={index}
+              className="bg-white rounded-xl border border-neutral-200 shadow-sm hover:shadow-md transition-shadow duration-200 p-5 flex flex-col justify-between"
+            >
+              <div className="flex items-start justify-between mb-4">
+                <div>
+                  <p className="text-sm font-medium text-neutral-500 mb-1">{card.title}</p>
+                  <h3 className="text-2xl font-bold text-neutral-900">{card.value}</h3>
+                </div>
+                <div className={`w-10 h-10 ${card.iconBg} rounded-lg flex items-center justify-center text-white shadow-sm`}>
+                  {card.icon}
+                </div>
+              </div>
+              {/* Sub-stats with clearer visual hierarchy */}
+              {card.subStats && (
+                <div className="pt-4 border-t border-neutral-100 grid grid-cols-2 gap-2">
+                  {card.subStats.map((stat, idx) => (
+                    <div key={idx} className="flex flex-col">
+                      <div className="flex items-center gap-1.5">
+                        <span className={stat.color}>{stat.icon}</span>
+                        <span className={`text-base font-semibold ${stat.color}`}>{stat.value}</span>
                       </div>
-                      <div className={`flex flex-row ${card?.subStats?.length === 3 ? "justify-between" : "gap-4"} pt-3 border-t border-gray-200 dark:border-neutral-600`}>
-                        {card?.subStats?.map((stat, statIndex) => (
-                          <div key={statIndex} className="text-center">
-                            <div className="flex items-center justify-center gap-1 mb-1">
-                              <span className={stat.color}>{stat.icon}</span>
-                              <p className={`text-lg 2xl:text-[20px] font-semibold ${stat.color}`}>{stat.value}</p>
-                            </div>
-                            <p className="text-[11px] 2xl:text-[12px] text-gray-600 dark:text-gray-400">{stat.label}</p>
-                          </div>
-                        ))}
-                      </div>
+                      <span className="text-[10px] text-neutral-400 uppercase tracking-widest font-medium mt-0.5">{stat.label}</span>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+
+        {/* Charts Section - Full Width Row */}
+        <div className="grid grid-cols-1 ml-0 lg:grid-cols-3 gap-6">
+          {permissions?.main_page?.includes("flats_page") && (
+            <div className="col-span-1">
+              <Flatschart />
+            </div>
+          )}
+          {permissions?.main_page?.includes("customers_page") && (
+            <div className="col-span-1">
+              <Customerschart />
+            </div>
+          )}
+          {permissions?.main_page?.includes("payments_page") && (
+            <div className="col-span-1">
+              <Paymentchart />
+            </div>
+          )}
+        </div>
+
+        {/* Recent Activity Grid */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
+          {/* Leads Table */}
+          {permissions?.main_page?.includes("leads_page") && (
+            <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+                <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                  <IconUsersGroup className="text-blue-600" size={18} />
+                  Recent Leads
+                </h4>
+                <span className="text-xs font-medium bg-blue-50 text-blue-700 px-2.5 py-1 rounded-full">{dashboardData.leadsData.length} New</span>
+              </div>
+              <div className="overflow-x-auto">
+                {dashboardData.leadsData.length > 0 ? (
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+                      <tr>
+                        <th className="px-6 py-3">Customer</th>
+                        <th className="px-6 py-3">Contact</th>
+                        <th className="px-6 py-3">Date</th>
+                        <th className="px-6 py-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {dashboardData.leadsData.slice(0, 5).map((ele) => (
+                        <tr key={ele.id} className="hover:bg-neutral-50 transition-colors">
+                          <td className="px-6 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center text-xs font-bold">
+                                {ele.full_name?.slice(0, 2).toUpperCase()}
+                              </div>
+                              <div>
+                                <p className="font-medium text-neutral-900">{ele.prefixes} {ele.full_name}</p>
+                                <p className="text-xs text-neutral-500">{ele.uuid}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-3.5">
+                            <div className="flex flex-col text-xs">
+                              <span className="text-neutral-900 mb-0.5">+{ele.phone_code} {ele.phone_number}</span>
+                              <a href={`mailto:${ele.email}`} className="text-neutral-500 hover:text-blue-600 truncate max-w-[120px]">{ele.email}</a>
+                            </div>
+                          </td>
+                          <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
+                            {new Date(ele.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-3.5 text-right">
+                            <button onClick={() => openSingleLead(ele.uuid)} className="p-1.5 text-neutral-400 hover:text-blue-600 hover:bg-blue-50 rounded-md transition-all">
+                              <IconEye size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="py-8 text-center text-neutral-400 text-sm">No recent leads</div>
+                )}
               </div>
             </div>
-          </div>
+          )}
 
-          {/* <Line options={options} data={data} />; */}
-          <div className='flex flex-row w-full'>
-
-            <div className="space-y-6 w-1/2">
-
-              {/* Leads */}
-              {permissions?.main_page?.includes("leads_page") && (
-                <div className="bg-white dark:bg-neutral-700 rounded-md shadow-sm border border-gray-200 dark:border-neutral-600">
-                  <div className="p-4 border-b border-gray-200 dark:border-neutral-600">
-                    <h4 className="text-lg font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                      <IconUsers className="text-neutral-700" size={20} />
-                      Recent Leads ({dashboardData.customersData.length})
-                    </h4>
-                  </div>
-                  <div className="p-3">
-                    {dashboardData.leadsData.length > 0 ? (
-                      <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
-                        <table className="w-full text-left border-collapse">
-                          <thead className="bg-gray-50 border-b border-neutral-200">
-                            <tr>
-                              {permissions?.leads_page?.includes("view_lead") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">Ref Id</th>
-                              )}
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[160px]">Customer</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[140px]">Email</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[160px]">Phone</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px]">Created</th>
-                              {permissions?.leads_page?.includes("view_lead") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[70px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">View</th>
-                              )}
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-neutral-200">
-                            {dashboardData.leadsData.slice(0, 5).map((ele, index) => (
-                              <tr key={ele.id} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
-                                {permissions?.leads_page?.includes("view_lead") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 w-[120px] sticky left-0 z-20 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
-                                    <NavLink to={`/lead/${ele.uuid}`} className="hover:text-blue-600">
-                                      {ele.uuid}
-                                    </NavLink>
-                                  </td>
-                                )}
-                                <td className="py-4 px-4 min-w-[160px]">
-                                  {permissions?.leads_page?.includes("view_lead") ? (
-                                    <NavLink to={`/lead/${ele.uuid}`}>
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                                          {ele.full_name?.slice(0, 2).toUpperCase()}
-                                        </div>
-                                        <span className="font-medium text-xs text-neutral-900">
-                                          {ele.prefixes} {ele.full_name}
-                                        </span>
-                                      </div>
-                                    </NavLink>
-                                  ) : (
-                                    <div className="flex items-center gap-3">
-                                      <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                                        {ele.full_name?.slice(0, 2).toUpperCase()}
-                                      </div>
-                                      <span className="font-medium text-xs text-neutral-900">
-                                        {ele.prefixes} {ele.full_name}
-                                      </span>
-                                    </div>
-                                  )}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[140px]">
-                                  <NavLink to={`mailto:${ele.email}`} className="hover:text-blue-600">
-                                    {ele.email}
-                                  </NavLink>
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[160px]">
-                                  <NavLink
-                                    to={`https://wa.me/${ele.phone_code}${ele.phone_number}?text=Hello!%20I%27m%20interested%20in%20your%20service`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:text-blue-600"
-                                  >
-                                    +{ele.phone_code} {ele.phone_number}
-                                  </NavLink>
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[120px]">
-                                  {new Date(ele.created_at).toLocaleDateString()}
-                                </td>
-                                {permissions?.leads_page?.includes("view_lead") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[70px] sticky right-0 z-20 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
-                                    <div
-                                      onClick={() => openSingleLead(ele.uuid)}
-                                      className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer inline-block"
-                                    >
-                                      <IconEye size={18} />
-                                    </div>
-                                  </td>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-center py-8">No leads found</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* flats */}
-              {permissions?.main_page?.includes("flats_page") && (
-                <div className="bg-white dark:bg-neutral-700 rounded-md shadow-sm border border-gray-200 dark:border-neutral-600">
-                  <div className="p-4 border-b border-gray-200 dark:border-neutral-600">
-                    <h4 className="text-lg font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                      <Home className="text-purple-600" size={20} />
-                      Recent Flats ({dashboardData.flatsData.length})
-                    </h4>
-                  </div>
-                  <div className="p-3">
-                    {dashboardData.flatsData.length > 0 ? (
-                      <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
-                        <table className="w-full text-left border-collapse">
-                          <thead className="bg-gray-50 border-b border-neutral-200">
-                            <tr>
-                              {permissions?.flats_page?.includes("view_flat") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">Ref No</th>
-                              )}
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[90px]">Flat No</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[70px]">Floor</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[100px]">Block</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[100px]">Status</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[100px]">Created</th>
-                              {permissions?.flats_page?.includes("view_flat") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[70px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">View</th>
-                              )}
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-neutral-200">
-                            {dashboardData.flatsData.slice(0, 5).map((flat, index) => (
-                              <tr key={flat.id} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
-                                {permissions?.flats_page?.includes("view_flat") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 w-[120px] sticky left-0 z-20 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
-                                    <NavLink to={`/flats/view-flat/${flat.uuid}`} className="hover:text-blue-600">
-                                      {flat.uuid}
-                                    </NavLink>
-                                  </td>
-                                )}
-                                <td className="py-4 px-4 min-w-[90px]">
-                                  <div className="flex items-center gap-3">
-                                    <div className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-semibold bg-purple-100 text-purple-700">
-                                      {flat.flat_no}
-                                    </div>
-                                  </div>
-                                  {/* Note: Original code had empty class for w-8 h-8rounded-full, assuming typo fixed */}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[70px]">
-                                  {flat.floor_no}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[100px]">
-                                  Block {flat.block_id}
-                                </td>
-                                <td className="py-4 px-4 min-w-[100px]">
-                                  <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wide ${flat.status === 'Sold'
-                                    ? 'bg-green-100 text-green-700 dark:bg-green-800 dark:text-green-100'
-                                    : 'bg-orange-100 text-orange-700 dark:bg-orange-800 dark:text-orange-100'
-                                    }`}>
-                                    {flat.status}
-                                  </span>
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[100px]">
-                                  {new Date(flat.created_at).toLocaleDateString()}
-                                </td>
-                                {permissions?.flats_page?.includes("view_flat") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[70px] sticky right-0 z-20 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
-                                    <div
-                                      onClick={() => openSingleFlat(flat.uuid)}
-                                      className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer inline-block"
-                                    >
-                                      <IconEye size={18} />
-                                    </div>
-                                  </td>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-center py-8">No flats found</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Customers */}
-              {permissions?.main_page?.includes("customers_page") && (
-                <div className="bg-white dark:bg-neutral-700 rounded-md shadow-sm border border-gray-200 dark:border-neutral-600">
-                  <div className="p-4 border-b border-gray-200 dark:border-neutral-600">
-                    <h4 className="text-lg font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                      <IconUsers className="text-neutral-700" size={20} />
-                      Recent Customers ({dashboardData.customersData.length})
-                    </h4>
-                  </div>
-                  <div className="p-3">
-                    {dashboardData.customersData.length > 0 ? (
-                      <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
-                        <table className="w-full text-left border-collapse">
-                          <thead className="bg-gray-50 border-b border-neutral-200">
-                            <tr>
-                              {permissions?.customers_page?.includes("view_single_customer") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">Ref Id</th>
-                              )}
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[160px]">Customer</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[140px]">Email</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[160px]">Phone</th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px]">Created</th>
-                              {permissions?.customers_page?.includes("view_single_customer") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[70px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">View</th>
-                              )}
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-neutral-200">
-                            {dashboardData.customersData.slice(0, 5).map((customer, index) => (
-                              <tr key={customer.id} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
-                                {permissions?.customers_page?.includes("view_single_customer") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 w-[120px] sticky left-0 z-20 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
-                                    <NavLink to={`/customers/${customer.uuid}`} className="hover:text-blue-600">
-                                      {customer.uuid}
-                                    </NavLink>
-                                  </td>
-                                )}
-                                <td className="py-4 px-4 min-w-[160px]">
-                                  {permissions?.customers_page?.includes("view_single_customer") ? (
-                                    <NavLink to={`/customers/${customer.uuid}`}>
-                                      <div className="flex items-center gap-3">
-                                        <div className="w-8 h-8 bg-cyan-600 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                                          {customer.first_name?.[0]}
-                                          {customer.last_name?.[0]}
-                                        </div>
-                                        <span className="font-medium text-xs text-neutral-900">
-                                          {customer.prefixes} {customer.first_name} {customer.last_name}
-                                        </span>
-                                      </div>
-                                    </NavLink>
-                                  ) : (
-                                    <div className="flex items-center gap-3 cursor-not-allowed opacity-60">
-                                      <div className="w-8 h-8 bg-gray-400 rounded-full flex items-center justify-center text-white text-xs font-semibold">
-                                        {customer.first_name?.[0]}
-                                        {customer.last_name?.[0]}
-                                      </div>
-                                      <span className="font-medium text-xs text-neutral-900">
-                                        {customer.prefixes} {customer.first_name} {customer.last_name}
-                                      </span>
-                                    </div>
-                                  )}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[140px]">
-                                  <NavLink to={`mailto:${customer.email}`} className="hover:text-blue-600">
-                                    {customer.email}
-                                  </NavLink>
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[160px]">
-                                  <NavLink
-                                    to={`https://wa.me/${customer.phone_code}${customer.phone_number}?text=Hello!%20I%27m%20interested%20in%20your%20service`}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="hover:text-blue-600"
-                                  >
-                                    +{customer.phone_code} {customer.phone_number}
-                                  </NavLink>
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[120px]">
-                                  {new Date(customer.created_at).toLocaleDateString()}
-                                </td>
-                                {permissions?.customers_page?.includes("view_single_customer") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[70px] sticky right-0 z-20 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
-                                    <div
-                                      onClick={() => openSingleCustomer(customer.uuid)}
-                                      className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer inline-block"
-                                    >
-                                      <IconEye size={18} />
-                                    </div>
-                                  </td>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-center py-8">No customers found</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {/* Payments */}
-              {permissions?.main_page?.includes("payments_page") && (
-                <div className="bg-white dark:bg-neutral-700 rounded-md shadow-sm border border-gray-200 dark:border-neutral-600">
-                  <div className="p-4 border-b border-gray-200 dark:border-neutral-600">
-                    <h4 className="text-lg font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                      <IconCash className="text-neutral-700" size={20} />
-                      Recent Payments ({dashboardData.paymentsData.length})
-                    </h4>
-                  </div>
-                  <div className="p-3">
-                    {dashboardData.paymentsData.length > 0 ? (
-                      <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
-                        <table className="w-full text-left border-collapse">
-                          <thead className="bg-gray-50 border-b border-neutral-200">
-                            <tr>
-                              {permissions?.payments_page?.includes("view_payment") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
-                                  Ref Id
-                                </th>
-                              )}
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[80px]">
-                                Flat No
-                              </th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[150px]">
-                                Customer Name
-                              </th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[100px]">
-                                Block Name
-                              </th>
-                              <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[120px]">
-                                Amount
-                              </th>
-                              {permissions?.payments_page?.includes("view_payment") && (
-                                <th className="py-3 px-4 font-bold text-sm text-neutral-700 uppercase tracking-wider min-w-[70px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
-                                  View
-                                </th>
-                              )}
-                            </tr>
-                          </thead>
-                          <tbody className="divide-y divide-neutral-200">
-                            {dashboardData.paymentsData.slice(0, 5).map((payment, index) => (
-                              <tr
-                                key={payment?.id || index}
-                                className="hover:bg-neutral-50 transition-colors duration-150 align-top group"
-                              >
-                                {permissions?.payments_page?.includes("view_payment") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 w-[120px] sticky left-0 z-20 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
-                                    <NavLink to={`/singlepaymentview/${payment?.uuid}`} className="hover:text-blue-600">
-                                      {payment?.uuid ?? "---"}
-                                    </NavLink>
-                                  </td>
-                                )}
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[80px]">
-                                  {payment?.flat_no ?? "---"}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[150px]">
-                                  {`${payment.customer_prefixes} ${payment.customer_name}` || "----"}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[100px]">
-                                  {payment?.block_name ?? "---"}
-                                </td>
-                                <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[120px]">
-                                  {payment?.amount != null ? `₹${payment.amount}` : "---"}
-                                </td>
-                                {permissions?.payments_page?.includes("view_payment") && (
-                                  <td className="py-4 px-4 text-xs font-medium text-neutral-600 min-w-[70px] sticky right-0 z-20 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
-                                    <div
-                                      onClick={() => openSingleFlatView(payment.uuid)}
-                                      className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer inline-block"
-                                    >
-                                      <IconEye size={18} />
-                                    </div>
-                                  </td>
-                                )}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-center py-8">No payments found</p>
-                    )}
-                  </div>
-                </div>
-              )}
-
-              {employeeInfo?.role_name === "Super Admin" && (
-                <div className="bg-white dark:bg-neutral-700 rounded-md shadow-sm border border-gray-200 dark:border-neutral-600">
-                  <div className="p-4 border-b border-gray-200 dark:border-neutral-600">
-                    <h4 className="text-lg font-semibold text-neutral-900 dark:text-white flex items-center gap-2">
-                      <IconIdBadge2 className="text-neutral-700" size={20} />
-                      Recent Employees ({dashboardData.employeesData.length})
-                    </h4>
-                  </div>
-                  <div className="p-3">
-                    {dashboardData.employeesData.length > 0 ? (
-                      <div className="space-y-3 max-h-64 overflow-y-auto grid grid-cols-2 gap-4">
-                        {dashboardData.employeesData.slice(0, 5).map((employee, index) => (
-                          <div key={employee.id} className="flex items-center justify-between p-3 bg-gray-50 dark:bg-neutral-600 rounded-lg">
-                            <div>
-                              <a href={`/single-employee-view/${employee.id}`} className="flex items-center gap-3">
-                                <div className="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center text-white font-semibold">
-                                  {employee.name?.split(' ').map(n => n.charAt(0)).join('').substring(0, 2)}
-                                </div>
-                                <div>
-                                  <p className="font-medium text-neutral-900 dark:text-white">{employee.name}</p>
-                                  <p className="text-sm text-gray-600 dark:text-gray-400">{employee.email}</p>
-                                </div>
-                              </a>
+          {/* Flats Table */}
+          {permissions?.main_page?.includes("flats_page") && (
+            <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+                <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                  <Home className="text-purple-600" size={18} />
+                  Recent Flats
+                </h4>
+                <span className="text-xs font-medium bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full">{dashboardData.flatsData.length} New</span>
+              </div>
+              <div className="overflow-x-auto">
+                {dashboardData.flatsData.length > 0 ? (
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+                      <tr>
+                        <th className="px-6 py-3">Flat Details</th>
+                        <th className="px-6 py-3">Status</th>
+                        <th className="px-6 py-3">Date</th>
+                        <th className="px-6 py-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {dashboardData.flatsData.slice(0, 5).map((flat) => (
+                        <tr key={flat.id} className="hover:bg-neutral-50 transition-colors">
+                          <td className="px-6 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm font-bold border border-purple-100">
+                                {flat.flat_no}
+                              </div>
+                              <div>
+                                <p className="font-medium text-neutral-900 text-xs">Block {flat.block_id}</p>
+                                <p className="text-[11px] text-neutral-500">Floor {flat.floor_no}</p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                    ) : (
-                      <p className="text-gray-500 dark:text-gray-400 text-center py-4">No employees found</p>
-                    )}
-                  </div>
-                </div>
-              )}
+                          </td>
+                          <td className="px-6 py-3.5">
+                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${flat.status === 'Sold'
+                              ? 'bg-green-50 text-green-700 border border-green-100'
+                              : 'bg-orange-50 text-orange-700 border border-orange-100'
+                              }`}>
+                              {flat.status}
+                            </span>
+                          </td>
+                          <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
+                            {new Date(flat.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-3.5 text-right">
+                            <button onClick={() => openSingleFlat(flat.uuid)} className="p-1.5 text-neutral-400 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-all">
+                              <IconEye size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="py-8 text-center text-neutral-400 text-sm">No recent flats</div>
+                )}
+              </div>
             </div>
-            <div className='flex flex-col w-1/2 pl-4 gap-6 '>
-              {permissions?.main_page?.includes("flats_page") && (
-                <Flatschart />
-              )}
-              {permissions?.main_page?.includes("customers_page") && (
-                <Customerschart />
-              )}
-              {permissions?.main_page?.includes("payments_page") && (
-                <Paymentchart />
-              )}
+          )}
+
+          {/* Customers Table */}
+          {permissions?.main_page?.includes("customers_page") && (
+            <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+                <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                  <IconUsers className="text-teal-600" size={18} />
+                  Recent Customers
+                </h4>
+                <span className="text-xs font-medium bg-teal-50 text-teal-700 px-2.5 py-1 rounded-full">{dashboardData.customersData.length} New</span>
+              </div>
+              <div className="overflow-x-auto">
+                {dashboardData.customersData.length > 0 ? (
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+                      <tr>
+                        <th className="px-6 py-3">Customer</th>
+                        <th className="px-6 py-3">Contact</th>
+                        <th className="px-6 py-3">Date</th>
+                        <th className="px-6 py-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {dashboardData.customersData.slice(0, 5).map((customer) => (
+                        <tr key={customer.id} className="hover:bg-neutral-50 transition-colors">
+                          <td className="px-6 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-600 flex items-center justify-center text-xs font-bold">
+                                {customer.first_name?.[0]}{customer.last_name?.[0]}
+                              </div>
+                              <div>
+                                <p className="font-medium text-neutral-900">{customer.prefixes} {customer.first_name} {customer.last_name}</p>
+                                <p className="text-xs text-neutral-500">{customer.uuid}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-3.5">
+                            <div className="flex flex-col text-xs">
+                              <span className="text-neutral-900 mb-0.5">+{customer.phone_code} {customer.phone_number}</span>
+                              <a href={`mailto:${customer.email}`} className="text-neutral-500 hover:text-teal-600 truncate max-w-[120px]">{customer.email}</a>
+                            </div>
+                          </td>
+                          <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
+                            {new Date(customer.created_at).toLocaleDateString()}
+                          </td>
+                          <td className="px-6 py-3.5 text-right">
+                            <button onClick={() => openSingleCustomer(customer.uuid)} className="p-1.5 text-neutral-400 hover:text-teal-600 hover:bg-teal-50 rounded-md transition-all">
+                              <IconEye size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="py-8 text-center text-neutral-400 text-sm">No recent customers</div>
+                )}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* Payments Table */}
+          {permissions?.main_page?.includes("payments_page") && (
+            <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+              <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+                <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                  <IconCash className="text-green-600" size={18} />
+                  Recent Payments
+                </h4>
+                <span className="text-xs font-medium bg-green-50 text-green-700 px-2.5 py-1 rounded-full">{dashboardData.paymentsData.length} New</span>
+              </div>
+              <div className="overflow-x-auto">
+                {dashboardData.paymentsData.length > 0 ? (
+                  <table className="w-full text-left text-sm">
+                    <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+                      <tr>
+                        <th className="px-6 py-3">Customer</th>
+                        <th className="px-6 py-3">Details</th>
+                        <th className="px-6 py-3">Amount</th>
+                        <th className="px-6 py-3 text-right">Action</th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-neutral-100">
+                      {dashboardData.paymentsData.slice(0, 5).map((payment) => (
+                        <tr key={payment.id} className="hover:bg-neutral-50 transition-colors">
+                          <td className="px-6 py-3.5">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center text-xs font-bold">
+                                ₹
+                              </div>
+                              <div>
+                                <p className="font-medium text-neutral-900">{payment.customer_prefixes} {payment.customer_name}</p>
+                                <p className="text-xs text-neutral-500">{payment.uuid}</p>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-3.5 text-xs">
+                            <p className="font-medium text-neutral-700">Flat {payment.flat_no}</p>
+                            <p className="text-neutral-500">{payment.block_name}</p>
+                          </td>
+                          <td className="px-6 py-3.5 text-sm font-semibold text-neutral-900">
+                            ₹{payment.amount?.toLocaleString()}
+                          </td>
+                          <td className="px-6 py-3.5 text-right">
+                            <button onClick={() => openSingleFlatView(payment.uuid)} className="p-1.5 text-neutral-400 hover:text-green-600 hover:bg-green-50 rounded-md transition-all">
+                              <IconEye size={16} />
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="py-8 text-center text-neutral-400 text-sm">No recent payments</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       </div>
+
+
 
       <Modal
         open={projectModel}
