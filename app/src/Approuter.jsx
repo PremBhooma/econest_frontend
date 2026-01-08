@@ -30,9 +30,15 @@ import Backup from './pages/backup/Backup'
 import { useEmployeeDetails } from './components/zustand/useEmployeeDetails'
 import Convertleadtocustomer from './pages/leads/Convertleadtocustomer'
 
+import MainLayout from './components/layout/MainLayout'
+
 const ProtectedRoute = ({ element }) => {
   const isLogged = useEmployeeDetails(state => state?.isLogged);
-  return isLogged ? element : <Navigate to="/" replace />;
+  return isLogged ? (
+    <MainLayout>
+      {element}
+    </MainLayout>
+  ) : <Navigate to="/" replace />;
 }
 
 const PublicRoute = ({ element }) => {

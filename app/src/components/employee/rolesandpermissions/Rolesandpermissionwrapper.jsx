@@ -167,53 +167,53 @@ function Rolesandpermissionwrapper() {
             Roles & Permissions
           </p>
         </div>
-        <div className="flex gap-4">
-          <div className="basis-[25%] w-full bg-white  p-4 rounded-md">
+        <div className="flex flex-col lg:flex-row gap-6 items-start">
+          <div className="w-full lg:w-[300px] flex-none">
             <Addnewform reloadGetroledata={reloadGetroledata} />
           </div>
-          <div className="basis-[75%] bg-white p-4 flex flex-col gap-4 w-full border border-[#ebecef] rounded-md">
-            <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md">
+          <div className="flex-1 w-full bg-white p-5 border border-neutral-200 shadow-sm rounded-xl overflow-hidden">
+            <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
               <table className="w-full table-fixed text-left border-collapse">
-                <thead className="border-b-[0.6px] border-b-[#ebecef]">
+                <thead className="bg-gray-50 border-b border-neutral-200">
                   <tr className="w-full">
-                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky left-0 z-20 bg-white rounded-md border-r border-[#ebecef]">
+                    <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
                       SL#
                     </th>
-                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[180px]">
+                    <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
                       Name
                     </th>
-                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Permissions
                     </th>
-                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Default
                     </th>
-                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] sticky right-[120px] z-10 w-[120px] bg-white border-l border-[#ebecef]">
+                    <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] sticky right-[120px] z-10 w-[120px] bg-gray-50 border-l border-neutral-200">
                       Status
                     </th>
-                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white rounded-md border-l border-[#ebecef]">
+                    <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 rounded-tr-lg border-l border-neutral-200">
                       Actions
                     </th>
                   </tr>
                 </thead>
-                <tbody>
+                <tbody className="divide-y divide-neutral-200">
                   {isLoading === false ? (
                     roledata?.length > 0 ? (
                       roledata?.map((roledata, index) => (
-                        <tr key={index} className="border-b-[0.6px] border-b-[#ebecef] align-top">
-                          <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky left-0 z-10 bg-white border-r border-[#ebecef]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                        <tr key={index} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
+                            <p className="text-neutral-600 text-sm font-medium">
                               {index + 1}
                             </p>
                           </td>
                           <td className="px-4 py-3 whitespace-normal break-words w-[180px]">
-                            <p className=" text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-900 text-sm font-semibold">
                               {roledata.role_name}
                             </p>
                           </td>
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
                             <button
-                              className="cursor-pointer px-2 py-1 bg-[#0083bf] text-white rounded-md text-[11px]"
+                              className="cursor-pointer px-3 py-1.5 bg-white border border-[#0083bf] text-[#0083bf] hover:bg-[#0083bf] hover:text-white transition-colors rounded-md text-xs font-medium"
                               onClick={() =>
                                 openPermisissionsModal(roledata.role_id)
                               }
@@ -223,110 +223,54 @@ function Rolesandpermissionwrapper() {
                           </td>
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
                             {roledata.default_role === "Yes" ? (
-                              <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-white bg-[#0083bf] rounded-full">
-                                <span className="w-2 h-2 bg-white rounded-full mr-1.5"></span>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
                                 Yes
                               </span>
                             ) : (
-                              <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-200 rounded-full">
-                                <span className="w-2 h-2 bg-gray-400 rounded-full mr-1.5"></span>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
                                 No
                               </span>
                             )}
                           </td>
-                          <td className="px-4 py-3 whitespace-normal break-words sticky right-[120px] z-10 w-[120px] bg-white border-l border-[#ebecef]">
+                          <td className="px-4 py-3 whitespace-normal break-words sticky right-[120px] z-10 w-[120px] bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
                             {roledata.status === "Inactive" ? (
-                              <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#fdecec] w-fit">
-                                <svg
-                                  width={9}
-                                  height={8}
-                                  viewBox="0 0 9 8"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                  preserveAspectRatio="xMidYMid meet"
-                                >
-                                  <circle
-                                    cx="4.42871"
-                                    cy={4}
-                                    r={3}
-                                    fill="#EC0606"
-                                  />
-                                </svg>
-                                <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#ec0606]">
-                                  Inactive
-                                </p>
-                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Inactive
+                              </span>
                             ) : roledata.status === "Active" ? (
-                              <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#ecfdf3] w-fit">
-                                <svg
-                                  width={9}
-                                  height={8}
-                                  viewBox="0 0 9 8"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                  preserveAspectRatio="xMidYMid meet"
-                                >
-                                  <circle
-                                    cx="4.42871"
-                                    cy={4}
-                                    r={3}
-                                    fill="#14BA6D"
-                                  />
-                                </svg>
-                                <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#037847]">
-                                  Active
-                                </p>
-                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                              </span>
                             ) : (
                               roledata.status === "Suspended" && (
-                                <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#D6D6D6] w-fit">
-                                  <svg
-                                    width={9}
-                                    height={8}
-                                    viewBox="0 0 9 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                    preserveAspectRatio="xMidYMid meet"
-                                  >
-                                    <circle
-                                      cx="4.42871"
-                                      cy={4}
-                                      r={3}
-                                      fill="#434343"
-                                    />
-                                  </svg>
-                                  <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#434343]">
-                                    Suspended
-                                  </p>
-                                </div>
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                  Suspended
+                                </span>
                               )
                             )}
                           </td>
                           {roledata.role_name !== "Super Admin" && (
-                            <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
-                              <div className="flex flex-row items-center gap-1">
-                                <div
+                            <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-20 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                              <div className="flex flex-row items-center justify-center gap-3">
+                                <button
                                   onClick={() =>
                                     openEditRoleEditModel(
                                       roledata.role_id,
                                       roledata
                                     )
                                   }
-                                  className="cursor-pointer"
+                                  className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
                                 >
-                                  <IconEdit size={20} color="#4b5563" />
-                                </div>
-                                <div
+                                  <IconEdit size={18} />
+                                </button>
+                                <button
                                   onClick={() =>
                                     openRoleDeleteModal(roledata.role_id)
                                   }
-                                  className="cursor-pointer"
+                                  className="p-1 hover:bg-red-50 rounded-md transition-colors text-neutral-500 hover:text-red-600"
                                 >
-                                  <IconTrash color="red" size={20} strokeWidth={1.5} />
-                                </div>
+                                  <IconTrash size={18} />
+                                </button>
                               </div>
                             </td>
                           )}
@@ -334,19 +278,20 @@ function Rolesandpermissionwrapper() {
                       ))
                     ) : (
                       <tr>
-                        <td colSpan={6} className="text-center py-4">
-                          <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                            No data found
+                        <td colSpan={6} className="text-center py-8">
+                          <p className="text-neutral-500 text-sm">
+                            No roles found
                           </p>
                         </td>
                       </tr>
                     )
                   ) : (
                     <tr>
-                      <td colSpan={6} className="text-center py-4">
-                        <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                          Loading...
-                        </p>
+                      <td colSpan={6} className="text-center py-8">
+                        <div className="flex items-center justify-center gap-2">
+                          <div className="w-4 h-4 border-2 border-[#0083bf] border-t-transparent rounded-full animate-spin"></div>
+                          <p className="text-neutral-500 text-sm">Loading roles...</p>
+                        </div>
                       </td>
                     </tr>
                   )}
@@ -354,7 +299,7 @@ function Rolesandpermissionwrapper() {
               </table>
             </div>
             {roledata?.length > 0 && (
-              <div className="flex flex-row-reverse">
+              <div className="flex flex-row-reverse border-t border-neutral-100 pt-4">
                 <Pagination
                   totalpages={totalPages}
                   value={page}

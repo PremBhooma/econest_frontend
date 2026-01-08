@@ -49,63 +49,44 @@ function Settingswrapper() {
 
     return (
         <>
-            <div className='flex md:flex-row flex-col justify-between'>
+            <div className='flex flex-col gap-4'>
                 <div className="text-[24px] font-semibold">
                     Settings
                 </div>
 
 
-                <div className="flex justify-start items-center gap-1">
-                    {permissions?.settings_page?.includes("company_info_tab") && (
-                        <div onClick={() => tabChange('company_info')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'company_info' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <Building2 className="!w-4 !h-4" />
-                            <p>Company Info</p>
-                        </div>
-                    )}
-                    {permissions?.settings_page?.includes("project_tab") && (
-                        <div onClick={() => tabChange('project')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'project' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <SquareChartGantt className="!w-4 !h-4" />
-                            <p>Project</p>
-                        </div>
-                    )}
-                    {permissions?.settings_page?.includes("blocks_tab") && (
-                        <div onClick={() => tabChange('blocks')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'blocks' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <BlocksIcon className="!w-4 !h-4" />
-                            <p>Blocks</p>
-                        </div>
-                    )}
-                    {permissions?.settings_page?.includes("amenities_tab") && (
-                        <div onClick={() => tabChange('amenities')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'amenities' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <NotepadText className="!w-4 !h-4" />
-                            <p>Amenities Prices</p>
-                        </div>
-                    )}
-                    {permissions?.settings_page?.includes("group_owner_tab") && (
-                        <div onClick={() => tabChange('group_owner')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'group_owner' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <GroupIcon className="!w-4 !h-4" />
-                            <p>Group/Owner</p>
-                        </div>
-                    )}
-                    {permissions?.settings_page?.includes("global_tab") && (
-                        <div onClick={() => tabChange('bulk_uploads_tab')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'bulk_uploads_tab' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <IconDatabase className="!w-4 !h-4" />
-                            <p>Global Upload</p>
-                        </div>
-                    )}
-                    {permissions?.settings_page?.includes("backup_tab") && (
-                        <div onClick={() => tabChange('backup')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'backup' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                            <IconRestore className="!w-4 !h-4" />
-                            <p>Backup</p>
-                        </div>
-                    )}
-                    <div onClick={() => tabChange('lead_stages')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'lead_stages' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                        <IconChartFunnel className="!w-4 !h-4" />
-                        <p>Lead stages</p>
-                    </div>
-                    <div onClick={() => tabChange('templates')} className={`flex items-center gap-2 cursor-pointer font-semibold text-sm px-3 py-1.5 rounded-sm transition-colors duration-200 ${activeTaskTab === 'templates' ? 'text-[#0083bf] bg-[#dbeafe] hover:text-white hover:bg-[#0083bf]/90' : 'text-[#2b2b2b] hover:bg-[#0083bf]/10'}`}>
-                        <IconTemplate className="!w-4 !h-4" />
-                        <p>Templates</p>
-                    </div>
+                <div className="flex justify-start items-center gap-2 overflow-x-auto pb-2 border-b border-neutral-200 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
+                    {[
+                        { id: 'company_info', label: 'Company Info', icon: Building2, permission: 'company_info_tab' },
+                        { id: 'project', label: 'Project', icon: SquareChartGantt, permission: 'project_tab' },
+                        { id: 'blocks', label: 'Blocks', icon: BlocksIcon, permission: 'blocks_tab' },
+                        { id: 'amenities', label: 'Amenities Prices', icon: NotepadText, permission: 'amenities_tab' },
+                        { id: 'group_owner', label: 'Group/Owner', icon: GroupIcon, permission: 'group_owner_tab' },
+                        { id: 'bulk_uploads_tab', label: 'Global Upload', icon: IconDatabase, permission: 'global_tab' },
+                        { id: 'backup', label: 'Backup', icon: IconRestore, permission: 'backup_tab' },
+                        { id: 'lead_stages', label: 'Lead Stages', icon: IconChartFunnel, permission: null }, // Assuming no specific permission or always visible
+                        { id: 'templates', label: 'Templates', icon: IconTemplate, permission: null }
+                    ].map((tab) => {
+                        // Check permission if it exists
+                        if (tab.permission && !permissions?.settings_page?.includes(tab.permission)) return null;
+
+                        const Icon = tab.icon;
+                        const isActive = activeTaskTab === tab.id;
+                        return (
+                            <button
+                                key={tab.id}
+                                onClick={() => tabChange(tab.id)}
+                                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 whitespace-nowrap border-b-2
+                                    ${isActive
+                                        ? 'border-[#0083bf] text-[#0083bf]'
+                                        : 'border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 rounded-t-lg'
+                                    }`}
+                            >
+                                <Icon size={18} stroke={1.5} />
+                                <span>{tab.label}</span>
+                            </button>
+                        );
+                    })}
                 </div>
             </div>
             <div className="mt-3 full">
@@ -160,12 +141,12 @@ function Settingswrapper() {
                 }
                 {activeTaskTab === 'lead_stages' &&
                     <>
-                            <Leadstageswrapper />
+                        <Leadstageswrapper />
                     </>
                 }
                 {activeTaskTab === 'templates' &&
                     <>
-                            <Templates/>
+                        <Templates />
                     </>
                 }
             </div>

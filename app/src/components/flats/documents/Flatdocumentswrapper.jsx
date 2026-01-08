@@ -16,7 +16,7 @@ function Flatdocumentswrapper() {
   const flat_uid = params.uuid;
   const permissions = useEmployeeDetails(state => state.permissions);
 
-  const [isLoadingEffect, setIsLoadingEffect] = useState(false)
+  const [isLoadingEffect, setIsLoadingEffect] = useState(true)
   const [errorMessage, setErrorMessage] = useState('')
   const [fileStructure, setFileStructure] = useState([]);
   const [folderPath, SetFolderPath] = useState('filemanager');

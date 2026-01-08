@@ -673,73 +673,73 @@ function Flatswrapper() {
               </div>
             </div>
           </div>
-          <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md">
+          <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg z-0">
             <table className="w-full table-fixed text-left border-collapse">
-              <thead className="border-b-[0.6px] border-b-[#ebecef] bg-white">
+              <thead className="bg-gray-50 border-b border-neutral-200">
                 <tr className="w-full">
                   {visibleColumns.reference && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px]  w-[140px] sticky left-0 z-20 bg-white border-r border-[#ebecef]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
                       Ref ID
                     </th>
                   )}
                   {visibleColumns.customer && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[220px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
                       Customer
                     </th>
                   )}
                   {/* {visibleColumns.groupowner && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[220px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
                       Group/Owner
                     </th>
                   )} */}
                   {visibleColumns.mortgage && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Mortgage
                     </th>
                   )}
                   {visibleColumns.project && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[200px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[200px]">
                       Project
                     </th>
                   )}
                   {visibleColumns.flatNo && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Flat No
                     </th>
                   )}
                   {visibleColumns.block && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Block
                     </th>
                   )}
                   {visibleColumns.floorNo && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Floor No
                     </th>
                   )}
                   {visibleColumns.area && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Area (Sq.ft)
                     </th>
                   )}
                   {visibleColumns.type && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Type
                     </th>
                   )}
                   {visibleColumns.facing && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Facing
                     </th>
                   )}
                   {visibleColumns.status && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] sticky right-[120px] z-10 w-[120px] bg-white border-l border-[#ebecef]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] sticky right-[120px] z-10 w-[120px] bg-gray-50 border-l border-neutral-200">
                       Status
                     </th>
                   )}
 
                   {/* LAST (STICKY RIGHT) */}
-                  <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
+                  <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
                     Actions
                   </th>
                 </tr>
@@ -768,19 +768,19 @@ function Flatswrapper() {
                   flats.map((flat, index) => (
                     <tr
                       key={flat?.uuid}
-                      className="border-b-[0.6px] border-b-[#ebecef] align-top bg-white"
+                      className="border-b border-neutral-200 hover:bg-neutral-50 transition-colors duration-150 align-top group"
                     >
                       {visibleColumns.reference && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-0 z-10 bg-white border-r border-[#ebecef]">
+                        <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
                           {permissions?.flats_page?.includes("view_flat") ? (
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               <NavLink to={`/flats/view-flat/${flat?.uuid}`}>
                                 {flat?.uuid}
                               </NavLink>
                             </p>
                           )
                             :
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {flat?.uuid}
                             </p>
                           }
@@ -789,24 +789,24 @@ function Flatswrapper() {
                       {visibleColumns.customer && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[220px] relative">
                           {flat?.customer ? (
-                            <div className="group relative w-full">
+                            <div className="group/customer relative w-full">
 
 
                               {pageFlatsCount < 5 ? (
                                 flat?.customer && flat?.customer !== "N/A" ? (
                                   <Link
                                     to={`/customers/${flat?.customer_details?.uuid}`}
-                                    className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal cursor-pointer hover:underline"
+                                    className="text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal cursor-pointer hover:text-[#0083bf] hover:underline"
                                   >
                                     {flat?.customer}
                                   </Link>
                                 ) : (
-                                  <p className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal">
+                                  <p className="text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal">
                                     {flat?.customer}
                                   </p>
                                 )
                               ) : (
-                                <p className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal">
+                                <p className="text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal">
                                   {flat?.customer}
                                 </p>
                               )}
@@ -815,8 +815,8 @@ function Flatswrapper() {
                                 flat?.customer !== "N/A" &&
                                 flat?.customer_details && (
                                   <div
-                                    className="absolute z-[9999] invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 delay-200
-                   flex flex-col gap-2 bg-white shadow-lg border border-[#ebecef] p-4 rounded-xl w-60 max-w-xs break-words"
+                                    className="absolute z-[9999] invisible opacity-0 group-hover/customer:visible group-hover/customer:opacity-100 transition-all duration-200 delay-200
+                   flex flex-col gap-2 bg-white shadow-lg border border-neutral-200 p-4 rounded-xl w-60 max-w-xs break-words"
                                     style={{
                                       top:
                                         index < 3 ? "calc(100% + 5px)" : "auto",
@@ -839,7 +839,7 @@ function Flatswrapper() {
                                         className="w-12 h-12 rounded-full object-cover border border-gray-300"
                                       />
                                       <div className="flex flex-col break-words w-full">
-                                        <p className="text-sm font-semibold text-gray-500 capitalize">
+                                        <p className="text-sm font-semibold text-gray-700 capitalize">
                                           {`${flat?.customer_details?.prefixes || ""} ${flat?.customer_details?.first_name}`}
                                         </p>
                                         <p className="text-xs text-gray-500">
@@ -855,7 +855,7 @@ function Flatswrapper() {
                                     <div className="w-full">
                                       <Link
                                         to={`/customers/${flat?.customer_details?.uuid}`}
-                                        className="cursor-pointer text-xs text-gray-500 hover:text-white flex justify-center items-center relative px-4 py-1 rounded border border-[#0083bf] hover:bg-[#0083bf]"
+                                        className="cursor-pointer text-xs text-gray-600 hover:text-white flex justify-center items-center relative px-4 py-1.5 rounded border border-[#0083bf] hover:bg-[#0083bf] transition-colors"
                                       >
                                         View Customer
                                       </Link>
@@ -864,7 +864,7 @@ function Flatswrapper() {
                                 )}
                             </div>
                           ) : (
-                            <p className="text-[#2B2B2B]/40 text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-400 text-xs font-normal leading-[18px]">
                               ---
                             </p>
                           )}
@@ -872,29 +872,29 @@ function Flatswrapper() {
                       )}
                       {/* {visibleColumns.groupowner && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[220px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {flat?.group_owner?.name ? flat?.group_owner?.name : "---"}
                           </p>
                         </td>
                       )} */}
                       {visibleColumns.mortgage && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {flat?.mortgage === true ? "Yes" : "No"}
                           </p>
                         </td>
                       )}
                       {visibleColumns.project && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal">
                             {flat?.project_name || "-"}
                           </p>
                         </td>
                       )}
                       {visibleColumns.flatNo && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
-                            <NavLink to={`/flats/view-flat/${flat?.uuid}`}>
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                            <NavLink to={`/flats/view-flat/${flat?.uuid}`} className="hover:text-[#0083bf] hover:underline">
                               {flat?.flat_no || "---"}
                             </NavLink>
                           </p>
@@ -902,80 +902,76 @@ function Flatswrapper() {
                       )}
                       {visibleColumns.block && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {flat?.block?.block_name || "---"}
                           </p>
                         </td>
                       )}
                       {visibleColumns.floorNo && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {flat?.floor_no || "---"}
                           </p>
                         </td>
                       )}
                       {visibleColumns.area && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {flat?.square_feet ? `${flat?.square_feet} Sq.ft` : "---"}
                           </p>
                         </td>
                       )}
                       {visibleColumns.type && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {typeToLabelMap[flat?.type] || '---'}
                           </p>
                         </td>
                       )}
                       {visibleColumns.facing && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                          <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                             {flat?.facing || '---'}
                           </p>
                         </td>
                       )}
                       {visibleColumns.status && (
-                        <td className="px-4 py-3 whitespace-normal break-words sticky right-[120px] z-10 w-[120px] bg-white border-l border-[#ebecef]">
-                          <p
+                        <td className="px-4 py-3 whitespace-normal break-words sticky right-[120px] z-10 w-[120px] bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                          <span
                             className={`${flat?.status === "Sold"
-                              ? "text-green-500 bg-green-100"
-                              : "text-red-500 bg-red-100"
-                              } rounded-sm text-center p-0.5 text-[13px] font-normal leading-[18px]`}
+                              ? "text-green-800 bg-green-100"
+                              : "text-red-800 bg-red-100"
+                              } inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium`}
                           >
                             {flat?.status}
-                          </p>
+                          </span>
                         </td>
                       )}
                       {/* LAST (STICKY RIGHT) */}
-                      <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white border-l border-[#ebecef]">
-                        <div className="flex flex-row gap-1">
+                      <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                        <div className="flex flex-row gap-2 justify-center">
                           {permissions?.flats_page?.includes("view_flat") && (
                             <div
                               onClick={() => openSingleFlatView(flat.uuid)}
-                              className="cursor-pointer"
+                              className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer"
                             >
-                              <IconEye size={20} color="#4b5563" />
+                              <IconEye size={18} />
                             </div>
                           )}
                           {permissions?.flats_page?.includes("edit_flat") && (
                             <div
                               onClick={() => openEditPage(flat.uuid)}
-                              className="cursor-pointer"
+                              className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer"
                             >
-                              <IconEdit size={20} color="#4b5563" />
+                              <IconEdit size={18} />
                             </div>
                           )}
                           {permissions?.flats_page?.includes("delete_flat") && (
                             <div
                               onClick={() => openDeleteModal(flat.uuid)}
-                              className="cursor-pointer"
+                              className="p-1 hover:bg-red-50 rounded-md transition-colors text-neutral-500 hover:text-red-600 cursor-pointer"
                             >
-                              <IconTrash
-                                color="red"
-                                size={20}
-                                strokeWidth={1.5}
-                              />
+                              <IconTrash size={18} />
                             </div>
                           )}
                         </div>

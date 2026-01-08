@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
-import { IconEye } from '@tabler/icons-react';
+import { IconEye, IconSearch } from '@tabler/icons-react';
 import { Pagination, Select } from '@nayeshdaggula/tailify';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -86,7 +86,7 @@ function Searchresults() {
     return () => document.removeEventListener('click', handleClickOutside);
   }, []);
 
-  async function fetchSearchResults(section,  newSearchQuery) {
+  async function fetchSearchResults(section, newSearchQuery) {
     setIsLoading(true);
     try {
       const response = await Dashboardapi.get('search', {
@@ -146,17 +146,17 @@ function Searchresults() {
   useEffect(() => {
     if (!searchQuery) {
       setSections({
-        employees: { data: [],   totalPages: 0, visibleColumns: sections.employees.visibleColumns, showColumnToggle: false },
-        customers: { data: [],   totalPages: 0, visibleColumns: sections.customers.visibleColumns, showColumnToggle: false },
-        flats: { data: [],   totalPages: 0, visibleColumns: sections.flats.visibleColumns, showColumnToggle: false },
-        payments: { data: [],   totalPages: 0, visibleColumns: sections.payments.visibleColumns, showColumnToggle: false },
+        employees: { data: [], totalPages: 0, visibleColumns: sections.employees.visibleColumns, showColumnToggle: false },
+        customers: { data: [], totalPages: 0, visibleColumns: sections.customers.visibleColumns, showColumnToggle: false },
+        flats: { data: [], totalPages: 0, visibleColumns: sections.flats.visibleColumns, showColumnToggle: false },
+        payments: { data: [], totalPages: 0, visibleColumns: sections.payments.visibleColumns, showColumnToggle: false },
       });
       setIsLoading(false);
       setErrorMessage('');
       return;
     }
     Object.keys(sections).forEach((section) => {
-      fetchSearchResults(section,  searchQuery);
+      fetchSearchResults(section, searchQuery);
     });
   }, [searchQuery]);
 
@@ -417,29 +417,44 @@ function Searchresults() {
   );
 
   return (
-    <>
-      <div
-        className={`mx-[160px] bg-[#FFFFF0] rounded-lg shadow-lg  transition-all duration-200 mt-8 `}
-        ref={searchRef}
-      >
-        <input
-          type="text"
-          placeholder="Search..."
-          className=" w-full px-4 py-2 text-sm  focus:outline-none focus:ring-2 focus:ring-blue-600 rounded-lg"
-          value={searchQuery}
-          onChange={handleSearchChange}
-        />
+    <div className="w-full max-w-7xl mx-auto">
+      {/* Search Input Section */}
+      <div className="flex flex-col items-center justify-center py-8">
+        <div className="relative w-full max-w-2xl">
+          <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+            <IconSearch className="text-neutral-400" size={24} />
+          </div>
+          <input
+            type="text"
+            ref={searchRef}
+            placeholder="Search employees, customers, flats..."
+            className="w-full pl-12 pr-4 py-3 bg-white border border-neutral-200 rounded-full shadow-sm text-neutral-900 placeholder-neutral-400 focus:outline-none focus:ring-2 focus:ring-[#0083bf]/20 focus:border-[#0083bf] transition-all"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            autoFocus
+          />
+        </div>
       </div>
-      <div className="mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col gap-6">
+
+      {/* Results Section */}
+      <div className="flex flex-col gap-6">
         {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
 
-        {renderSection('employees', 'Employees', sections.employees.visibleColumns)}
-        {renderSection('customers', 'Customers', sections.customers.visibleColumns)}
-        {renderSection('flats', 'Flats', sections.flats.visibleColumns)}
-        {renderSection('payments', 'Payments', sections.payments.visibleColumns)}
+        {!searchQuery ? (
+          <div className="flex flex-col items-center justify-center py-20 text-neutral-400">
+            <IconSearch size={48} className="mb-4 opacity-50" />
+            <p className="text-lg font-medium">Start typing to search...</p>
+          </div>
+        ) : (
+          <>
+            {renderSection('employees', 'Employees', sections.employees.visibleColumns)}
+            {renderSection('customers', 'Customers', sections.customers.visibleColumns)}
+            {renderSection('flats', 'Flats', sections.flats.visibleColumns)}
+            {renderSection('payments', 'Payments', sections.payments.visibleColumns)}
+          </>
+        )}
       </div>
-    </>
-
+    </div>
   );
 }
 

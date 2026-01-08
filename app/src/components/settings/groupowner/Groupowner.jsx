@@ -176,59 +176,62 @@ const Groupowner = () => {
                             : "basis-[100%]"
                             } bg-white p-4 flex flex-col gap-4 w-full border border-[#ebecef] rounded-md`}
                     >
-                        <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md">
+                        <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
                             <table className="w-full table-fixed text-left border-collapse">
-                                <thead className="border-b-[0.6px] border-b-[#ebecef]">
+                                <thead className="bg-gray-50 border-b border-neutral-200">
                                     <tr className="w-full">
-                                        <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky left-0 z-20 bg-white rounded-md border-r border-[#ebecef]">
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
                                             Ref Id
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[180px]">
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
                                             Name
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[180px]">
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
                                             Default
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white rounded-md border-l border-[#ebecef]">
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
                                             Actions
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="divide-y divide-neutral-200">
                                     {isLoading === false ? (
                                         groupOwnerData?.length > 0 ? (
                                             groupOwnerData?.map((ele, index) => (
-                                                <tr key={index} className="border-b-[0.6px] border-b-[#ebecef] align-top">
-                                                    <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky left-0 z-10 bg-white border-r border-[#ebecef]">
-                                                        <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                                                <tr key={index} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
+                                                    <td className="px-4 py-4 whitespace-normal break-words w-[120px] sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                                                             {ele.uuid}
                                                         </p>
                                                     </td>
-                                                    <td className="px-4 py-3 whitespace-normal break-words w-[180px]">
-                                                        <p className=" text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                                                    <td className="px-4 py-4 whitespace-normal break-words w-[180px]">
+                                                        <p className=" text-neutral-600 text-xs font-medium leading-[18px]">
                                                             {ele.name}
                                                         </p>
                                                     </td>
 
 
-                                                    <td className="px-4 py-3 whitespace-normal break-words w-[180px]">
+                                                    <td className="px-4 py-4 whitespace-normal break-words w-[180px]">
                                                         {ele.isDefault === true ? (
                                                             <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-white bg-[#0083bf] rounded-full">
                                                                 <span className="w-2 h-2 bg-white rounded-full mr-1.5"></span>
                                                                 Yes
                                                             </span>
                                                         ) : (
-                                                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-gray-700 bg-gray-200 rounded-full">
-                                                                <span className="w-2 h-2 bg-gray-400 rounded-full mr-1.5"></span>
+                                                            <span className="inline-flex items-center px-2 py-0.5 text-xs font-medium text-neutral-700 bg-neutral-200 rounded-full">
+                                                                <span className="w-2 h-2 bg-neutral-400 rounded-full mr-1.5"></span>
                                                                 No
                                                             </span>
                                                         )}
                                                     </td>
-                                                    <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
-                                                        <div className="flex items-center gap-3">
+                                                    <td className="px-4 py-4 text-center whitespace-normal break-words w-[120px] sticky right-0 z-20 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                                                        <div className="flex items-center justify-center gap-3">
                                                             {permissions?.settings_page?.includes("edit_group_owner") && (
-                                                                <div className="cursor-pointer">
-                                                                    <IconEdit size={20} className='' onClick={() => openUpdateGroupOwnerModal(ele)} />
+                                                                <div
+                                                                    onClick={() => openUpdateGroupOwnerModal(ele)}
+                                                                    className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer"
+                                                                >
+                                                                    <IconEdit size={18} />
                                                                 </div>
                                                             )}
 
@@ -243,8 +246,8 @@ const Groupowner = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={3} className="text-center py-4">
-                                                    <p className="text-[#4A4D53CC] text-[14px] font-[400]">No data found</p>
+                                                <td colSpan={3} className="text-center py-8">
+                                                    <p className="text-neutral-500 text-sm">No data found</p>
                                                 </td>
                                             </tr>
                                         )

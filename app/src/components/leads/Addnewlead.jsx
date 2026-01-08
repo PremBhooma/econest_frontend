@@ -801,59 +801,58 @@ const Addnewlead = () => {
   };
 
   return (
-    <>
-      <div className="w-[98%] m-auto flex flex-col gap-4">
-        <div className="flex justify-between items-center">
-          <h1 className="text-[20px] font-semibold">Add Lead</h1>
-          <Link to={"/leads"} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
-            <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
-            Back
-          </Link>
-        </div>
-        <div className=" flex flex-col gap-3 w-full bg-white rounded-lg shadow-sm border border-[#ebecef] p-8">
-          <div className="flex flex-col gap-4">
-            <div className="grid grid-cols-3 gap-4">
-              <Select
-                label="Prefix"
-                data={[
-                  { value: "Mr", label: "Mr" },
-                  { value: "Mrs", label: "Mrs" },
-                  { value: "Miss", label: "Miss" },
-                  { value: "Mx", label: "Mx" },
-                ]}
-                withAsterisk
-                searchable
-                error={prefixError}
-                value={prefixes}
-                onChange={updatePrefix}
-                labelClass="font-medium font-sans text-[#000] text-sm"
-                inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
-                selectWrapperClass="!shadow-none"
-              />
+    <div className="flex flex-col gap-4">
+      <div className="flex justify-between items-center">
+        <h1 className="text-[20px] font-semibold">Add Lead</h1>
+        <Link to={"/leads"} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
+          <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
+          Back
+        </Link>
+      </div>
+      <div className=" flex flex-col gap-3 w-full bg-white rounded-lg shadow-sm border border-[#ebecef] p-8">
+        <div className="flex flex-col gap-4">
+          <div className="grid grid-cols-3 gap-4">
+            <Select
+              label="Prefix"
+              data={[
+                { value: "Mr", label: "Mr" },
+                { value: "Mrs", label: "Mrs" },
+                { value: "Miss", label: "Miss" },
+                { value: "Mx", label: "Mx" },
+              ]}
+              withAsterisk
+              searchable
+              error={prefixError}
+              value={prefixes}
+              onChange={updatePrefix}
+              labelClass="font-medium font-sans text-[#000] text-sm"
+              inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
+              dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
+              selectWrapperClass="!shadow-none"
+            />
 
-              <Textinput
-                placeholder="Enter Full Name"
-                label="Full Name"
-                withAsterisk
-                value={fullName}
-                error={fullNameError}
-                onChange={updateFullName}
-                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-              />
+            <Textinput
+              placeholder="Enter Full Name"
+              label="Full Name"
+              withAsterisk
+              value={fullName}
+              error={fullNameError}
+              onChange={updateFullName}
+              labelClassName="text-sm font-medium text-gray-600 mb-1"
+              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+            />
 
-              <Textinput
-                placeholder="Enter Email Address"
-                label="Email Address"
-                withAsterisk
-                value={email}
-                error={emailError}
-                onChange={updateEmail}
-                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-              />
-              {/* 
+            <Textinput
+              placeholder="Enter Email Address"
+              label="Email Address"
+              withAsterisk
+              value={email}
+              error={emailError}
+              onChange={updateEmail}
+              labelClassName="text-sm font-medium text-gray-600 mb-1"
+              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+            />
+            {/* 
               <Textinput
                 placeholder="Enter Alternate Email Address"
                 label="Alternate Email Address"
@@ -865,150 +864,150 @@ const Addnewlead = () => {
               />
                */}
 
-              <div className="w-full">
-                <label className="block text-sm font-medium text-gray-600 mb-1">
-                  Phone Number <span className="text-red-500">*</span>
-                </label>
-                <div className="flex flex-row gap-x-4 w-full">
-                  <div className="w-20">
-                    <Select
-                      data={countryCodes}
-                      placeholder="Code"
-                      searchable
-                      value={phoneCode}
-                      // error={phoneCodeError}
-                      onChange={updatePhoneCode}
-                      selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-                      className="w-full"
-                      dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-                    />
-                  </div>
-                  <div className="flex-1">
-                    <Textinput
-                      placeholder="Enter Phone Number"
-                      type="text"
-                      value={phoneNumber}
-                      // error={phoneNumberError}
-                      onChange={updatePhoneNumber}
-                      inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                    />
-                  </div>
-                </div>
-                {phoneCodeError !== "" && (
-                  <p className="mt-1 text-xs text-red-600 font-medium">
-                    {phoneCodeError}
-                  </p>
-                )}
-                {phoneNumberError !== "" && (
-                  <p className="mt-1 text-xs text-red-600 font-medium">
-                    {phoneNumberError}
-                  </p>
-                )}
-              </div>
-
-              <Select
-                data={employeeData}
-                placeholder="Employee"
-                label="Assign to Employee"
-                searchable
-                value={employee}
-                error={employeeError}
-                onChange={updateEmployee}
-                selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-                className="w-full"
-                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-              />
-
-              <Select
-                label="Sourse of lead"
-                data={[
-                  { value: "Instagram", label: "Instagram" },
-                  { value: "Facebook", label: "Facebook" },
-                  { value: "Referral", label: "Referral" },
-                  { value: "Friend", label: "Friend" },
-                  { value: "Others", label: "Others" },
-
-                ]}
-                searchable
-                withAsterisk
-                error={sourseOfLeadError}
-                value={sourseOfLead}
-                onChange={updateSourseOfLead}
-                labelClass="font-medium font-sans text-[#000] text-sm"
-                inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
-                selectWrapperClass="!shadow-none"
-              />
-
-              <Select
-                label="Country"
-                placeholder="Select Country"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="bg-white"
-                searchable={true}
-                data={[{ label: "India", value: "101" }]}
-                // data={countryNames}
-                value={correspondenceCountry}
-                onChange={updateCorrespondenceCountry}
-                error={correspondenceCountryError}
-              />
-
-              {
-                correspondenceCountry && (
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-600 mb-1">
+                Phone Number <span className="text-red-500">*</span>
+              </label>
+              <div className="flex flex-row gap-x-4 w-full">
+                <div className="w-20">
                   <Select
-                    label="State"
-                    placeholder="Select State"
-                    labelClass="text-sm font-medium text-gray-600 mb-1"
-                    dropDownClass="overflow-y-hidden"
-                    selectWrapperClass="bg-white"
-                    searchable={true}
-                    data={stateData}
-                    value={correspondenceState}
-                    onChange={updateCorrespondenceState}
-                    error={correspondenceStateError}
+                    data={countryCodes}
+                    placeholder="Code"
+                    searchable
+                    value={phoneCode}
+                    // error={phoneCodeError}
+                    onChange={updatePhoneCode}
+                    selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
+                    className="w-full"
+                    dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
                   />
-                )
-              }
+                </div>
+                <div className="flex-1">
+                  <Textinput
+                    placeholder="Enter Phone Number"
+                    type="text"
+                    value={phoneNumber}
+                    // error={phoneNumberError}
+                    onChange={updatePhoneNumber}
+                    inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                  />
+                </div>
+              </div>
+              {phoneCodeError !== "" && (
+                <p className="mt-1 text-xs text-red-600 font-medium">
+                  {phoneCodeError}
+                </p>
+              )}
+              {phoneNumberError !== "" && (
+                <p className="mt-1 text-xs text-red-600 font-medium">
+                  {phoneNumberError}
+                </p>
+              )}
+            </div>
 
-              {correspondenceState && (
+            <Select
+              data={employeeData}
+              placeholder="Employee"
+              label="Assign to Employee"
+              searchable
+              value={employee}
+              error={employeeError}
+              onChange={updateEmployee}
+              selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
+              className="w-full"
+              dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
+            />
+
+            <Select
+              label="Sourse of lead"
+              data={[
+                { value: "Instagram", label: "Instagram" },
+                { value: "Facebook", label: "Facebook" },
+                { value: "Referral", label: "Referral" },
+                { value: "Friend", label: "Friend" },
+                { value: "Others", label: "Others" },
+
+              ]}
+              searchable
+              withAsterisk
+              error={sourseOfLeadError}
+              value={sourseOfLead}
+              onChange={updateSourseOfLead}
+              labelClass="font-medium font-sans text-[#000] text-sm"
+              inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
+              dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
+              selectWrapperClass="!shadow-none"
+            />
+
+            <Select
+              label="Country"
+              placeholder="Select Country"
+              labelClass="text-sm font-medium text-gray-600 mb-1"
+              dropDownClass="overflow-y-hidden"
+              selectWrapperClass="bg-white"
+              searchable={true}
+              data={[{ label: "India", value: "101" }]}
+              // data={countryNames}
+              value={correspondenceCountry}
+              onChange={updateCorrespondenceCountry}
+              error={correspondenceCountryError}
+            />
+
+            {
+              correspondenceCountry && (
                 <Select
-                  label="City"
-                  placeholder="Select City"
+                  label="State"
+                  placeholder="Select State"
                   labelClass="text-sm font-medium text-gray-600 mb-1"
                   dropDownClass="overflow-y-hidden"
                   selectWrapperClass="bg-white"
                   searchable={true}
-                  data={correspondenceCityData}
-                  value={correspondenceCity}
-                  onChange={updateCorrespondenceCity}
-                  error={correspondenceCityError}
+                  data={stateData}
+                  value={correspondenceState}
+                  onChange={updateCorrespondenceState}
+                  error={correspondenceStateError}
                 />
-              )}
-              {correspondenceCity && (
-                <Textinput
-                  label="Address"
-                  placeholder="Enter your Address"
-                  labelClassName="text-sm font-medium text-gray-600 !mb-1"
-                  inputClassName="shadow-sm !bg-white"
-                  value={correspondenceAddress}
-                  onChange={updateCorrespondenceAddress}
-                  error={correspondenceAddressError}
-                />
-              )}
-              {correspondenceAddress && (
-                <Textinput
-                  label="Pin Code"
-                  labelClassName="text-sm font-medium text-gray-600 !mb-1"
-                  inputClassName="shadow-sm bg-white"
-                  placeholder="Enter your pincode"
-                  value={correspondencePincode}
-                  onChange={updateCorrespondencePincode}
-                  error={correspondencePincodeError}
-                />
-              )}
+              )
+            }
 
-              {/* <div className="w-full">
+            {correspondenceState && (
+              <Select
+                label="City"
+                placeholder="Select City"
+                labelClass="text-sm font-medium text-gray-600 mb-1"
+                dropDownClass="overflow-y-hidden"
+                selectWrapperClass="bg-white"
+                searchable={true}
+                data={correspondenceCityData}
+                value={correspondenceCity}
+                onChange={updateCorrespondenceCity}
+                error={correspondenceCityError}
+              />
+            )}
+            {correspondenceCity && (
+              <Textinput
+                label="Address"
+                placeholder="Enter your Address"
+                labelClassName="text-sm font-medium text-gray-600 !mb-1"
+                inputClassName="shadow-sm !bg-white"
+                value={correspondenceAddress}
+                onChange={updateCorrespondenceAddress}
+                error={correspondenceAddressError}
+              />
+            )}
+            {correspondenceAddress && (
+              <Textinput
+                label="Pin Code"
+                labelClassName="text-sm font-medium text-gray-600 !mb-1"
+                inputClassName="shadow-sm bg-white"
+                placeholder="Enter your pincode"
+                value={correspondencePincode}
+                onChange={updateCorrespondencePincode}
+                error={correspondencePincodeError}
+              />
+            )}
+
+            {/* <div className="w-full">
                 <label className="block text-sm font-medium text-gray-600 mb-1">
                   Landline Number
                 </label>
@@ -1063,7 +1062,7 @@ const Addnewlead = () => {
                   </p>
                 )}
               </div> */}
-              {/* <Select
+            {/* <Select
                 label="Gender"
                 data={[
                   { value: "Male", label: "Male" },
@@ -1281,8 +1280,8 @@ const Addnewlead = () => {
                   inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                 />
               )} */}
-            </div>
-            {/* <hr className="border border-[#ebecef]" />
+          </div>
+          {/* <hr className="border border-[#ebecef]" />
             <div className="flex flex-col gap-3">
               <p className="font-semibold text-[16px] text-gray-700">
                 Professional Details
@@ -1337,7 +1336,7 @@ const Addnewlead = () => {
                 />
               </div>
             </div> */}
-            {/* <hr className="border border-[#ebecef]" />
+          {/* <hr className="border border-[#ebecef]" />
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className="flex flex-col gap-2">
                 <p className="font-semibold text-[16px] text-gray-700">
@@ -1430,7 +1429,7 @@ const Addnewlead = () => {
                   </>
                 )}
               </div> */}
-            {/* <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
                 <p className="font-semibold text-[16px] text-gray-700">
                   Permanent Address
                 </p>
@@ -1518,25 +1517,24 @@ const Addnewlead = () => {
                 )}
               </div> */}
 
-            {/* </div> */}
-          </div>
-          {isLoadingEffect ? (
-            isLoadingEffect && (
-              <div className="absolute inset-0 bg-[#2b2b2bcc] flex flex-row justify-center items-center  rounded">
-                <Loadingoverlay visible={isLoadingEffect} overlayBg="" />
-              </div>
-            )
-          ) : (
-            <div className="flex justify-end gap-2">
-              <button onClick={handleSubmit} className="px-4 py-2 text-[14px] font-semibold text-white bg-[#0083bf] rounded cursor-pointer">
-                Submit
-              </button>
-            </div>
-          )}
-          {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
+          {/* </div> */}
         </div>
+        {isLoadingEffect ? (
+          isLoadingEffect && (
+            <div className="absolute inset-0 bg-[#2b2b2bcc] flex flex-row justify-center items-center  rounded">
+              <Loadingoverlay visible={isLoadingEffect} overlayBg="" />
+            </div>
+          )
+        ) : (
+          <div className="flex justify-end gap-2">
+            <button onClick={handleSubmit} className="px-4 py-2 text-[14px] font-semibold text-white bg-[#0083bf] rounded cursor-pointer">
+              Submit
+            </button>
+          </div>
+        )}
+        {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
       </div>
-    </>
+    </div>
   );
 };
 

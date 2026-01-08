@@ -665,11 +665,11 @@ function Leadwrapper() {
               </div>
             </div>
           </div>
-          <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md z-0">
+          <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg z-0">
             <table className="w-full table-fixed text-left border-collapse">
-              <thead className="border-b-[0.6px] border-b-[#ebecef] bg-white">
+              <thead className="bg-gray-50 border-b border-neutral-200">
                 <tr className="w-full">
-                  <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[50px] sticky left-0 z-20 bg-white border-r border-[#ebecef]">
+                  <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[50px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
                     <input
                       type="checkbox"
                       checked={isAllUnassignedSelected}
@@ -683,90 +683,90 @@ function Leadwrapper() {
                     />
                   </th>
                   {visibleColumns.reference && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px] sticky left-[40px] z-20 bg-white border-r border-[#ebecef]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px] sticky left-[40px] z-20 bg-gray-50 border-r border-neutral-200">
                       Ref ID
                     </th>
                   )}
                   {visibleColumns.name && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Name
                     </th>
                   )}
                   {visibleColumns.email && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[200px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[200px]">
                       Email
                     </th>
                   )}
                   {visibleColumns.phone && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Phone
                     </th>
                   )}
                   {/* {visibleColumns.fatherName && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Father Name
                     </th>
                   )}
                   {visibleColumns.adhar && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Aadhar
                     </th>
                   )}
                   {visibleColumns.pan && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       PAN
                     </th>
                   )}
                   {visibleColumns.citizenship && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Citizenship
                     </th>
                   )}
                   {visibleColumns.residence && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Residence
                     </th>
                   )}
                   {visibleColumns.motherTongue && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Mother Tongue
                     </th>
                   )}
                   {visibleColumns.maritalStatus && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Martial Status
                     </th>
                   )} */}
                   {visibleColumns.leadStage && (
-                    <th className="sticky right-[240px] z-10 w-[120px] bg-white border-l border-[#ebecef] px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px]">
+                    <th className="sticky right-[240px] z-10 w-[120px] bg-gray-50 border-l border-neutral-200 px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px]">
                       Lead Stage
                     </th>
                   )}
                   {visibleColumns.assignedto && (
-                    <th className="sticky right-[240px] z-10 w-[120px] bg-white border-l border-[#ebecef] px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px]">
+                    <th className="sticky right-[240px] z-10 w-[120px] bg-gray-50 border-l border-neutral-200 px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px]">
                       Assigned To
                     </th>
                   )}
                   {visibleColumns.status && (
-                    <th className="sticky right-[120px] z-10 w-[120px] bg-white border-l border-[#ebecef] px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px]">
+                    <th className="sticky right-[120px] z-10 w-[120px] bg-gray-50 border-l border-neutral-200 px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px]">
                       Status
                     </th>
                   )}
                   {/* LAST (STICKY RIGHT) */}
-                  <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
+                  <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-neutral-200">
                 {isLoading === false ? (
                   leadsData?.length > 0 ? (
                     leadsData?.map((ele, index) => (
                       <tr
                         key={index}
-                        className="border-b-[0.6px] border-b-[#ebecef] align-top bg-white"
+                        className="hover:bg-neutral-50 transition-colors duration-150 align-top group"
                       >
-                        <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[50px] sticky left-0 z-20 bg-white border-r border-[#ebecef]">
+                        <th className="px-4 py-3 text-neutral-700 text-sm font-bold leading-[18px] w-[50px] sticky left-0 z-20 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
                           {
                             ele?.lead_assigned_employee ?
                               <input
@@ -784,24 +784,23 @@ function Leadwrapper() {
                           }
                         </th>
                         {visibleColumns.reference && (
-                          <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-[40px] z-10 bg-white border-r border-[#ebecef]">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-[40px] z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
                             {permissions?.leads_page?.includes("view_lead") ? (
                               <NavLink to={`/lead/${ele?.lead_uid}`}>
-                                <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                                <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                   {ele?.lead_uid}
                                 </p>
                               </NavLink>
                             ) : (
-                              <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                                 {ele?.lead_uid}
                               </p>
                             )}
                           </td>
-
                         )}
                         {visibleColumns.name && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-900 text-xs font-semibold leading-[18px]">
                               {ele?.full_name}
                             </p>
                           </td>
@@ -809,7 +808,7 @@ function Leadwrapper() {
                         {visibleColumns.email && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
                             <NavLink to={`mailto:${ele.email}`}>
-                              <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                 {ele?.email || "----"}
                               </p>
                             </NavLink>
@@ -822,7 +821,7 @@ function Leadwrapper() {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                 {ele?.phone_code && ele?.phone_number
                                   ? `+${ele?.phone_code} ${ele?.phone_number}`
                                   : "----"}
@@ -832,168 +831,110 @@ function Leadwrapper() {
                         )}
                         {/* {visibleColumns.fatherName && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.father_name || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.adhar && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.aadhar_card_no || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.pan && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.pan_card_no || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.citizenship && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.country_of_citizenship || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.residence && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.country_of_residence || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.motherTongue && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.mother_tongue || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.maritalStatus && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.marital_status || "----"}
                             </p>
                           </td>
                         )} */}
                         {visibleColumns.leadStage && (
-                          <td className="px-4 py-3 whitespace-normal break-words w-[160px] sticky right-[240px] z-10 bg-white border-l border-[#ebecef]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky right-[240px] z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.lead_stage_name || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.assignedto && (
-                          <td className="px-4 py-3 whitespace-normal break-words w-[160px] sticky right-[240px] z-10 bg-white border-l border-[#ebecef]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky right-[240px] z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {ele?.lead_assigned_employee || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.status && (
-                          <td className="px-4 py-3 whitespace-normal break-words w-[160px] sticky right-[120px] z-10 bg-white border-l border-[#ebecef]">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[120px] sticky right-[120px] z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
                             {ele?.status === "Inactive" ? (
-                              <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#fdecec] w-fit">
-                                <svg
-                                  width={9}
-                                  height={8}
-                                  viewBox="0 0 9 8"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                  preserveAspectRatio="xMidYMid meet"
-                                >
-                                  <circle
-                                    cx="4.42871"
-                                    cy={4}
-                                    r={3}
-                                    fill="#EC0606"
-                                  />
-                                </svg>
-                                <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#ec0606]">
-                                  Inactive
-                                </p>
-                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Inactive
+                              </span>
                             ) : ele?.status === "Active" ? (
-                              <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#ecfdf3] w-fit">
-                                <svg
-                                  width={9}
-                                  height={8}
-                                  viewBox="0 0 9 8"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                  preserveAspectRatio="xMidYMid meet"
-                                >
-                                  <circle
-                                    cx="4.42871"
-                                    cy={4}
-                                    r={3}
-                                    fill="#14BA6D"
-                                  />
-                                </svg>
-                                <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#037847]">
-                                  Active
-                                </p>
-                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                              </span>
                             ) : (
                               ele?.status === "Suspended" && (
-                                <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#D6D6D6] w-fit">
-                                  <svg
-                                    width={9}
-                                    height={8}
-                                    viewBox="0 0 9 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                    preserveAspectRatio="xMidYMid meet"
-                                  >
-                                    <circle
-                                      cx="4.42871"
-                                      cy={4}
-                                      r={3}
-                                      fill="#434343"
-                                    />
-                                  </svg>
-                                  <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#434343]">
-                                    Suspended
-                                  </p>
-                                </div>
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                  Suspended
+                                </span>
                               )
                             )}
                           </td>
                         )}
-                        <td className="px-4 py-3 flex items-start whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white border-l border-[#ebecef]">
-                          <div className="flex flex-row gap-1">
+                        <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                          <div className="flex flex-row items-center justify-center gap-2">
                             {permissions?.leads_page?.includes("view_lead") && (
                               <Link
                                 to={`/lead/${ele?.lead_uid}`}
-                                className="cursor-pointer transition-colors duration-200"
+                                className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
                               >
-                                <IconEye size={20} color="#4b5563" />
+                                <IconEye size={18} />
                               </Link>
                             )}
                             {permissions?.leads_page?.includes("edit_lead") && (
                               <Link
-                                to={`/lead/edit-lead/${ele?.lead_uid}`}
-                                className="cursor-pointer transition-colors duration-200"
+                                to={`/lead/edit-lead/${ele.lead_uid}`}
+                                className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
                               >
-                                <IconEdit size={20} color="#4b5563" />
+                                <IconEdit size={18} />
                               </Link>
                             )}
                             {permissions?.leads_page?.includes("delete_lead") && (
                               <div
                                 onClick={() => openDeleteModal(ele?.id)}
-                                className="cursor-pointer"
+                                className="p-1 hover:bg-red-50 rounded-md transition-colors text-neutral-500 hover:text-red-600 cursor-pointer"
                               >
-                                <IconTrash
-                                  color="red"
-                                  size={20}
-                                  strokeWidth={1.5}
-                                />
+                                <IconTrash size={18} />
                               </div>
                             )}
                           </div>

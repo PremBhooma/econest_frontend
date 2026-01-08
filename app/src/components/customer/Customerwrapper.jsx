@@ -449,95 +449,95 @@ function Customerwrapper() {
               </div>
             </div>
           </div>
-          <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md z-0">
+          <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg z-0">
             <table className="w-full table-fixed text-left border-collapse">
-              <thead className="border-b-[0.6px] border-b-[#ebecef] bg-white">
+              <thead className="bg-gray-50 border-b border-neutral-200">
                 <tr className="w-full">
                   {visibleColumns.reference && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px] sticky left-0 z-20 bg-white border-r border-[#ebecef]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
                       Ref ID
                     </th>
                   )}
                   {visibleColumns.flatNo && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[220px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
                       Flats
                     </th>
                   )}
                   {visibleColumns.name && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Name
                     </th>
                   )}
                   {visibleColumns.email && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[200px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[200px]">
                       Email
                     </th>
                   )}
                   {visibleColumns.phone && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Phone
                     </th>
                   )}
                   {visibleColumns.fatherName && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Father Name
                     </th>
                   )}
                   {visibleColumns.adhar && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Aadhar
                     </th>
                   )}
                   {visibleColumns.pan && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       PAN
                     </th>
                   )}
                   {visibleColumns.citizenship && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Citizenship
                     </th>
                   )}
                   {visibleColumns.residence && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Residence
                     </th>
                   )}
                   {visibleColumns.motherTongue && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Mother Tongue
                     </th>
                   )}
                   {visibleColumns.maritalStatus && (
-                    <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
                       Martial Status
                     </th>
                   )}
                   {visibleColumns.status && (
-                    <th className="sticky right-[120px] z-10 w-[120px] bg-white border-l border-[#ebecef] px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px]">
+                    <th className="sticky right-[120px] z-10 w-[120px] bg-gray-50 border-l border-neutral-200 px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px]">
                       Status
                     </th>
                   )}
                   {/* LAST (STICKY RIGHT) */}
-                  <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
+                  <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
                     Actions
                   </th>
                 </tr>
               </thead>
-              <tbody>
+              <tbody className="divide-y divide-neutral-200">
                 {isLoading === false ? (
                   customersData?.length > 0 ? (
                     customersData?.map((customer, index) => (
                       <tr
                         key={index}
-                        className="border-b-[0.6px] border-b-[#ebecef] align-top bg-white"
+                        className="hover:bg-neutral-50 transition-colors duration-150 align-top group"
                       >
                         {visibleColumns.reference && (
-                          <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-0 z-10 bg-white border-r border-[#ebecef]">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
                             <NavLink
                               to={`/customers/${customer?.customer_uid}`}
                             >
-                              <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                 {customer?.customer_uid}
                               </p>
                             </NavLink>
@@ -554,8 +554,8 @@ function Customerwrapper() {
                                       {pageCustomerCount < 5 ? (
                                         <Link to={`/flats/view-flat/${flat?.uuid}`}>
                                           <p
-                                            className={`text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal cursor-pointer pr-2 ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
-                                              ? "border-r-[0.6px] border-r-[#757575]"
+                                            className={`text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal cursor-pointer pr-2 hover:text-[#0083bf] ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
+                                              ? "border-r border-neutral-300"
                                               : ""
                                               }`}
                                           >
@@ -564,8 +564,8 @@ function Customerwrapper() {
                                         </Link>
                                       ) : (
                                         <p
-                                          className={`text-[#4b5563] text-[13px] font-normal leading-[18px] capitalize break-words whitespace-normal pr-2 ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
-                                            ? "border-r-[0.6px] border-r-[#757575]"
+                                          className={`text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal pr-2 ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
+                                            ? "border-r border-neutral-300"
                                             : ""
                                             }`}
                                         >
@@ -577,7 +577,7 @@ function Customerwrapper() {
                                       {/* Hover Card */}
                                       {pageCustomerCount > 5 &&
                                         <div
-                                          className="absolute z-[1000] invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 delay-200 flex flex-col gap-2 bg-white shadow-lg border border-[#ebecef] p-2 rounded-xl w-60 max-w-xs break-words"
+                                          className="absolute z-[1000] invisible opacity-0 group-hover:visible group-hover:opacity-100 transition-all duration-200 delay-200 flex flex-col gap-2 bg-white shadow-lg border border-neutral-200 p-2 rounded-xl w-60 max-w-xs break-words"
                                           style={{
                                             top:
                                               index < 3
@@ -642,7 +642,7 @@ function Customerwrapper() {
                                 )}
                               </div>
                             ) : (
-                              <p className="text-[#2B2B2B]/40 text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-400 text-xs font-medium leading-[18px]">
                                 ---
                               </p>
                             )}
@@ -651,7 +651,7 @@ function Customerwrapper() {
 
                         {visibleColumns.name && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-900 text-xs font-semibold leading-[18px]">
                               {customer?.prefixes || ""} {customer?.first_name} {customer?.last_name}
                             </p>
                           </td>
@@ -659,7 +659,7 @@ function Customerwrapper() {
                         {visibleColumns.email && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
                             <NavLink to={`mailto:${customer.email}`}>
-                              <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                 {customer?.email || "----"}
                               </p>
                             </NavLink>
@@ -672,7 +672,7 @@ function Customerwrapper() {
                               target="_blank"
                               rel="noopener noreferrer"
                             >
-                              <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                              <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                 {customer?.phone_code && customer?.phone_number
                                   ? `+${customer?.phone_code} ${customer?.phone_number}`
                                   : "----"}
@@ -682,177 +682,108 @@ function Customerwrapper() {
                         )}
                         {visibleColumns.fatherName && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.father_name || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.adhar && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.aadhar_card_no || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.pan && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.pan_card_no || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.citizenship && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.country_of_citizenship || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.residence && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.country_of_residence || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.motherTongue && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.mother_tongue || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.maritalStatus && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                            <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">
+                            <p className="text-neutral-600 text-xs font-medium leading-[18px]">
                               {customer?.marital_status || "----"}
                             </p>
                           </td>
                         )}
                         {visibleColumns.status && (
-                          <td className="px-4 py-3 whitespace-normal break-words w-[160px] sticky right-[120px] z-10 bg-white border-l border-[#ebecef]">
+                          <td className="px-4 py-3 whitespace-normal break-words w-[160px] sticky right-[120px] z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
                             {customer?.status === "Inactive" ? (
-                              <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#fdecec] w-fit">
-                                <svg
-                                  width={9}
-                                  height={8}
-                                  viewBox="0 0 9 8"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                  preserveAspectRatio="xMidYMid meet"
-                                >
-                                  <circle
-                                    cx="4.42871"
-                                    cy={4}
-                                    r={3}
-                                    fill="#EC0606"
-                                  />
-                                </svg>
-                                <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#ec0606]">
-                                  Inactive
-                                </p>
-                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                                Inactive
+                              </span>
                             ) : customer?.status === "Active" ? (
-                              <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#ecfdf3] w-fit">
-                                <svg
-                                  width={9}
-                                  height={8}
-                                  viewBox="0 0 9 8"
-                                  fill="none"
-                                  xmlns="http://www.w3.org/2000/svg"
-                                  className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                  preserveAspectRatio="xMidYMid meet"
-                                >
-                                  <circle
-                                    cx="4.42871"
-                                    cy={4}
-                                    r={3}
-                                    fill="#14BA6D"
-                                  />
-                                </svg>
-                                <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#037847]">
-                                  Active
-                                </p>
-                              </div>
+                              <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                                Active
+                              </span>
                             ) : (
                               customer?.status === "Suspended" && (
-                                <div className="flex justify-center items-center flex-grow-0 flex-shrink-0 relative gap-1.5 px-5 py-1 rounded-2xl bg-[#D6D6D6] w-fit">
-                                  <svg
-                                    width={9}
-                                    height={8}
-                                    viewBox="0 0 9 8"
-                                    fill="none"
-                                    xmlns="http://www.w3.org/2000/svg"
-                                    className="flex-grow-0 flex-shrink-0 w-2 h-2 relative"
-                                    preserveAspectRatio="xMidYMid meet"
-                                  >
-                                    <circle
-                                      cx="4.42871"
-                                      cy={4}
-                                      r={3}
-                                      fill="#434343"
-                                    />
-                                  </svg>
-                                  <p className="flex-grow-0 flex-shrink-0 text-xs font-medium text-center text-[#434343]">
-                                    Suspended
-                                  </p>
-                                </div>
+                                <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
+                                  Suspended
+                                </span>
                               )
                             )}
                           </td>
                         )}
-                        <td className="px-4 py-3 flex items-start whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white border-l border-[#ebecef]">
-                          <div className="flex flex-row gap-1">
-                            {permissions?.customers_page?.includes(
-                              "view_single_customer"
-                            ) && (
-                                <Link
-                                  to={`/customers/${customer?.customer_uid}`}
-                                  className="cursor-pointer transition-colors duration-200"
-                                >
-                                  <IconEye size={20} color="#4b5563" />
-                                </Link>
-                              )}
-                            {permissions?.customers_page?.includes(
-                              "edit_customer"
-                            ) && (
-                                <Link
-                                  to={`/customers/editcustomer/${customer?.customer_uid}`}
-                                  className="cursor-pointer transition-colors duration-200"
-                                >
-                                  <IconEdit size={20} color="#4b5563" />
-                                </Link>
-                              )}
-                            {permissions?.customers_page?.includes(
-                              "delete_customer"
-                            ) && (
-                                <div
-                                  onClick={() => openDeleteModal(customer?.id)}
-                                  className="cursor-pointer"
-                                >
-                                  <IconTrash
-                                    color="red"
-                                    size={20}
-                                    strokeWidth={1.5}
-                                  />
-                                </div>
-                              )}
+                        <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                          <div className="flex flex-row items-center justify-center gap-2">
+                            {permissions?.customers_page?.includes("view_single_customer") && (
+                              <Link
+                                to={`/customers/${customer?.customer_uid}`}
+                                className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
+                              >
+                                <IconEye size={18} />
+                              </Link>
+                            )}
+                            {permissions?.customers_page?.includes("edit_customer") && (
+                              <Link
+                                to={`/customers/edit-customer/${customer.customer_uid}`}
+                                className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
+                              >
+                                <IconEdit size={18} />
+                              </Link>
+                            )}
+                            {permissions?.customers_page?.includes("delete_customer") && (
+                              <div
+                                onClick={() => openDeleteModal(customer?.id)}
+                                className="p-1 hover:bg-red-50 rounded-md transition-colors text-neutral-500 hover:text-red-600 cursor-pointer"
+                              >
+                                <IconTrash size={18} />
+                              </div>
+                            )}
                           </div>
                         </td>
                       </tr>
                     ))
                   ) : (
                     <tr>
-                      <td
-                        colSpan={
-                          Object.keys(visibleColumns).filter(
-                            (key) => visibleColumns[key]
-                          ).length
-                        }
-                        className="text-center py-6 text-gray-400 text-[15px] font-medium"
-                      >
-                        No data found
+                      <td colSpan={10} className="text-center py-8">
+                        <p className="text-neutral-500 text-sm">
+                          No customers found
+                        </p>
                       </td>
                     </tr>
                   )
@@ -862,7 +793,7 @@ function Customerwrapper() {
                       colSpan={
                         Object.keys(visibleColumns).filter(
                           (key) => visibleColumns[key]
-                        ).length
+                        ).length + 2 // +1 for Actions, +1 for sticky? No, just enough to cover.
                       }
                       className="text-center py-6 text-gray-400 text-[15px] font-medium"
                     >
@@ -873,6 +804,7 @@ function Customerwrapper() {
               </tbody>
             </table>
           </div>
+
           {customersData?.length > 0 && (
             <div className="flex flex-row-reverse">
               <Pagination
@@ -883,16 +815,19 @@ function Customerwrapper() {
                 color="#0083bf"
               />
             </div>
-          )}
+          )
+          }
 
-          {errorMessage !== "" && (
-            <Errorpanel
-              errorMessages={errorMessage}
-              setErrorMessages={setErrorMessage}
-            />
-          )}
-        </div>
-      </div>
+          {
+            errorMessage !== "" && (
+              <Errorpanel
+                errorMessages={errorMessage}
+                setErrorMessages={setErrorMessage}
+              />
+            )
+          }
+        </div >
+      </div >
 
       {/* <DeleteModal
         title="Delete Customer"
@@ -947,7 +882,8 @@ function Customerwrapper() {
       >
         {projectModel === true && (
           <AssignProject closeProjectModel={closeProjectModel} />
-        )}
+        )
+        }
       </Modal>
 
       <Modal

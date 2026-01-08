@@ -76,37 +76,44 @@ function Addnewform({ reloadGetroledata }) {
   };
 
   return (
-    <div className="flex flex-col gap-4">
-      <p className="text-[#2B2B2B] text-[16px] font-[500] leading-[18px]">
-        Add New Role
-      </p>
+    <div className="flex flex-col gap-5 border border-neutral-200 rounded-xl bg-white p-5 shadow-sm">
+      <div className="flex items-center gap-2">
+        {/* Optional Icon if needed, but keeping it clean for now */}
+        <p className="text-neutral-900 text-lg font-semibold">
+          Add Role
+        </p>
+      </div>
 
-      <div className="flex flex-col">
+      <div className="flex flex-col gap-1.5">
+        <label className="text-sm font-medium text-neutral-700">Role Name</label>
         <input
           type="text"
-          placeholder="Role Name"
+          placeholder="Enter Role Name"
           name="rolename"
           value={roleName}
           onChange={updateRoleName}
-          className={`w-full px-4 py-2 border rounded-md text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-[#0083bf] focus:border-none ${roleNameError ? "border-red-500" : "border-gray-300"
+          className={`w-full px-3 py-2.5 border rounded-lg text-sm transition-all duration-200 outline-none
+            ${roleNameError
+              ? "border-red-500 focus:ring-red-100 placeholder-red-300"
+              : "border-neutral-300 focus:border-[#0083bf] focus:ring-4 focus:ring-[#0083bf]/10 placeholder-neutral-400"
             }`}
         />
         {roleNameError && (
-          <p className="text-red-500 text-sm mt-1">{roleNameError}</p>
+          <p className="text-red-500 text-xs font-medium mt-1">{roleNameError}</p>
         )}
       </div>
 
       <button
         onClick={submiteRoleName}
         disabled={isLoading}
-        className="cursor-pointer flex justify-center w-full items-center gap-2 px-4 py-2.5 rounded-lg hover:bg-[#0083bf] hover:text-white text-[#0083bf] border-[0.8px] border-[#0083bf]"
+        className="cursor-pointer flex justify-center w-full items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#0083bf] text-[#0083bf] hover:bg-[#0083bf] hover:text-white shadow-sm transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed group"
       >
-        <p className="text-sm font-medium">Add Role</p>
+        <p className="text-sm font-semibold">{isLoading ? 'Adding...' : 'Submit'}</p>
       </button>
 
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-          <div className="w-8 h-8 border-4 border-white border-t-transparent rounded-full animate-spin"></div>
+        <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px] rounded-xl z-10">
+          <div className="w-6 h-6 border-2 border-[#0083bf] border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
     </div>

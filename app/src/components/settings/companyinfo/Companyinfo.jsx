@@ -5,6 +5,8 @@ import Settingsapi from "../../api/Settingsapi.jsx";
 import Errorpanel from "../../shared/Errorpanel.jsx";
 import { useEmployeeDetails } from "../../zustand/useEmployeeDetails.jsx";
 import { NavLink } from "react-router";
+import { MapPin, Phone, Mail, Globe, Map, Building } from "lucide-react";
+
 
 const Companyinfo = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -66,92 +68,101 @@ const Companyinfo = () => {
 
   return (
     <>
-      <div className="flex flex-col gap-4 border border-[#ebecef] rounded-xl bg-white p-8 min-h-[65vh]">
+      <div className="flex flex-col gap-6">
         <div className="flex justify-between items-center">
-          <p className="text-[18px] font-semibold">Company Info</p>
+          <div>
+            {/* Optional Header - keeping it simple if tabs already have it, but for context let's leave it clean */}
+          </div>
           {permissions?.settings_page?.includes("update_company_info") && (
             <button
               onClick={openGeneralInfoModal}
-              className="text-[14px] font-semibold text-black bg-[#f3f4f6] hover:bg-gray-200 cursor-pointer rounded-md px-4 py-2"
+              className="text-sm font-medium text-white bg-[#0083bf] hover:bg-[#0073a8] transition-colors rounded-lg px-4 py-2 shadow-sm"
             >
               Update Info
             </button>
           )}
         </div>
-        <hr className="text-[#ebecef]" />
-        <div className="relative space-y-4">
-          <div className="grid grid-cols-3 gap-2">
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Company Name</p>
-              <p className="text-sm text-gray-500 font-normal overflow-hidden break-words">
-                {companyInfo?.name || "---"}
-              </p>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {/* General Information Card */}
+          <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-6 relative overflow-hidden">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-blue-50 rounded-lg">
+                <Building className="text-[#0083bf]" size={24} />
+              </div>
+              <h3 className="text-lg font-semibold text-neutral-900">General Information</h3>
             </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Email</p>
-              <NavLink to={`mailto:${companyInfo?.email}`}>
-                <p className="text-sm text-gray-500 font-normal overflow-hidden break-words">
-                  {companyInfo?.email || "---"}
-                </p>
-              </NavLink>
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Phone Number</p>
-              <NavLink
-                to={`https://wa.me/${companyInfo?.phone_code || "+91"}${
-                  companyInfo?.phone_number
-                }?text=Hello!%20I%27m%20interested%20in%20your%20service`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <p className="text-sm text-gray-500 font-normal">
-                  {companyInfo?.phone_code || "+91"}{" "}
-                  {companyInfo?.phone_number || "---"}
-                </p>
-              </NavLink>
+
+            <div className="space-y-4">
+              <div className="group">
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">Company Name</p>
+                <p className="text-base font-medium text-neutral-900">{companyInfo?.name || "---"}</p>
+              </div>
+
+              <div className="flex flex-col gap-4 pt-2">
+                <div className="group">
+                  <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">Email Address</p>
+                  <NavLink to={`mailto:${companyInfo?.email}`} className="flex items-center gap-2 text-neutral-900 hover:text-[#0083bf] transition-colors">
+                    <Mail size={16} className="text-neutral-400" />
+                    {companyInfo?.email || "---"}
+                  </NavLink>
+                </div>
+
+                <div className="group">
+                  <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">Phone Number</p>
+                  <NavLink to={`https://wa.me/${companyInfo?.phone_code || "+91"}${companyInfo?.phone_number}`} target="_blank" className="flex items-center gap-2 text-neutral-900 hover:text-[#0083bf] transition-colors">
+                    <Phone size={16} className="text-neutral-400" />
+                    {companyInfo?.phone_code || "+91"} {companyInfo?.phone_number || "---"}
+                  </NavLink>
+                </div>
+              </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Address Line 1</p>
-              <p className="text-sm text-gray-500 font-normal overflow-hidden break-words">
-                {companyInfo?.address_line1 || "---"}
-              </p>
+          {/* Address Card */}
+          <div className="bg-white rounded-xl border border-neutral-200 shadow-sm p-6 relative overflow-hidden">
+            <div className="flex items-center gap-3 mb-6">
+              <div className="p-2 bg-orange-50 rounded-lg">
+                <MapPin className="text-orange-500" size={24} />
+              </div>
+              <h3 className="text-lg font-semibold text-neutral-900">Address Details</h3>
             </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Address Line 2</p>
-              <p className="text-sm text-gray-500 font-normal overflow-hidden break-words">
-                {companyInfo?.address_line2 || "---"}
-              </p>
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">City</p>
-              <p className="text-sm text-gray-500 font-normal">
-                {companyInfo?.city || "---"}
-              </p>
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">State</p>
-              <p className="text-sm text-gray-500 font-normal">
-                {companyInfo?.state || "---"}
-              </p>
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Country</p>
-              <p className="text-sm text-gray-500 font-normal">
-                {companyInfo?.country || "---"}
-              </p>
-            </div>
-            <div className="flex flex-col gap-y-1">
-              <p className="text-sm font-semibold">Pincode</p>
-              <p className="text-sm text-gray-500 font-normal">
-                {companyInfo?.zip_code || "---"}
-              </p>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-4 gap-y-6">
+              <div className="col-span-2">
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">Full Address</p>
+                <div className="flex items-start gap-2">
+                  <p className="text-base text-neutral-900">
+                    {companyInfo?.address_line1 || "---"}
+                    {companyInfo?.address_line2 && `, ${companyInfo?.address_line2}`}
+                  </p>
+                </div>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">City</p>
+                <p className="text-sm font-medium text-neutral-900">{companyInfo?.city || "---"}</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">State</p>
+                <p className="text-sm font-medium text-neutral-900">{companyInfo?.state || "---"}</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">Country</p>
+                <p className="text-sm font-medium text-neutral-900">{companyInfo?.country || "---"}</p>
+              </div>
+
+              <div>
+                <p className="text-xs font-medium text-neutral-500 uppercase tracking-wide mb-1">Pincode</p>
+                <p className="text-sm font-medium text-neutral-900">{companyInfo?.zip_code || "---"}</p>
+              </div>
             </div>
           </div>
+
           {isLoading && (
-            <div className="absolute top-0 left-0 w-full h-full bg-[#2b2b2bcc] flex flex-row justify-center items-center z-50">
+            <div className="absolute top-0 left-0 w-full h-full bg-white/50 backdrop-blur-sm flex justify-center items-center z-50 rounded-xl">
               <Loadingoverlay visible={isLoading} overlayBg="" />
             </div>
           )}

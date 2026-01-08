@@ -194,14 +194,14 @@ function Filemanager({ fileStructure, folderselect, isLoadingEffect, openDeleteF
                             }))
                             :
                             <tr>
-                                <td colSpan={6} className="text-center py-4">
+                                <td colSpan={5} className="text-center py-4">
                                     <p className="text-[#4A4D53CC] text-[14px] not-italic font-[400] leading-[18px]">
                                         No data found
                                     </p>
                                 </td>
                             </tr>
                         :
-                        <TableLoadingEffect colspan={6} tr={10} />
+                        <TableLoadingEffect colspan={5} tr={10} />
                     }
                 </tbody>
             </table>

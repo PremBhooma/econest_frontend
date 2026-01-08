@@ -99,81 +99,74 @@ function Onboarding() {
   };
 
   return (
-    <>
-      {/* <Customernavbar /> */}
-      <Navbar />
+    <div className="flex flex-col gap-4">
+      <div className='flex justify-between items-center'>
+        <h1 className="text-[20px] font-semibold">Customer Onboarding</h1>
+        <Link
+          to={"/customers"}
+          className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200"
+        >
+          <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
+          Back
+        </Link>
+      </div>
 
-      <div className="py-4">
-        <div className="w-[95%] m-auto flex flex-col gap-4">
-          <div className='flex justify-between items-center'>
-            <h1 className="text-[20px] font-semibold">Customer Onboarding</h1>
-            <Link
-              to={"/customers"}
-              className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200"
-            >
-              <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
-              Back
-            </Link>
-          </div>
-
-          <div className="bg-white rounded-lg shadow-sm border border-[#ebecef] p-8">
-            <div className="flex items-center justify-center mb-8">
-              {[1, 2].map((step, index) => (
-                <div key={step} className="flex items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${step === currentStep ? "bg-[#0083bf] text-white" : step < currentStep ? "bg-[#0083bf] text-white" : "bg-gray-200 text-gray-600"}`}>{step}</div>
-                  {index < 1 && <div className={`w-16 h-0.5 mx-2 ${step < currentStep ? "bg-[#0083bf]" : "bg-gray-200"}`} />}
-                </div>
-              ))}
+      <div className="bg-white rounded-lg shadow-sm border border-[#ebecef] p-8">
+        <div className="flex items-center justify-center mb-8">
+          {[1, 2].map((step, index) => (
+            <div key={step} className="flex items-center">
+              <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-medium ${step === currentStep ? "bg-[#0083bf] text-white" : step < currentStep ? "bg-[#0083bf] text-white" : "bg-gray-200 text-gray-600"}`}>{step}</div>
+              {index < 1 && <div className={`w-16 h-0.5 mx-2 ${step < currentStep ? "bg-[#0083bf]" : "bg-gray-200"}`} />}
             </div>
+          ))}
+        </div>
 
-            <div>
-              {renderStepContent()}
+        <div>
+          {renderStepContent()}
 
-              <div className="flex justify-between mt-8">
-                {currentStep > 1 && (
+          <div className="flex justify-between mt-8">
+            {currentStep > 1 && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handlePrevious}
+                className="px-6 bg-transparent !text-[#0083bf]"
+              >
+                PREVIOUS
+              </Button>
+            )}
+            <div className="ml-auto">
+              {currentStep < totalSteps ? (
+                <div className="flex items-center gap-2">
                   <Button
                     type="button"
-                    variant="outline"
-                    onClick={handlePrevious}
-                    className="px-6 bg-transparent !text-[#0083bf]"
+                    onClick={handleCreateCustomer}
+                    className="!bg-gray-200 hover:!bg-gray-300 !text-black px-8"
                   >
-                    PREVIOUS
+                    Just Create Customer
                   </Button>
-                )}
-                <div className="ml-auto">
-                  {currentStep < totalSteps ? (
-                    <div className="flex items-center gap-2">
-                      <Button
-                        type="button"
-                        onClick={handleCreateCustomer}
-                        className="!bg-gray-200 hover:!bg-gray-300 !text-black px-8"
-                      >
-                        Just Create Customer
-                      </Button>
-                      <Button
-                        type="button"
-                        onClick={handleNext}
-                        className="!bg-[#0083bf] hover:!bg-[#0083bf]/90  !text-white px-8"
-                      >
-                        Create Customer & Add Flat Details
-                      </Button>
-                    </div>
-                  ) : (
-                    <Button
-                      type="button"
-                      onClick={handleSubmit}
-                      className="!bg-[#0083bf] hover:!bg-[#0083bf]/90 text-white px-8"
-                    >
-                      SUBMIT
-                    </Button>
-                  )}
+                  <Button
+                    type="button"
+                    onClick={handleNext}
+                    className="!bg-[#0083bf] hover:!bg-[#0083bf]/90  !text-white px-8"
+                  >
+                    Create Customer & Add Flat Details
+                  </Button>
                 </div>
-              </div>
+              ) : (
+                <Button
+                  type="button"
+                  onClick={handleSubmit}
+                  className="!bg-[#0083bf] hover:!bg-[#0083bf]/90 text-white px-8"
+                >
+                  SUBMIT
+                </Button>
+              )}
             </div>
           </div>
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

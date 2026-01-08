@@ -883,224 +883,227 @@ function Allpaymentswrapper() {
                             </div>
                         </div>
                     </div>
-                    <div className='px-4'>
-                        <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md">
-                            <table className="w-full table-fixed text-left border-collapse">
-                                <thead className="border-b-[0.6px] border-b-[#ebecef] bg-white">
-                                    <tr className="w-full">
-                                        {visibleColumns.reference && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px] sticky left-0 z-20 bg-white border-r border-[#ebecef]">
-                                                Ref ID
-                                            </th>
-                                        )}
-                                        {visibleColumns.transactionId && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Transaction Id
-                                            </th>
-                                        )}
-                                        {visibleColumns.flat && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px]">
-                                                Flat
-                                            </th>
-                                        )}
-                                        {visibleColumns.block && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px]">
-                                                Block
-                                            </th>
-                                        )}
-                                        {visibleColumns.customer && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Customer
-                                            </th>
-                                        )}
-                                        {visibleColumns.amount && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
-                                                Amount
-                                            </th>
-                                        )}
-                                        {visibleColumns.date && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Date of Payment
-                                            </th>
-                                        )}
-                                        {visibleColumns.paymentType && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Payment Type
-                                            </th>
-                                        )}
-                                        {visibleColumns.paymentTowards && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Payment Towards
-                                            </th>
-                                        )}
-                                        {visibleColumns.paymentMethod && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Payment Method
-                                            </th>
-                                        )}
-                                        {visibleColumns.bank && (
-                                            <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
-                                                Bank
-                                            </th>
-                                        )}
-                                        <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
-                                            Actions
+                    {/* Table Section  */}
+                    <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg z-0">
+                        <table className="w-full table-fixed text-left border-collapse">
+                            <thead className="bg-gray-50 border-b border-neutral-200">
+                                <tr className="w-full">
+                                    {/* {visibleColumns.reference && (
+                                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
+                                        Ref ID
+                                    </th>
+                                )} */}
+                                    {visibleColumns.transactionId && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Transaction Id
                                         </th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {isLoading === false ? (
-                                        paymentsData.length > 0 ? (
-                                            paymentsData.map((payment, index) => (
-                                                <tr key={index} className="border-b-[0.6px] border-b-[#ebecef] align-top bg-white">
-                                                    {visibleColumns.reference && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-0 z-10 bg-white border-r border-[#ebecef]">
-                                                            <NavLink to={`/singlepaymentview/${payment.uuid}`}>
-                                                                <p className="text-[#4b5563] text-[13px] font-normal leading-[18px]">{payment?.uuid}</p>
-                                                            </NavLink>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.transactionId && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
+                                    )}
+                                    {visibleColumns.flat && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px]">
+                                            Flat
+                                        </th>
+                                    )}
+                                    {visibleColumns.block && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px]">
+                                            Block
+                                        </th>
+                                    )}
+                                    {visibleColumns.customer && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Customer
+                                        </th>
+                                    )}
+                                    {visibleColumns.amount && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
+                                            Amount
+                                        </th>
+                                    )}
+                                    {visibleColumns.date && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Date of Payment
+                                        </th>
+                                    )}
+                                    {visibleColumns.paymentType && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Payment Type
+                                        </th>
+                                    )}
+                                    {visibleColumns.paymentTowards && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Payment Towards
+                                        </th>
+                                    )}
+                                    {visibleColumns.paymentMethod && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Payment Method
+                                        </th>
+                                    )}
+                                    {visibleColumns.bank && (
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Bank
+                                        </th>
+                                    )}
+                                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
+                                        Actions
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody className="divide-y divide-neutral-200">
+                                {isLoading === false ? (
+                                    paymentsData.length > 0 ? (
+                                        paymentsData.map((payment, index) => (
+                                            <tr key={index} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
+                                                {/* {visibleColumns.reference && (
+                                                <td className="px-4 py-3 whitespace-normal break-words w-[140px] sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
+                                                    <NavLink to={`/singlepaymentview/${payment.uuid}`}>
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">{payment?.uuid}</p>
+                                                    </NavLink>
+                                                </td>
+                                            )} */}
+                                                {visibleColumns.transactionId && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <NavLink to={`/singlepaymentview/${payment.uuid}`}>
+                                                            <p className="text-neutral-600 text-xs font-medium leading-[18px] hover:text-[#0083bf]">
                                                                 {payment?.transaction_id}
                                                             </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.flat && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[120px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                <NavLink to={`/flats/view-flat/${payment?.flat_uuid}`}>
-                                                                    {payment?.flat_number || "----"}
-                                                                </NavLink>
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.block && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[120px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                {payment?.block_name || "----"}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.customer && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px] capitalize">
-                                                                <NavLink to={`/customers/${payment?.customer_uuid}`}>
-                                                                    {payment.customer_prefixes || ""} {payment.customer_first_name || "----"} {payment.customer_last_name}
-                                                                </NavLink>
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.amount && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                ₹ {parseInt(payment?.amount).toFixed(2) || "----"}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.date && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                {payment?.paymet_date ? dayjs(payment?.paymet_date).format("DD/MM/YYYY") : '---'}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.paymentType && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                {payment?.payment_type || "---"}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.paymentTowards && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                {payment?.payment_towards || "---"}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.paymentMethod && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                {payment?.payment_method}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    {visibleColumns.bank && (
-                                                        <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
-                                                            <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                                {payment?.bank || "----"}
-                                                            </p>
-                                                        </td>
-                                                    )}
-                                                    <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white border-l border-[#ebecef]">
-                                                        <div className="flex flex-row items-center gap-1">
-                                                            {permissions?.payments_page?.includes("view_payment") && (
-                                                                <Link
-                                                                    to={`/singlepaymentview/${payment.uuid}`}
-                                                                    className="cursor-pointer"
-                                                                >
-                                                                    <IconEye size={20} color="#4b5563" />
-                                                                </Link>
-                                                            )}
-
-                                                            {permissions?.payments_page?.includes("edit_payment") && (
-                                                                <Link
-                                                                    to={`/payments/edit/${payment.uuid}`}
-                                                                    className="cursor-pointer"
-                                                                >
-                                                                    <IconEdit size={20} color="#4b5563" />
-                                                                </Link>
-                                                            )}
-
-                                                            {permissions?.payments_page?.includes("delete_payment") && (
-                                                                <div
-                                                                    onClick={() => openDeletePayment(payment.payment_id)}
-                                                                    className="cursor-pointer"
-                                                                >
-                                                                    <IconTrash color="red" size={20} strokeWidth={1.5} />
-                                                                </div>
-                                                            )}
-
-                                                            {permissions?.payments_page?.includes("print_single_payment") && (
-                                                                <PrinterIcon size={20} strokeWidth={2.5} color="#e0589c" className="cursor-pointer" onClick={() => handleSinglePrint(payment)} />
-                                                            )}
-                                                        </div>
+                                                        </NavLink>
                                                     </td>
-                                                </tr>
-                                            ))
-                                        ) : (
-                                            <tr>
-                                                <td colSpan={8} className="text-center py-4">
-                                                    <p className="text-[#4A4D53CC] text-[14px] not-italic font-[400] leading-[18px]">
-                                                        No data found
-                                                    </p>
+                                                )}
+                                                {visibleColumns.flat && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[120px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            <NavLink to={`/flats/view-flat/${payment?.flat_uuid}`} className="hover:text-[#0083bf]">
+                                                                {payment?.flat_number || "----"}
+                                                            </NavLink>
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.block && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[120px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.block_name || "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.customer && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {(payment?.customer_prefixes || "") + " " + (payment?.customer_first_name || "") + " " + (payment?.customer_last_name || "")}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.amount && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.amount || "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.date && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.paymet_date ? dayjs(payment?.paymet_date).format("DD/MM/YYYY") : "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.paymentType && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.payment_type || "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.paymentTowards && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.payment_towards || "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.paymentMethod && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.payment_method || "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                {visibleColumns.bank && (
+                                                    <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
+                                                        <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {payment?.bank || "----"}
+                                                        </p>
+                                                    </td>
+                                                )}
+                                                <td className="px-4 py-3 text-center whitespace-normal break-words w-[120px] sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                                                    <div className="flex flex-row items-center justify-center gap-2">
+                                                        {permissions?.payments_page?.includes("view_payment") && (
+                                                            <Link
+                                                                to={`/singlepaymentview/${payment.uuid}`}
+                                                                className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
+                                                            >
+                                                                <IconEye size={18} />
+                                                            </Link>
+                                                        )}
+
+                                                        {permissions?.payments_page?.includes("edit_payment") && (
+                                                            <Link
+                                                                to={`/payments/edit/${payment.uuid}`}
+                                                                className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
+                                                            >
+                                                                <IconEdit size={18} />
+                                                            </Link>
+                                                        )}
+
+                                                        {permissions?.payments_page?.includes("delete_payment") && (
+                                                            <div
+                                                                onClick={() => openDeletePayment(payment.payment_id)}
+                                                                className="p-1 hover:bg-red-50 rounded-md transition-colors text-neutral-500 hover:text-red-600 cursor-pointer"
+                                                            >
+                                                                <IconTrash size={18} />
+                                                            </div>
+                                                        )}
+
+                                                        {permissions?.payments_page?.includes("print_single_payment") && (
+                                                            <PrinterIcon size={20} strokeWidth={2.5} color="#e0589c" className="cursor-pointer" onClick={() => handleSinglePrint(payment)} />
+                                                        )}
+                                                    </div>
                                                 </td>
                                             </tr>
-                                        )
+                                        ))
                                     ) : (
-                                        <TableLoadingEffect colspan={8} tr={5} />
-                                    )}
-                                </tbody>
-                            </table>
-                        </div>
-                        {paymentsData?.length > 0 && (
-                            <div className="flex flex-row-reverse p-4">
-                                <Pagination
-                                    totalpages={totalPages}
-                                    value={page}
-                                    siblings={1}
-                                    onChange={handlePageChange}
-                                    color="#0083bf"
-                                />
-                            </div>
-                        )}
+                                        <tr>
+                                            <td colSpan={13} className="text-center py-8">
+                                                <p className="text-neutral-500 text-sm">
+                                                    No payments found
+                                                </p>
+                                            </td>
+                                        </tr>
+                                    )
+                                ) : (
+                                    <tr>
+                                        <td colSpan={13}>
+                                            <TableLoadingEffect />
+                                        </td>
+                                    </tr>
+                                )}
+                            </tbody>
+                        </table>
                     </div>
+                    {paymentsData?.length > 0 && (
+                        <div className="flex flex-row-reverse p-4">
+                            <Pagination
+                                totalpages={totalPages}
+                                value={page}
+                                siblings={1}
+                                onChange={handlePageChange}
+                                color="#0083bf"
+                            />
+                        </div>
+                    )}
                 </div>
                 {errorMessage !== "" && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
 
-            </div>
+            </div >
 
             <DeleteModal
                 title="Delete Payment"

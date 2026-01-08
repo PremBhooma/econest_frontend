@@ -15,7 +15,7 @@ const Project = () => {
     const [projectList, setProjectList] = useState([]);
     const [selectedProject, setSelectedProject] = useState(null);
     const [updateProjectModal, setUpdateProjectModal] = useState(false);
-    
+
     // Pagination (Placeholder for now as controller supports it but frontend didn't have it fully wired)
     // const [page, setPage] = useState(1);
     // const [limit, setLimit] = useState(10);
@@ -101,7 +101,7 @@ const Project = () => {
                     <p className="text-[18px] font-semibold">Projects</p>
                 </div>
                 <hr className="text-[#ebecef]" />
-                
+
                 <div className="flex flex-col md:flex-row gap-4">
                     {/* Add Project Form - Left Column */}
                     {permissions?.settings_page?.includes("create_project") && (
@@ -112,33 +112,43 @@ const Project = () => {
 
                     {/* Project List - Right Column */}
                     <div className="basis-[75%] bg-white p-4 flex flex-col gap-4 w-full border border-[#ebecef] rounded-md">
-                        <div className="w-full relative overflow-x-auto border border-[#ebecef] rounded-md">
+                        <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
                             <table className="w-full table-fixed text-left border-collapse">
-                                <thead className="border-b-[0.6px] border-b-[#ebecef]">
+                                <thead className="bg-gray-50 border-b border-neutral-200">
                                     <tr className="w-full">
-                                        <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] w-[80px] border-r border-[#ebecef]">S.No</th>
-                                        <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500]">Project Name</th>
-                                        <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500]">Address</th>
-                                        <th className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] w-[120px] text-center border-l border-[#ebecef]">Actions</th>
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[80px] border-r border-neutral-200">S.No</th>
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px]">Project Name</th>
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px]">Address</th>
+                                        <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] text-center border-l border-neutral-200">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody className="divide-y divide-neutral-200">
                                     {isLoading ? (
                                         <TableLoadingEffect colspan={4} tr={4} />
                                     ) : (
                                         projectList.length > 0 ? (
                                             projectList.map((project, index) => (
-                                                <tr key={project.uuid} className="border-b-[0.6px] border-b-[#ebecef] align-top">
-                                                    <td className="px-4 py-3 border-r border-[#ebecef] text-[#4b5563] text-[13px]">{index + 1}</td>
-                                                    <td className="px-4 py-3 text-[#4b5563] text-[13px]">{project.project_name}</td>
-                                                    <td className="px-4 py-3 text-[#4b5563] text-[13px]">{project.project_address}</td>
-                                                    <td className="px-4 py-3 border-l border-[#ebecef]">
-                                                        <div className="flex items-center justify-center gap-3">
+                                                <tr key={project.uuid} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
+                                                    <td className="px-4 py-4 border-r border-neutral-200 text-neutral-600 text-xs font-medium leading-[18px]">{index + 1}</td>
+                                                    <td className="px-4 py-4 text-neutral-600 text-xs font-medium leading-[18px]">{project.project_name}</td>
+                                                    <td className="px-4 py-4 text-neutral-600 text-xs font-medium leading-[18px]">{project.project_address}</td>
+                                                    <td className="px-4 py-4 border-l border-neutral-200">
+                                                        <div className="flex items-center justify-center gap-2">
                                                             {permissions?.settings_page?.includes("update_project_info") && (
-                                                                <IconEdit size={20} className='cursor-pointer text-gray-600 hover:text-blue-600' onClick={() => openUpdateProjectModal(project)} />
+                                                                <div
+                                                                    onClick={() => openUpdateProjectModal(project)}
+                                                                    className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600 cursor-pointer"
+                                                                >
+                                                                    <IconEdit size={18} />
+                                                                </div>
                                                             )}
                                                             {permissions?.settings_page?.includes("delete_project") && (
-                                                                <IconTrash size={20} className='cursor-pointer text-gray-600 hover:text-red-600' onClick={() => handleDeleteProject(project.uuid)} />
+                                                                <div
+                                                                    onClick={() => handleDeleteProject(project.uuid)}
+                                                                    className="p-1 hover:bg-red-50 rounded-md transition-colors text-neutral-500 hover:text-red-600 cursor-pointer"
+                                                                >
+                                                                    <IconTrash size={18} />
+                                                                </div>
                                                             )}
                                                         </div>
                                                     </td>
@@ -146,7 +156,7 @@ const Project = () => {
                                             ))
                                         ) : (
                                             <tr>
-                                                <td colSpan={4} className="text-center py-4 text-gray-500">No projects found</td>
+                                                <td colSpan={4} className="text-center py-8 text-neutral-500 text-sm">No projects found</td>
                                             </tr>
                                         )
                                     )}

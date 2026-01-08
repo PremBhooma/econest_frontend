@@ -661,7 +661,7 @@ function Viewflat() {
                   )
                 }
 
-                <div className={`w-full text-black/60 mb-3 p-2 grid ${customerFlatDetails ? 'grid-cols-6' : 'grid-cols-5'} relative border border-[#ebecef] rounded-md bg-[#f1f1f1]`}>
+                <div className={`mb-3 grid ${customerFlatDetails ? 'grid-cols-6' : 'grid-cols-5'} relative border border-[#ebecef] rounded-md bg-[#f1f1f1] p-2`}>
                   {allTabs.map((tab) => (
                     <button
                       key={tab}
@@ -680,10 +680,10 @@ function Viewflat() {
                   ))}
                 </div>
 
-                <div className="flex-1 min-h-[calc(100vh-230px)] bg-white px-4 py-2 rounded-lg shadow-md">
+                <div className="flex-1 p-6 bg-white rounded-md shadow-md">
 
                   {activeTab === "flat-info" && (
-                    <div className="space-y-6 p-3">
+                    <div className="space-y-6">
                       {permissions?.flats_page?.includes("flat_info_single_flat") && (
                         <Flatinformation flatDetails={flatDetails} customerFlatDetails={customerFlatDetails} refreshUserDetails={refreshUserDetails} flatCostUpdate={flatCostUpdate} openFlatCostUpdate={openFlatCostUpdate} closeFlatCostUpdate={closeFlatCostUpdate} />
                       )}
@@ -691,7 +691,7 @@ function Viewflat() {
                   )}
 
                   {activeTab === "documents-tab" && (
-                    <div className="text-center text-gray-500 p-2">
+                    <div className="text-center text-gray-500">
                       {permissions?.flats_page?.includes("documents_single_flat") && (
                         <Flatdocumentswrapper />
                       )}
@@ -699,7 +699,7 @@ function Viewflat() {
                   )}
 
                   {activeTab === "payments-tab" && (
-                    <div className="text-center  text-gray-500 p-3">
+                    <div className="text-center text-gray-500">
                       {permissions?.flats_page?.includes("payments_single_flat") && (
                         <Paymentstab flat_id={flatDetails?.id} customerId={customerFlatDetails?.customer_id} />
                       )}
@@ -707,7 +707,7 @@ function Viewflat() {
                   )}
 
                   {activeTab === "notes-tab" && (
-                    <div className="text-center p-3 text-gray-500">
+                    <div className="text-center text-gray-500">
                       {permissions?.flats_page?.includes("notes_single_flat") && (
                         <Flatnotestab />
                       )}
@@ -715,7 +715,7 @@ function Viewflat() {
                   )}
 
                   {activeTab === "activities-tab" && (
-                    <div className="text-center p-3 text-gray-500]">
+                    <div className="text-center text-gray-500">
                       {permissions?.flats_page?.includes("activities_single_flat") && (
                         <Activitiestab flat_uuid={uuid} />
                       )}
@@ -723,7 +723,7 @@ function Viewflat() {
                   )}
 
                   {customerFlatDetails && activeTab === "customer-info-tab" && (
-                    <div className="space-y-6 p-3">
+                    <div className="space-y-6">
                       {permissions?.flats_page?.includes("customer_flat_single_flat") && (
                         <Customerflatinformation customerFlatDetails={customerFlatDetails} />
                       )}
@@ -735,9 +735,7 @@ function Viewflat() {
           </div>
         </div>
       </div>
-      {isLoadingEffect &&
-        <Loadingoverlay visible={isLoadingEffect} overlayBg="#2b2b2bcc" />
-      }
+
       {errorMessage && (
         <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />
       )}
