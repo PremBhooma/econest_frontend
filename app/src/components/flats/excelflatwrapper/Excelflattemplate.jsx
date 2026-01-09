@@ -117,11 +117,11 @@ function Excelflattemplate({ closeDownloadTemplate }) {
 
         // Dropdown options
         const flatTypes = [
-            { value: "TwoBHK", label: "2 BHK" },
-            { value: "ThreeBHK", label: "3 BHK" },
+            { value: "2 BHK", label: "2 BHK" },
+            { value: "3 BHK", label: "3 BHK" },
         ];
 
-       
+
         const mortgageOptions = [
             { value: "true", label: "Yes" },
             { value: "false", label: "No" },

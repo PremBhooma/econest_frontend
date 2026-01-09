@@ -352,8 +352,8 @@ function Editflat() {
   const handleSubmit = () => {
     if (
       (FloorNo !== originalFloor ||
-      facing !== originalFacing ||
-      corner !== originalCorner) && flatStatus !== "Unsold"
+        facing !== originalFacing ||
+        corner !== originalCorner) && flatStatus !== "Unsold"
     ) {
       openFloorEastCorner();
       return;
@@ -595,10 +595,10 @@ function Editflat() {
                 placeholder="Enter Deed No"
               />
               <Select
-               data={[
-                { value: "TwoBHK", label: "2 BHK" },
-                { value: "ThreeBHK", label: "3 BHK" },
-              ]}
+                data={[
+                  { value: "2 BHK", label: "2 BHK" },
+                  { value: "3 BHK", label: "3 BHK" },
+                ]}
                 placeholder="Select flat type"
                 value={flatType}
                 label="Flat Type"

@@ -422,30 +422,30 @@ function Addflat() {
       .then((response) => {
         const data = response.data;
         if (data.status === "error") {
-           // Handle error if needed, or just log
-           console.error("Error fetching projects:", data.message);
+          // Handle error if needed, or just log
+          console.error("Error fetching projects:", data.message);
         } else {
-            const projectOptions = (data.data || []).map(p => ({
-                value: p.uuid,
-                label: p.project_name
-            }));
-            setProjects(projectOptions);
-            
-            // Optional: Select the first project by default if available
-            // if (projectOptions.length > 0) {
-            //     setSelectedProject(projectOptions[0].value);
-            // }
+          const projectOptions = (data.data || []).map(p => ({
+            value: p.uuid,
+            label: p.project_name
+          }));
+          setProjects(projectOptions);
+
+          // Optional: Select the first project by default if available
+          // if (projectOptions.length > 0) {
+          //     setSelectedProject(projectOptions[0].value);
+          // }
         }
-         // Don't turn off loading here as other fetches might be running, 
-         // or handle loading state more granularly. 
-         // For now, let's just let the other independent fetches handle their own loading or global loading.
-         // Actually, since we set isLoadingEffect(true) at start of this function, we should ideally turn it off or manage it.
-         // But existing code has multiple fetches in useEffect. simpler to just not block UI too much.
+        // Don't turn off loading here as other fetches might be running, 
+        // or handle loading state more granularly. 
+        // For now, let's just let the other independent fetches handle their own loading or global loading.
+        // Actually, since we set isLoadingEffect(true) at start of this function, we should ideally turn it off or manage it.
+        // But existing code has multiple fetches in useEffect. simpler to just not block UI too much.
       })
       .catch((error) => {
         console.error("Error fetching projects:", error);
       });
-      // Not disabling loading here to avoid conflict with other parallel fetches if they share same loading state
+    // Not disabling loading here to avoid conflict with other parallel fetches if they share same loading state
   };
 
   useEffect(() => {
@@ -569,8 +569,8 @@ function Addflat() {
             /> */}
             <Select
               data={[
-                { value: "TwoBHK", label: "2 BHK" },
-                { value: "ThreeBHK", label: "3 BHK" },
+                { value: "2 BHK", label: "2 BHK" },
+                { value: "3 BHK", label: "3 BHK" },
               ]}
               placeholder="Select flat type"
               value={flatType}

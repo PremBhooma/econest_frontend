@@ -93,8 +93,8 @@ function Addamenities({ refreshAmenities }) {
                 <div className="flex flex-col gap-4">
                     <Select
                         data={[
-                            { value: "TwoBHK", label: "2 BHK" },
-                            { value: "ThreeBHK", label: "3 BHK" },
+                            { value: "2 BHK", label: "2 BHK" },
+                            { value: "3 BHK", label: "3 BHK" },
                         ]}
                         placeholder="Select flat type"
                         labelClass='!font-semibold !text-[14px]'

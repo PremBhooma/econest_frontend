@@ -90,8 +90,8 @@ function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAme
                     <div className='mb-3 grid grid-cols-1 gap-3'>
                         <Select
                             data={[
-                                { value: "TwoBHK", label: "2 BHK" },
-                                { value: "ThreeBHK", label: "3 BHK" },
+                                { value: "2 BHK", label: "2 BHK" },
+                                { value: "3 BHK", label: "3 BHK" },
                             ]}
                             placeholder="Select flat type"
                             labelClass='!font-semibold !text-[14px]'
