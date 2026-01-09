@@ -168,6 +168,7 @@ function Sharedpermissionlist({
                         { value: "delete_folder_in_lead", label: "Delete Folder in Lead Document" },
                         { value: "lead_notes", label: "Lead Note" },
                         { value: "add_notes_in_lead", label: "Add Notes in Lead" },
+                        { value: "generate_cost_sheet", label: "Generate Cost Sheet" },
                     ].map((item) => (
                         <label key={item.value} className="inline-flex items-center">
                             <input

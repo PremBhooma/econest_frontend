@@ -146,14 +146,13 @@ function Leadview() {
 
   return (
     <>
-      <div className="flex flex-col gap-3">
-        <div className="flex justify-between items-center">
+      <div className="flex flex-col gap-6">
+        {/* <div className="flex justify-between items-center">
           <p className="text-[24px] font-semibold">View Lead</p>
 
           <div className="flex items-center gap-2 text-sm text-gray-600">
             <div className="bg-[#fff] flex flex-row items-center gap-2 px-4 py-1 rounded-full border border-[#e11d80]">
               <IconPointFilled className="size-4" color="#e11d80" />
-              {/* <p className="text-[12px] text-gray-600">Lead Stage:</p> */}
               <span className="font-bold text-black text-[12px]">{leadData?.lead_stage_name}</span>
             </div>
             {
@@ -194,10 +193,73 @@ function Leadview() {
                 Edit
               </Link>
             )}
-            {/* <Link to={"/leads"} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
-              <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
-              Back
-            </Link> */}
+          </div>
+        </div> */}
+
+        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">View Lead</h1>
+
+            <div className="flex flex-wrap items-center gap-3">
+              <div className="flex items-center gap-2 px-3 py-1.5 bg-pink-50 text-pink-700 rounded-full border border-pink-100 text-sm font-medium">
+                <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+                <span>{leadData?.lead_stage_name || "Unknown Stage"}</span>
+              </div>
+
+              {leadData?.lead_assignee ? (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full border border-green-100 text-sm font-medium">
+                  <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                  <span>Assigned: {leadData.lead_assignee.name}</span>
+                </div>
+              ) : (
+                <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full border border-gray-200 text-sm font-medium">
+                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+                  <span>Unassigned</span>
+                </div>
+              )}
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+            {leadData?.lead_assignee ? (
+              permissions?.leads_page?.includes("transfer_lead") && (
+                <button onClick={openTransferLead} className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 hover:text-gray-900 transition-colors shadow-sm cursor-pointer">
+                  Transfer
+                </button>
+              )
+            ) : (
+              permissions?.leads_page?.includes("assign_lead") && (
+                <button onClick={openAsignLead} className="px-4 py-2 text-sm font-medium text-white bg-black border border-black rounded-lg hover:bg-gray-800 transition-colors shadow-sm cursor-pointer">
+                  Assign Lead
+                </button>
+              )
+            )}
+
+            {permissions?.leads_page?.includes("update_lead_stage") && (
+              <button onClick={() => openUpdateLeadStageModal(leadData?.lead_stage_id, leadData?.id)} className="px-4 py-2 text-sm font-medium text-white bg-[#931f42] border border-[#931f42] rounded-lg hover:bg-[#a6234b] transition-colors shadow-sm cursor-pointer">
+                Update Stage
+              </button>
+            )}
+
+
+            {permissions?.leads_page?.includes("generate_cost_sheet") && (
+              <button className="px-4 py-2 text-sm font-medium text-white bg-cyan-400 border border-cyan-500 rounded-lg hover:bg-cyan-600 transition-colors shadow-sm cursor-pointer">
+                Cost Sheet
+              </button>
+            )}
+
+            {permissions?.leads_page?.includes("convert_lead_to_customer") && (
+              <Link to={`/lead/convert-lead-to-customer/${leadUuid}`} className="px-4 py-2 text-sm font-medium text-white bg-emerald-600 border border-emerald-600 rounded-lg hover:bg-emerald-700 transition-colors shadow-sm cursor-pointer">
+                Convert to Customer
+              </Link>
+            )}
+
+            {permissions?.leads_page?.includes("edit_lead") && (
+              <Link to={`/lead/edit-lead/${leadUuid}`} className="px-4 py-2 text-sm font-medium text-white bg-[#0083bf] border border-[#0083bf] rounded-lg hover:bg-[#0072a6] transition-colors shadow-sm flex items-center gap-2 cursor-pointer">
+                <IconEdit size={16} />
+                Edit
+              </Link>
+            )}
           </div>
         </div>
         <div className="min-h-screen">
