@@ -18,6 +18,7 @@ import {
     SelectTrigger,
     SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 import Flatapi from "../api/Flatapi";
 import Settingsapi from "../api/Settingsapi";
 import Customerapi from "../api/Customerapi";
@@ -630,7 +631,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
                                 <div>
                                     <Label>Description</Label>
-                                    <Input
+                                    <Textarea
                                         value={description}
                                         onChange={(e) => setDescription(e.target.value)}
                                         className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
