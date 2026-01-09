@@ -194,10 +194,10 @@ function Leadview() {
                 Edit
               </Link>
             )}
-            <Link to={"/leads"} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
+            {/* <Link to={"/leads"} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
               <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
               Back
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="min-h-screen">

@@ -6,7 +6,7 @@ import { useProjectDetails } from '../zustand/useProjectDetails';
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
 import { Datepicker, Modal, Select } from '@nayeshdaggula/tailify';
 import { IconCash, IconCreditCardPay, IconEye, IconIdBadge2, IconUsers, IconUsersGroup } from '@tabler/icons-react';
-import { Users, User, Home, UserCheck, UserMinus, UserX, CheckCircle, XCircle } from 'lucide-react';
+import { Users, User, Home, UserCheck, UserMinus, UserX, CheckCircle, XCircle, MoreHorizontal, ChevronRight } from 'lucide-react';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Title, Filler, Tooltip, Legend } from 'chart.js';
 import Flatschart from './Flatschart';
 import Paymentchart from './Paymentchart';
@@ -322,13 +322,13 @@ function DashboardWrapper() {
         { label: 'Suspended', value: dashboardData.suspendedEmployees, color: 'text-red-600', icon: <UserX size={14} /> }
       ]
     },
-    {
-      title: 'Total Payments',
-      value: dashboardData.totalPayments,
-      icon: <IconCreditCardPay size={20} />,
-      bgColor: 'from-cyan-600/10 to-cyan-50',
-      iconBg: 'bg-cyan-300',
-    }
+    // {
+    //   title: 'Total Payments',
+    //   value: dashboardData.totalPayments,
+    //   icon: <IconCreditCardPay size={20} />,
+    //   bgColor: 'from-cyan-600/10 to-cyan-50',
+    //   iconBg: 'bg-cyan-300',
+    // }
   ];
 
   if (isLoadingEffect) {
@@ -368,7 +368,7 @@ function DashboardWrapper() {
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           {statsCards?.map((card, index) => (
             <div
               key={index}
@@ -401,30 +401,90 @@ function DashboardWrapper() {
           ))}
         </div>
 
-        {/* Charts Section - Full Width Row */}
-        <div className="grid grid-cols-1 ml-0 lg:grid-cols-3 gap-6">
-          {permissions?.main_page?.includes("flats_page") && (
-            <div className="col-span-1">
-              <Flatschart />
+        {/* Divide Sections */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+
+          {/* Charts Section */}
+          <div className="lg:col-span-3">
+            <div className="grid grid-cols-1 lg:grid-cols-1 gap-6">
+
+              {permissions?.main_page?.includes("flats_page") && (
+                <div>
+                  <Flatschart />
+                </div>
+              )}
             </div>
-          )}
+          </div>
+
+          {/* Right Side Section */}
+          <div className="lg:col-span-1 bg-white border border-neutral-200 shadow-sm rounded-xl p-5 h-full">
+            <div className="flex items-center justify-between mb-6">
+              <h3 className="font-bold text-neutral-900 text-lg">Recent Lead</h3>
+              {/* <button className="text-neutral-400 hover:text-neutral-600 transition-colors p-1 rounded-md hover:bg-neutral-100">
+                <MoreHorizontal size={20} />
+              </button> */}
+            </div>
+
+            <div className="space-y-6">
+              {dashboardData.leadsData.slice(0, 5).map((lead, index) => (
+                <div key={lead.id || index} className="flex items-center justify-between group cursor-pointer" onClick={() => openSingleLead(lead.uuid)}>
+                  <div className="flex items-center gap-3">
+                    {/* Avatar */}
+                    <div className="w-10 h-10 rounded-full bg-neutral-100 flex items-center justify-center text-neutral-600 font-semibold text-sm overflow-hidden border border-neutral-100 shrink-0">
+                      {lead.full_name?.slice(0, 2).toUpperCase()}
+                    </div>
+
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-sm font-semibold text-neutral-900 group-hover:text-blue-600 transition-colors truncate">
+                        {lead.prefixes} {lead.full_name}
+                      </span>
+                      <span className="text-xs text-neutral-500 truncate block max-w-[150px] sm:max-w-[200px]">
+                        {lead.email}
+                      </span>
+                    </div>
+                  </div>
+
+                  <button className="text-neutral-300 group-hover:text-neutral-500 transition-colors ml-2 shrink-0">
+                    <ChevronRight size={18} />
+                  </button>
+                </div>
+              ))}
+
+              {dashboardData.leadsData.length === 0 && (
+                <div className="flex flex-col items-center justify-center py-10 text-neutral-400">
+                  <p className="text-sm">No recent leads found</p>
+                </div>
+              )}
+            </div>
+          </div>
+
+        </div>
+
+
+        {/* Charts Section */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {permissions?.main_page?.includes("customers_page") && (
-            <div className="col-span-1">
+            <div>
               <Customerschart />
             </div>
           )}
+
           {permissions?.main_page?.includes("payments_page") && (
-            <div className="col-span-1">
+            <div>
               <Paymentchart />
             </div>
           )}
         </div>
 
-        {/* Recent Activity Grid */}
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
 
-          {/* Leads Table */}
-          {permissions?.main_page?.includes("leads_page") && (
+
+
+
+        {/* Recent Activity Grid */}
+        {/* <div className="grid grid-cols-1 xl:grid-cols-2 gap-6"> */}
+
+        {/* Leads Table */}
+        {/* {permissions?.main_page?.includes("leads_page") && (
             <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
               <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
                 <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
@@ -481,70 +541,72 @@ function DashboardWrapper() {
                 )}
               </div>
             </div>
-          )}
+          )} */}
 
-          {/* Flats Table */}
-          {permissions?.main_page?.includes("flats_page") && (
-            <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
-              <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
-                <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
-                  <Home className="text-purple-600" size={18} />
-                  Recent Flats
-                </h4>
-                <span className="text-xs font-medium bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full">{dashboardData.flatsData.length} New</span>
-              </div>
-              <div className="overflow-x-auto">
-                {dashboardData.flatsData.length > 0 ? (
-                  <table className="w-full text-left text-sm">
-                    <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
-                      <tr>
-                        <th className="px-6 py-3">Flat Details</th>
-                        <th className="px-6 py-3">Status</th>
-                        <th className="px-6 py-3">Date</th>
-                        <th className="px-6 py-3 text-right">Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-neutral-100">
-                      {dashboardData.flatsData.slice(0, 5).map((flat) => (
-                        <tr key={flat.id} className="hover:bg-neutral-50 transition-colors">
-                          <td className="px-6 py-3.5">
-                            <div className="flex items-center gap-3">
-                              <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm font-bold border border-purple-100">
-                                {flat.flat_no}
-                              </div>
-                              <div>
-                                <p className="font-medium text-neutral-900 text-xs">Block {flat.block_id}</p>
-                                <p className="text-[11px] text-neutral-500">Floor {flat.floor_no}</p>
-                              </div>
-                            </div>
-                          </td>
-                          <td className="px-6 py-3.5">
-                            <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${flat.status === 'Sold'
-                              ? 'bg-green-50 text-green-700 border border-green-100'
-                              : 'bg-orange-50 text-orange-700 border border-orange-100'
-                              }`}>
-                              {flat.status}
-                            </span>
-                          </td>
-                          <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
-                            {new Date(flat.created_at).toLocaleDateString()}
-                          </td>
-                          <td className="px-6 py-3.5 text-right">
-                            <button onClick={() => openSingleFlat(flat.uuid)} className="p-1.5 text-neutral-400 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-all">
-                              <IconEye size={16} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
-                  <div className="py-8 text-center text-neutral-400 text-sm">No recent flats</div>
-                )}
-              </div>
+        {/* Flats Table */}
+        {permissions?.main_page?.includes("flats_page") && (
+          <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
+            <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
+              <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
+                <Home className="text-purple-600" size={18} />
+                Recent Flats
+              </h4>
+              <span className="text-xs font-medium bg-purple-50 text-purple-700 px-2.5 py-1 rounded-full">{dashboardData.flatsData.length} New</span>
             </div>
-          )}
+            <div className="overflow-x-auto">
+              {dashboardData.flatsData.length > 0 ? (
+                <table className="w-full text-left text-sm">
+                  <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+                    <tr>
+                      <th className="px-6 py-3">Flat Details</th>
+                      <th className="px-6 py-3">Status</th>
+                      <th className="px-6 py-3">Date</th>
+                      <th className="px-6 py-3 text-right">Action</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-neutral-100">
+                    {dashboardData.flatsData.slice(0, 5).map((flat) => (
+                      <tr key={flat.id} className="hover:bg-neutral-50 transition-colors">
+                        <td className="px-6 py-3.5">
+                          <div className="flex items-center gap-3">
+                            <div className="w-9 h-9 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-sm font-bold border border-purple-100">
+                              {flat.flat_no}
+                            </div>
+                            <div>
+                              <p className="font-medium text-neutral-900 text-xs">Block {flat.block_id}</p>
+                              <p className="text-[11px] text-neutral-500">Floor {flat.floor_no}</p>
+                            </div>
+                          </div>
+                        </td>
+                        <td className="px-6 py-3.5">
+                          <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${flat.status === 'Sold'
+                            ? 'bg-green-50 text-green-700 border border-green-100'
+                            : 'bg-orange-50 text-orange-700 border border-orange-100'
+                            }`}>
+                            {flat.status}
+                          </span>
+                        </td>
+                        <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
+                          {new Date(flat.created_at).toLocaleDateString()}
+                        </td>
+                        <td className="px-6 py-3.5 text-right">
+                          <button onClick={() => openSingleFlat(flat.uuid)} className="p-1.5 text-neutral-400 hover:text-purple-600 hover:bg-purple-50 rounded-md transition-all">
+                            <IconEye size={16} />
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              ) : (
+                <div className="py-8 text-center text-neutral-400 text-sm">No recent flats</div>
+              )}
+            </div>
+          </div>
+        )}
+        {/* </div> */}
 
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
           {/* Customers Table */}
           {permissions?.main_page?.includes("customers_page") && (
             <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">
@@ -663,7 +725,7 @@ function DashboardWrapper() {
             </div>
           )}
         </div>
-      </div>
+      </div >
 
 
 
