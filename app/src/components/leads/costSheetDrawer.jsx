@@ -18,6 +18,7 @@ import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import Errorpanel from "../shared/Errorpanel";
+import { CloudCog } from 'lucide-react';
 
 const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) => {
     const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
@@ -120,6 +121,8 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     };
 
     const handleSelectFlat = (flat) => {
+
+        console.log("FLAT____DETAILS:", flat)
         setSearchedFlat(flat?.label);
         setSelectedFlat(flat);
         setSaleableAreaSqFt(flat?.square_feet);

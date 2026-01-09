@@ -161,14 +161,14 @@ const Amenities = () => {
                     <p className="text-[18px] font-semibold">Amenities Prices</p>
                 </div>
                 <hr className="text-[#ebecef]" />
-                <div className="flex flex-col md:flex-row gap-4">
+                <div className="grid grid-cols-4 gap-4">
                     {permissions?.settings_page?.includes("add_amenities") && (
-                        <div className="max-sm:basis-[100%] basis-[25%] w-full">
+                        <div className="col-span-1 w-full">
                             <Addamenities refreshAmenities={refreshAmenities} />
                         </div>
                     )}
 
-                    <div className="basis-[75%] bg-white p-4 flex flex-col gap-4 w-full border border-[#ebecef] rounded-md">
+                    <div className="col-span-3 bg-white p-4 flex flex-col gap-4 w-full border border-[#ebecef] rounded-md">
                         <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg">
                             <table className="w-full table-fixed text-left border-collapse">
                                 <thead className="bg-gray-50 border-b border-neutral-200">
@@ -176,10 +176,13 @@ const Amenities = () => {
                                         <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">
                                             S.No
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px]">
+                                            Project Name
+                                        </th>
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                                             Flat Type
                                         </th>
-                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
+                                        <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px]">
                                             Amount
                                         </th>
                                         <th scope="col" className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px] sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">
@@ -197,12 +200,17 @@ const Amenities = () => {
                                                             {index + 1}
                                                         </p>
                                                     </td>
-                                                    <td className="px-4 py-4 whitespace-normal break-words w-[180px]">
+                                                    <td className="px-4 py-4 whitespace-normal break-words w-[160px]">
+                                                        <p className=" text-neutral-600 text-xs font-medium leading-[18px]">
+                                                            {ele.project_name || '-'}
+                                                        </p>
+                                                    </td>
+                                                    <td className="px-4 py-4 whitespace-normal break-words w-[140px]">
                                                         <p className=" text-neutral-600 text-xs font-medium leading-[18px]">
                                                             {ele.flat_type}
                                                         </p>
                                                     </td>
-                                                    <td className="px-4 py-4 whitespace-normal break-words w-[180px]">
+                                                    <td className="px-4 py-4 whitespace-normal break-words w-[120px]">
                                                         <p className=" text-neutral-600 text-xs font-medium leading-[18px]">
                                                             {ele.formatAmount}
                                                         </p>

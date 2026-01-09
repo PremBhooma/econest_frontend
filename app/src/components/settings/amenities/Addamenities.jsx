@@ -5,6 +5,8 @@ import { Loadingoverlay, Select, Textinput } from '@nayeshdaggula/tailify';
 import Settingsapi from '../../api/Settingsapi.jsx';
 import Errorpanel from '../../shared/Errorpanel.jsx';
 
+import Projectapi from '../../api/Projectapi.jsx';
+
 function Addamenities({ refreshAmenities }) {
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
@@ -23,6 +25,34 @@ function Addamenities({ refreshAmenities }) {
         setFlatTypeError('')
     }
 
+    const [projects, setProjects] = useState([]);
+    const [projectId, setProjectId] = useState('');
+    const [projectIdError, setProjectIdError] = useState('');
+
+    const updateProjectId = (value) => {
+        setProjectId(value);
+        setProjectIdError('');
+    }
+
+    useEffect(() => {
+        getProjects();
+    }, []);
+
+    const getProjects = async () => {
+        try {
+            const response = await Projectapi.get('/get-all-projects');
+            if (response.data.status === 'success') {
+                const projectOptions = response.data.data.map(item => ({
+                    value: item.id,
+                    label: item.project_name
+                }));
+                setProjects(projectOptions);
+            }
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+    }
+
     const handleSubmit = async () => {
         setIsLoading(true)
         if (amountType === "") {
@@ -37,9 +67,17 @@ function Addamenities({ refreshAmenities }) {
             return false
         }
 
+        // Project is optional, but if you want to force selection, uncomment below
+        // if (projectId === "") {
+        //     setIsLoading(false)
+        //     setProjectIdError("Please select a project")
+        //     return false
+        // }
+
         await Settingsapi.post('/add-amenities', {
             amount: amountType,
             flat_type: flatType,
+            project_id: projectId
         }, {
             headers: {
                 "Content-Type": "application/json",
@@ -59,6 +97,7 @@ function Addamenities({ refreshAmenities }) {
                 }
                 setAmountType('')
                 setFlatType('')
+                setProjectId('')
                 toast.success("Amenities created successfully", {
                     position: "top-right",
                     autoClose: 2000,
@@ -91,6 +130,16 @@ function Addamenities({ refreshAmenities }) {
         <div className="px-3 rounded-md bg-transparent border border-[#ebecef] relative">
             <div className="py-2">
                 <div className="flex flex-col gap-4">
+                    <Select
+                        data={projects}
+                        placeholder="Select Project"
+                        labelClass='!font-semibold !text-[14px]'
+                        value={projectId}
+                        label="Project"
+                        error={projectIdError}
+                        onChange={updateProjectId}
+                        selectWrapperClass="!shadow-none !bg-white !border-[#ebecef]"
+                    />
                     <Select
                         data={[
                             { value: "2 BHK", label: "2 BHK" },

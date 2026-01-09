@@ -3,6 +3,7 @@ import Settingsapi from '../../api/Settingsapi.jsx';
 import Errorpanel from '../../shared/Errorpanel.jsx';
 import { toast } from 'react-toastify';
 import { Button, Card, Group, Loadingoverlay, Select, Text, Textinput } from '@nayeshdaggula/tailify';
+import Projectapi from '../../api/Projectapi.jsx';
 
 function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAmenities }) {
 
@@ -23,6 +24,34 @@ function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAme
         setFlatTypeError('')
     }
 
+    const [projects, setProjects] = useState([]);
+    const [projectId, setProjectId] = useState('');
+    const [projectIdError, setProjectIdError] = useState('');
+
+    const updateProjectId = (value) => {
+        setProjectId(value);
+        setProjectIdError('');
+    }
+
+    useEffect(() => {
+        getProjects();
+    }, []);
+
+    const getProjects = async () => {
+        try {
+            const response = await Projectapi.get('/get-all-projects');
+            if (response.data.status === 'success') {
+                const projectOptions = response.data.data.map(item => ({
+                    value: item.id,
+                    label: item.project_name
+                }));
+                setProjects(projectOptions);
+            }
+        } catch (error) {
+            console.error('Error fetching projects:', error);
+        }
+    }
+
     const handleSubmit = () => {
         setIsLoadingEffect(true);
         if (amountType === '') {
@@ -41,6 +70,7 @@ function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAme
             amenitiesId: singleAmenitiesData?.id,
             amount: amountType,
             flat_type: flatType,
+            project_id: projectId,
         })
             .then((response) => {
                 let data = response.data;
@@ -66,6 +96,7 @@ function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAme
         if (singleAmenitiesData) {
             setAmountType(singleAmenitiesData?.amount);
             setFlatType(singleAmenitiesData?.flat_type);
+            setProjectId(singleAmenitiesData?.project_id || '');
         }
     }, [singleAmenitiesData])
 
@@ -88,6 +119,16 @@ function Updateamenities({ closeUpdateAmenities, singleAmenitiesData, refreshAme
                 </Card.Section>
                 <Card.Section className="h-fit max-h-[80vh] overflow-auto !p-2">
                     <div className='mb-3 grid grid-cols-1 gap-3'>
+                        <Select
+                            data={projects}
+                            placeholder="Select Project"
+                            labelClass='!font-semibold !text-[14px]'
+                            value={projectId}
+                            label="Project"
+                            error={projectIdError}
+                            onChange={updateProjectId}
+                            selectWrapperClass="!shadow-none !bg-white !border-[#ebecef]"
+                        />
                         <Select
                             data={[
                                 { value: "2 BHK", label: "2 BHK" },
