@@ -57,9 +57,6 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
         setApplicationDateError("");
     };
 
-    const [openDate, setOpenDate] = useState(false);
-    const [date, setDate] = useState(new Date());
-
     // Charges
     const [floorRise, setFloorRise] = useState('25');
     const [floorRiseError, setFloorRiseError] = useState('');
@@ -140,7 +137,6 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     };
 
     const handleSelectFlat = (flat) => {
-
         console.log("FLAT____DETAILS:", flat)
         setSearchedFlat(flat?.label);
         setSelectedFlat(flat);

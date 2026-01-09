@@ -67,14 +67,14 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
             <div className="border-2 border-black">
                 {/* Header */}
                 <div className="bg-yellow-300 border-b border-black text-center py-2 font-bold text-xl uppercase">
-                    Abode MJL Heights
+                    {selectedFlat?.project_name}
                 </div>
 
                 {/* Table Grid */}
                 <div className="grid grid-cols-12 border-b border-black">
                     <div className="col-span-6 border-r border-black p-1 pl-2">Unit ID</div>
                     <div className="col-span-6 p-1 text-center font-bold text-red-600 bg-yellow-100">
-                        MJL Heights flat No {selectedFlat.flat_no}
+                        {selectedFlat?.project_name} flat No {selectedFlat.flat_no}
                     </div>
                 </div>
 
