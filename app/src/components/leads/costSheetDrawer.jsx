@@ -202,8 +202,8 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
             setSaleableAreaSqFt('');
         }
         if (selectedFlat?.floor_no) {
-            if (selectedFlat?.floor_no >= 5) {
-                const floorsToCharge = selectedFlat.floor_no - 5 + 1;
+            if (selectedFlat?.floor_no >= 6) {
+                const floorsToCharge = selectedFlat.floor_no - 6 + 1;
                 setFloorRise(floorsToCharge * 25);
             } else {
                 setFloorRise(0);
@@ -242,7 +242,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
         // Floor Rise
         let floorRiseCost = 0;
-        if (selectedFlat?.floor_no >= 5 && area && flRise) {
+        if (selectedFlat?.floor_no >= 6 && area && flRise) {
             floorRiseCost = flRise * area;
             setFloorRiseXPerSft(floorRiseCost);
         } else {
@@ -366,7 +366,8 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
         documentationFee,
         corpusFund,
         grandTotal,
-        status
+        status,
+        description
     };
 
     return (
@@ -525,7 +526,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         />
                                     </div>
 
-                                    {selectedFlat?.floor_no >= 5 && (
+                                    {selectedFlat?.floor_no >= 6 && (
                                         <div className="grid grid-cols-2 gap-2">
                                             <div>
                                                 <Label>Floor Rise (Per sq.ft)</Label>

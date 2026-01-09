@@ -4,6 +4,9 @@ import { format } from "date-fns";
 export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }, ref) => {
     if (!data || !selectedFlat) return null;
 
+    console.log("sheet:", selectedFlat)
+    console.log("sheet_data:", data)
+
     const {
         saleableAreaSqFt,
         ratePerSqFt,
@@ -24,7 +27,8 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
         documentationFee,
         corpusFund,
         grandTotal,
-        status
+        status,
+        description
     } = data;
 
     const formatCurrency = (val) => {
@@ -91,8 +95,16 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
 
                 <div className="grid grid-cols-12 border-b border-black">
                     <div className="col-span-6 border-r border-black p-1 pl-2">Status</div>
-                    <div className="col-span-6 p-1 text-center font-bold">{status || "Under Construction"}</div>
+                    <div className="col-span-6 p-1 text-center font-bold">{status}</div>
                 </div>
+
+                {/* Notes / Description from Form if available */}
+                {description && (
+                    <div className="grid grid-cols-12 border-b border-black">
+                        <div className="col-span-6 border-r border-black p-1 pl-2">Note / Description</div>
+                        <div className="col-span-6 p-1 text-center pl-2 font-bold text-red-600">{description}</div>
+                    </div>
+                )}
 
                 {/* Column Headers */}
                 <div className="grid grid-cols-12 border-b border-black font-bold">
@@ -205,6 +217,9 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
                     <div className="col-span-3 border-r border-black p-1 text-right pr-2">{formatCurrency(manjeeraConnectionCharge)}</div>
                     <div className="col-span-3 p-1 text-right pr-2">{formatCurrency(manjeeraConnectionCharge)}</div>
                 </div>
+
+                {/* Notes / Description from Form if available */}
+
 
                 {/* <div className="grid grid-cols-12 border-b border-black">
           <div className="col-span-6 border-r border-black p-1 pl-2">Manjeera connection Metere</div>
