@@ -2,7 +2,15 @@ import React, { useEffect, useState } from 'react'
 import Projectapi from '../../api/Projectapi.jsx';
 import Errorpanel from '../../shared/Errorpanel.jsx';
 import { toast } from 'react-toastify';
-import { Button, Card, Group, Loadingoverlay, NumberInput, Text, Textinput } from '@nayeshdaggula/tailify';
+import { Button } from "../../ui/button";
+import { Input } from "../../ui/input";
+import { Label } from "../../ui/label";
+import { Loader2 } from "lucide-react";
+import {
+    DialogHeader,
+    DialogTitle,
+    DialogFooter,
+} from "../../ui/dialog";
 
 function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProject, isEdit }) {
 
@@ -11,17 +19,14 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
 
     const [projectName, setProjectName] = useState('');
     const [projectNameError, setProjectNameError] = useState('')
-    const updateProjectName = (e) => {
-        setProjectName(e.target.value)
-        setProjectNameError('')
-    }
 
     const [projectAddress, setProjectAddress] = useState('');
     const [projectAddressError, setProjectAddressError] = useState('')
-    const updateProjectAddress = (e) => {
-        setProjectAddress(e.currentTarget.value)
-        setProjectAddressError('')
-    }
+
+    const [projectCornerPrice, setProjectCornerPrice] = useState('');
+    const [projectEastPrice, setProjectEastPrice] = useState('');
+    const [projectSixFloorPrice, setProjectSixFloorPrice] = useState('');
+
 
     const handleSubmit = () => {
         setIsLoadingEffect(true);
@@ -30,16 +35,19 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
             setProjectNameError('Enter project name');
             return false;
         }
-        if (projectAddress === '') {
-            setIsLoadingEffect(false);
-            setProjectAddressError('Enter project address');
-            return false;
-        }
+        // if (projectAddress === '') {
+        //     setIsLoadingEffect(false);
+        //     setProjectAddressError('Enter project address');
+        //     return false;
+        // }
 
         const apiEndpoint = isEdit ? 'update-project' : 'add-project';
         const payload = {
             project_name: projectName,
             project_address: projectAddress,
+            project_corner_price: projectCornerPrice,
+            project_east_price: projectEastPrice,
+            project_six_floor_onwards_price: projectSixFloorPrice,
             ...(isEdit && { uuid: projectData?.uuid }),
         };
 
@@ -66,60 +74,111 @@ function Updateprojectmodal({ closeUpdateProjectModal, projectData, refreshProje
 
     useEffect(() => {
         if (isEdit && projectData) {
-            setProjectName(projectData.project_name);
-            setProjectAddress(projectData.project_address);
+            setProjectName(projectData.project_name || '');
+            setProjectAddress(projectData.project_address || '');
+            setProjectCornerPrice(projectData.project_corner_price || '');
+            setProjectEastPrice(projectData.project_east_price || '');
+            setProjectSixFloorPrice(projectData.project_six_floor_onwards_price || '');
         } else {
             setProjectName('');
             setProjectAddress('');
+            setProjectCornerPrice('');
+            setProjectEastPrice('');
+            setProjectSixFloorPrice('');
         }
     }, [projectData, isEdit])
 
     return (
-        <>
-            {isLoadingEffect && <Loadingoverlay visible={isLoadingEffect} />}
+        <div className="w-full h-full flex flex-col">
+            <DialogHeader className="px-6 py-4 border-b">
+                <DialogTitle>
+                    {isEdit ? "Update Information" : "Add New Project"}
+                </DialogTitle>
+            </DialogHeader>
 
-            <Card withBorder={false} className='!shadow-none' padding='0'>
-                <Card.Section padding='0'>
-                    <Group justify="space-between" align="center" className='pb-3 items-center px-2'>
-                        <Text color='#2b2b2b' c={"#000000"} className="!font-semibold text-[18px]">
-                            {isEdit ? "Update Information" : "Add New Project"}
-                        </Text>
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-4">
+                <div className="grid gap-2">
+                    <Label htmlFor="projectName" className="font-semibold">Project Name</Label>
+                    <Input
+                        id="projectName"
+                        placeholder="Enter Project Name"
+                        value={projectName}
+                        onChange={(e) => {
+                            setProjectName(e.target.value);
+                            setProjectNameError('');
+                        }}
+                        className={`bg-white ${projectNameError ? 'border-red-500' : ''}`}
+                    />
+                    {projectNameError && <p className="text-sm text-red-500">{projectNameError}</p>}
+                </div>
 
-                        <Button onClick={closeUpdateProjectModal} size="sm" variant="default" className='!px-2 !py-1.5 !text-red-500 hover:!border-red-500'>
-                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 14 14" fill="none">
-                                <path d="M1 13L7 7L13 13M13 1L6.99886 7L1 1" stroke="#FF0000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-                            </svg>
-                        </Button>
-                    </Group>
-                </Card.Section>
-                <Card.Section className="h-fit max-h-[80vh] overflow-auto !p-2">
-                    <div className='mb-3 grid grid-cols-1 gap-3'>
-                        <Textinput
-                            placeholder='Enter Project Name'
-                            labelClassName='!font-semibold'
-                            label="Project Name"
-                            w={"100%"}
-                            value={projectName}
-                            error={projectNameError}
-                            onChange={updateProjectName}
-                        />
-                        <Textinput
-                            placeholder='Enter project address'
-                            labelClassName='!font-semibold'
-                            label="Project Address"
-                            w={'100%'}
-                            value={projectAddress}
-                            error={projectAddressError}
-                            onChange={updateProjectAddress}
-                        />
-                    </div>
-                </Card.Section>
-                <Card.Section className='flex justify-end mt-2 !p-0'>
-                    <button onClick={handleSubmit} disabled={isLoadingEffect} className="px-3 text-[14px] bg-[#0083bf] hover:!bg-[#0083bf]/90 text-white py-2 rounded cursor-pointer">Submit</button>
-                </Card.Section>
-            </Card>
+                {/* <div className="grid gap-2">
+                    <Label htmlFor="projectAddress" className="font-semibold">Project Address</Label>
+                    <Input
+                        id="projectAddress"
+                        placeholder="Enter project address"
+                        value={projectAddress}
+                        onChange={(e) => {
+                            setProjectAddress(e.target.value);
+                            setProjectAddressError('');
+                        }}
+                        className={`bg-white ${projectAddressError ? 'border-red-500' : ''}`}
+                    />
+                    {projectAddressError && <p className="text-sm text-red-500">{projectAddressError}</p>}
+                </div> */}
+
+                <div className="grid gap-2">
+                    <Label htmlFor="projectCornerPrice" className="font-semibold">Project Corner Price</Label>
+                    <Input
+                        id="projectCornerPrice"
+                        type="number"
+                        placeholder="Enter Corner Price"
+                        value={projectCornerPrice}
+                        onChange={(e) => setProjectCornerPrice(e.target.value)}
+                        className="bg-white"
+                    />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="projectEastPrice" className="font-semibold">Project East Price</Label>
+                    <Input
+                        id="projectEastPrice"
+                        type="number"
+                        placeholder="Enter East Price"
+                        value={projectEastPrice}
+                        onChange={(e) => setProjectEastPrice(e.target.value)}
+                        className="bg-white"
+                    />
+                </div>
+
+                <div className="grid gap-2">
+                    <Label htmlFor="projectSixFloorPrice" className="font-semibold">Six Floor Onwards Price</Label>
+                    <Input
+                        id="projectSixFloorPrice"
+                        type="number"
+                        placeholder="Enter Six Floor Onwards Price"
+                        value={projectSixFloorPrice}
+                        onChange={(e) => setProjectSixFloorPrice(e.target.value)}
+                        className="bg-white"
+                    />
+                </div>
+            </div>
+
+            <DialogFooter className="px-6 py-4 border-t mt-auto">
+                <div className="flex justify-end gap-2 w-full">
+                    <Button variant="outline" onClick={closeUpdateProjectModal}>Cancel</Button>
+                    <Button
+                        onClick={handleSubmit}
+                        disabled={isLoadingEffect}
+                        className="bg-[#0083bf] hover:bg-[#0083bf]/90 text-white min-w-[100px]"
+                    >
+                        {isLoadingEffect ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : "Submit"}
+                    </Button>
+                </div>
+            </DialogFooter>
+
             {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
-        </>
+        </div>
     )
 }
 
