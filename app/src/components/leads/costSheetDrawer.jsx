@@ -19,6 +19,8 @@ import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
 import { toast } from "react-toastify";
 import Errorpanel from "../shared/Errorpanel";
 import { Datepicker } from '@nayeshdaggula/tailify';
+import { useReactToPrint } from "react-to-print";
+import { CostSheetPrint } from "./CostSheetPrint";
 
 const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) => {
     const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
@@ -307,72 +309,65 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     }, [totalCostofUnit, saleableAreaSqFt, documentationFee]);
 
 
-    const handleSubmit = async () => {
-        setIsLoadingEffect(true);
+    const componentRef = React.useRef();
+    const handlePrint = useReactToPrint({
+        contentRef: componentRef,
+    });
 
-        if (selectedFlat === null) {
-            setSelectedFlatError("Please select the flat");
-            setIsLoadingEffect(false);
-            return false;
+    const handleGenerate = () => {
+        setErrorMessage("");
+
+        if (!selectedFlat) {
+            setSelectedFlatError("Please select a flat");
+            return;
         }
-
-        // Using leadData instead of selectedCustomer
         if (!leadData) {
             toast.error("Lead data missing");
-            setIsLoadingEffect(false);
-            return false;
+            return;
         }
-
-        if (applicationDate === "") {
+        if (!applicationDate) {
             setApplicationDateError('Select application date');
-            setIsLoadingEffect(false);
-            return false;
+            return;
+        }
+        if (!saleableAreaSqFt) {
+            setSaleableAreaSqFtError("Saleable Area is required");
+            return;
+        }
+        if (!ratePerSqFt) {
+            setRatePerSqFtError("Rate Per sq.ft is required");
+            return;
+        }
+        if (!grandTotal) {
+            setGrandTotalError('Grand total calculation failed');
+            return;
         }
 
-        if (saleableAreaSqFt === "") {
-            setSaleableAreaSqFtError("Saleable Area (sq.ft.) is required");
-            setIsLoadingEffect(false);
-            return false;
-        }
-
-        if (ratePerSqFt === "") {
-            setRatePerSqFtError("Rate Per (sq.ft.) is required");
-            setIsLoadingEffect(false);
-            return false;
-        }
-
-        if (grandTotal === "") {
-            setGrandTotalError('Grand total is required');
-            setIsLoadingEffect(false);
-            return false;
-        }
-
-        try {
-            const formatDateOnly = (date) => {
-                if (!date) return null;
-                const d = new Date(date);
-                const year = d.getFullYear();
-                const month = String(d.getMonth() + 1).padStart(2, "0");
-                const day = String(d.getDate()).padStart(2, "0");
-                return `${year}-${month}-${day}`;
-            };
-
-
-            setIsLoadingEffect(false);
-
-        } catch (error) {
-            console.error(error);
-            setErrorMessage({
-                message: error.message,
-                server_res: error.response?.data,
-            });
-            setIsLoadingEffect(false);
-            return false;
-        }
+        handlePrint();
     };
 
-    console.log("leadData:", leadData)
-
+    // Prepare data object for print
+    const printData = {
+        saleableAreaSqFt,
+        ratePerSqFt,
+        discount,
+        floorRise,
+        floorRiseXPerSft,
+        eastFacing,
+        eastFacingXPerSft,
+        corner,
+        cornerXPerSft,
+        amenities,
+        baseCostUnit,
+        totalCostofUnit,
+        gst,
+        costofUnitWithTax,
+        manjeeraConnectionCharge,
+        maintenceCharge,
+        documentationFee,
+        corpusFund,
+        grandTotal,
+        status
+    };
 
     return (
         <div
@@ -383,6 +378,16 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                 className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
                 onClick={() => onOpenChange(false)}
             />
+
+            {/* Hidden Print Component */}
+            <div style={{ display: "none" }}>
+                <CostSheetPrint
+                    ref={componentRef}
+                    data={printData}
+                    leadData={leadData}
+                    selectedFlat={selectedFlat}
+                />
+            </div>
 
             {/* Drawer Panel */}
             <div
@@ -696,7 +701,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                 {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
                             </div>
                             <Button variant="outline" onClick={() => onOpenChange(false)} type="button">Cancel</Button>
-                            <Button onClick={handleSubmit} className="bg-[#931f42] hover:bg-[#a6234b] cursor-pointer">Generate Cost Sheet</Button>
+                            <Button onClick={handleGenerate} className="bg-[#931f42] hover:bg-[#a6234b] cursor-pointer">Generate Cost Sheet</Button>
                         </div>
 
                     </div>
