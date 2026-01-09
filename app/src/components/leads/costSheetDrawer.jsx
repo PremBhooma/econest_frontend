@@ -357,52 +357,9 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                 return `${year}-${month}-${day}`;
             };
 
-            const apiEndpoint = leadData?.lead_uuid && "add-customer-flat"; // Using same endpoint? Assuming it handles leads or leads->customers
-
-            const response = await Customerapi.post(apiEndpoint, {
-                customerUuid: leadData?.lead_uuid || leadData?.id, // Using lead UUID/ID
-                flat_id: selectedFlat?.value,
-                applicationdate: formatDateOnly(applicationDate),
-                saleable_area_sq_ft: Number(saleableAreaSqFt),
-                rate_per_sq_ft: Number(ratePerSqFt),
-                discount: discount ? parseFloat(discount) : null,
-                base_cost_unit: Number(baseCostUnit),
-                amenities: parseFloat(amenities),
-                flatType: selectedFlat?.type,
-                toatlcostofuint: parseFloat(totalCostofUnit),
-                gst: parseFloat(gst),
-                costofunitwithtax: parseFloat(costofUnitWithTax),
-                registrationcharge: parseFloat(registartionCharge),
-                manjeeraconnectioncharge: parseFloat(manjeeraConnectionCharge),
-                maintenancecharge: parseFloat(maintenceCharge),
-                documentaionfee: parseFloat(documentationFee),
-                corpusfund: parseFloat(corpusFund),
-                floor_rise_per_sq_ft: selectedFlat?.floor_no >= 5 ? parseFloat(floorRise) : null,
-                total_floor_rise: parseFloat(floorRiseXPerSft),
-                east_facing_per_sq_ft: selectedFlat?.facing === "East" ? parseFloat(eastFacing) : null,
-                total_east_facing: parseFloat(eastFacingXPerSft),
-                corner_per_sq_ft: selectedFlat?.corner === true ? parseFloat(corner) : null,
-                total_corner: parseFloat(cornerXPerSft),
-                grand_total: parseFloat(grandTotal),
-                employeeId: employeeId
-            });
-
-            const data = response?.data;
-
-            if (data?.status === "error") {
-                setErrorMessage({
-                    message: data?.message,
-                    server_res: data,
-                });
-                setIsLoadingEffect(false);
-                return false;
-            }
 
             setIsLoadingEffect(false);
-            toast.success("Cost Sheet saved successfully");
-            if (refreshLeadDetails) refreshLeadDetails();
-            onOpenChange(false);
-            return true;
+
         } catch (error) {
             console.error(error);
             setErrorMessage({
@@ -739,7 +696,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                 {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
                             </div>
                             <Button variant="outline" onClick={() => onOpenChange(false)} type="button">Cancel</Button>
-                            <Button onClick={handleSubmit} className="bg-[#931f42] hover:bg-[#a6234b]">Save Cost Sheet</Button>
+                            <Button onClick={handleSubmit} className="bg-[#931f42] hover:bg-[#a6234b] cursor-pointer">Generate Cost Sheet</Button>
                         </div>
 
                     </div>
