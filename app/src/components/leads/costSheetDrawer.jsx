@@ -396,6 +396,8 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
         }
     };
 
+    console.log("leadData:", leadData)
+
 
     return (
         <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
@@ -404,7 +406,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                     <div>
                         <DrawerTitle>Cost Sheet</DrawerTitle>
                         <DrawerDescription>
-                            Generate cost sheet for {leadData?.first_name} {leadData?.last_name}
+                            Generate cost sheet for {leadData?.full_name}
                         </DrawerDescription>
                     </div>
                     <DrawerClose asChild>
@@ -414,223 +416,248 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                     </DrawerClose>
                 </DrawerHeader>
 
-                <div className="flex-1 overflow-y-auto px-6 pt-6 scrollbar-hide">
-                    {/* Loading Overlay */}
-                    {isLoadingEffect && (
-                        <div className="absolute inset-0 z-50 bg-white/50 flex items-center justify-center">
-                            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                        </div>
-                    )}
+                <div className="flex-1 overflow-y-auto pt-0 scrollbar-hide">
 
-                    {/* Flat Selection */}
-                    <div className="mb-6 relative">
-                        <Label>Select Flat *</Label>
-                        <Input
-                            value={searchedFlat}
-                            onChange={updateSearchedLocation}
-                            placeholder="Enter Flat No"
-                            className="mt-1"
-                        />
-                        {showDropdown && flat.length > 0 && (
-                            <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
-                                {flat.map((item) => (
-                                    <li
-                                        key={item.value}
-                                        className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                                        onClick={() => handleSelectFlat(item)}
-                                    >
-                                        {item.label}
-                                    </li>
-                                ))}
-                            </ul>
-                        )}
-                        {selectedFlatError && <p className="text-red-500 text-xs mt-1">{selectedFlatError}</p>}
+                    {/* Customer Details Section */}
+                    <div className="px-6 py-4 bg-gray-50 border-b mb-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <p className="text-xs text-gray-500 mb-1">Lead Name</p>
+                                <p className="font-medium text-sm">{leadData?.full_name}</p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 mb-1">Email</p>
+                                <p className="font-medium text-sm">{leadData?.email || '-'}</p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 mb-1">Phone Number</p>
+                                <p className="font-medium text-sm">{leadData?.phone_code && leadData?.phone_number ? `+${leadData.phone_code} ${leadData.phone_number}` : '-'} </p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 mb-1">Assigned Employee</p>
+                                <p className="font-medium text-sm">{leadData?.assigned_to || 'No Assigned'}</p>
+                            </div>
+                        </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-4">
-                            <div>
-                                <Label>Application Date *</Label>
-                                <Input
-                                    type="date"
-                                    value={applicationDate}
-                                    onChange={(e) => {
-                                        setApplicationDate(e.target.value);
-                                        setApplicationDateError('');
-                                    }}
-                                />
-                                {applicationDateError && <p className="text-red-500 text-xs mt-1">{applicationDateError}</p>}
+                    <div className="px-6">
+                        {/* Loading Overlay */}
+                        {isLoadingEffect && (
+                            <div className="absolute inset-0 z-50 bg-white/50 flex items-center justify-center">
+                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
                             </div>
+                        )}
 
-                            <div>
-                                <Label>Saleable Area (sq.ft) *</Label>
-                                <Input
-                                    type="number"
-                                    value={saleableAreaSqFt}
-                                    onChange={(e) => {
-                                        setSaleableAreaSqFt(e.target.value);
-                                        setSaleableAreaSqFtError('');
-                                    }}
-                                />
-                                {saleableAreaSqFtError && <p className="text-red-500 text-xs mt-1">{saleableAreaSqFtError}</p>}
-                            </div>
-
-                            <div>
-                                <Label>Rate Per sq.ft *</Label>
-                                <Input
-                                    type="number"
-                                    value={ratePerSqFt}
-                                    onChange={(e) => {
-                                        setRatePerSqFt(e.target.value);
-                                        setRatePerSqFtError('');
-                                    }}
-                                />
-                                {ratePerSqFtError && <p className="text-red-500 text-xs mt-1">{ratePerSqFtError}</p>}
-                            </div>
-
-                            <div>
-                                <Label>Discount Per sq.ft</Label>
-                                <Input
-                                    type="number"
-                                    value={discount}
-                                    onChange={(e) => setDiscount(e.target.value)}
-                                />
-                            </div>
-
-                            <div>
-                                <Label>Base Cost</Label>
-                                <Input
-                                    value={baseCostUnit}
-                                    readOnly
-                                    className="bg-gray-50"
-                                />
-                            </div>
-
-                            {selectedFlat?.floor_no >= 5 && (
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <Label>Floor Rise (Per sq.ft)</Label>
-                                        <Input
-                                            value={floorRise}
-                                            onChange={(e) => setFloorRise(e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Label>Total Floor Rise</Label>
-                                        <Input value={floorRiseXPerSft} readOnly className="bg-gray-50" />
-                                    </div>
-                                </div>
+                        {/* Flat Selection */}
+                        <div className="mb-6 relative">
+                            <Label>Select Flat *</Label>
+                            <Input
+                                value={searchedFlat}
+                                onChange={updateSearchedLocation}
+                                placeholder="Enter Flat No"
+                                className="mt-1"
+                            />
+                            {showDropdown && flat.length > 0 && (
+                                <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
+                                    {flat.map((item) => (
+                                        <li
+                                            key={item.value}
+                                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                                            onClick={() => handleSelectFlat(item)}
+                                        >
+                                            {item.label}
+                                        </li>
+                                    ))}
+                                </ul>
                             )}
-
-                            {selectedFlat?.facing === "East" && (
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <Label>East Facing (Per sq.ft)</Label>
-                                        <Input
-                                            value={eastFacing}
-                                            onChange={(e) => setEastFacing(e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Label>Total East Facing</Label>
-                                        <Input value={eastFacingXPerSft} readOnly className="bg-gray-50" />
-                                    </div>
-                                </div>
-                            )}
-
-                            {selectedFlat?.corner && (
-                                <div className="grid grid-cols-2 gap-2">
-                                    <div>
-                                        <Label>Corner (Per sq.ft)</Label>
-                                        <Input
-                                            value={corner}
-                                            onChange={(e) => setCorner(e.target.value)}
-                                        />
-                                    </div>
-                                    <div>
-                                        <Label>Total Corner</Label>
-                                        <Input value={cornerXPerSft} readOnly className="bg-gray-50" />
-                                    </div>
-                                </div>
-                            )}
-
-                            <div>
-                                <Label>Amenities</Label>
-                                <Input
-                                    value={amenities}
-                                    onChange={(e) => setAmenities(e.target.value)}
-                                />
-                                {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
-                            </div>
+                            {selectedFlatError && <p className="text-red-500 text-xs mt-1">{selectedFlatError}</p>}
                         </div>
 
-                        <div className="space-y-4">
-                            <div>
-                                <Label>Total Cost of Unit</Label>
-                                <Input
-                                    value={totalCostofUnit}
-                                    readOnly
-                                    className="bg-gray-50 font-bold"
-                                />
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div className="space-y-4">
+                                <div>
+                                    <Label>Application Date *</Label>
+                                    <Input
+                                        type="date"
+                                        value={applicationDate}
+                                        onChange={(e) => {
+                                            setApplicationDate(e.target.value);
+                                            setApplicationDateError('');
+                                        }}
+                                    />
+                                    {applicationDateError && <p className="text-red-500 text-xs mt-1">{applicationDateError}</p>}
+                                </div>
+
+                                <div>
+                                    <Label>Saleable Area (sq.ft) *</Label>
+                                    <Input
+                                        type="number"
+                                        value={saleableAreaSqFt}
+                                        onChange={(e) => {
+                                            setSaleableAreaSqFt(e.target.value);
+                                            setSaleableAreaSqFtError('');
+                                        }}
+                                    />
+                                    {saleableAreaSqFtError && <p className="text-red-500 text-xs mt-1">{saleableAreaSqFtError}</p>}
+                                </div>
+
+                                <div>
+                                    <Label>Rate Per sq.ft *</Label>
+                                    <Input
+                                        type="number"
+                                        value={ratePerSqFt}
+                                        onChange={(e) => {
+                                            setRatePerSqFt(e.target.value);
+                                            setRatePerSqFtError('');
+                                        }}
+                                    />
+                                    {ratePerSqFtError && <p className="text-red-500 text-xs mt-1">{ratePerSqFtError}</p>}
+                                </div>
+
+                                <div>
+                                    <Label>Discount Per sq.ft</Label>
+                                    <Input
+                                        type="number"
+                                        value={discount}
+                                        onChange={(e) => setDiscount(e.target.value)}
+                                    />
+                                </div>
+
+                                <div>
+                                    <Label>Base Cost</Label>
+                                    <Input
+                                        value={baseCostUnit}
+                                        readOnly
+                                        className="bg-gray-50"
+                                    />
+                                </div>
+
+                                {selectedFlat?.floor_no >= 5 && (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <Label>Floor Rise (Per sq.ft)</Label>
+                                            <Input
+                                                value={floorRise}
+                                                onChange={(e) => setFloorRise(e.target.value)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label>Total Floor Rise</Label>
+                                            <Input value={floorRiseXPerSft} readOnly className="bg-gray-50" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {selectedFlat?.facing === "East" && (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <Label>East Facing (Per sq.ft)</Label>
+                                            <Input
+                                                value={eastFacing}
+                                                onChange={(e) => setEastFacing(e.target.value)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label>Total East Facing</Label>
+                                            <Input value={eastFacingXPerSft} readOnly className="bg-gray-50" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                {selectedFlat?.corner && (
+                                    <div className="grid grid-cols-2 gap-2">
+                                        <div>
+                                            <Label>Corner (Per sq.ft)</Label>
+                                            <Input
+                                                value={corner}
+                                                onChange={(e) => setCorner(e.target.value)}
+                                            />
+                                        </div>
+                                        <div>
+                                            <Label>Total Corner</Label>
+                                            <Input value={cornerXPerSft} readOnly className="bg-gray-50" />
+                                        </div>
+                                    </div>
+                                )}
+
+                                <div>
+                                    <Label>Amenities</Label>
+                                    <Input
+                                        value={amenities}
+                                        onChange={(e) => setAmenities(e.target.value)}
+                                    />
+                                    {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
+                                </div>
                             </div>
 
-                            <div>
-                                <Label>GST (5%)</Label>
-                                <Input
-                                    value={gst}
-                                    readOnly
-                                    className="bg-gray-50"
-                                />
-                            </div>
+                            <div className="space-y-4">
+                                <div>
+                                    <Label>Total Cost of Unit</Label>
+                                    <Input
+                                        value={totalCostofUnit}
+                                        readOnly
+                                        className="bg-gray-50 font-bold"
+                                    />
+                                </div>
 
-                            <div>
-                                <Label>Cost of Unit with Tax</Label>
-                                <Input
-                                    value={costofUnitWithTax}
-                                    readOnly
-                                    className="bg-gray-50 font-semibold"
-                                />
-                            </div>
+                                <div>
+                                    <Label>GST (5%)</Label>
+                                    <Input
+                                        value={gst}
+                                        readOnly
+                                        className="bg-gray-50"
+                                    />
+                                </div>
 
-                            <div>
-                                <Label>Registration Charges</Label>
-                                <Input
-                                    value={registartionCharge}
-                                    onChange={(e) => setRegistrationCharge(e.target.value)}
-                                />
-                            </div>
+                                <div>
+                                    <Label>Cost of Unit with Tax</Label>
+                                    <Input
+                                        value={costofUnitWithTax}
+                                        readOnly
+                                        className="bg-gray-50 font-semibold"
+                                    />
+                                </div>
 
-                            <div>
-                                <Label>Maintenance Charges</Label>
-                                <Input
-                                    value={maintenceCharge}
-                                    onChange={(e) => setMaintenceCharge(e.target.value)}
-                                />
-                            </div>
+                                <div>
+                                    <Label>Registration Charges</Label>
+                                    <Input
+                                        value={registartionCharge}
+                                        onChange={(e) => setRegistrationCharge(e.target.value)}
+                                    />
+                                </div>
 
-                            <div>
-                                <Label>Documentation Fee</Label>
-                                <Input
-                                    value={documentationFee}
-                                    onChange={(e) => setDocumentationFee(e.target.value)}
-                                />
-                            </div>
+                                <div>
+                                    <Label>Maintenance Charges</Label>
+                                    <Input
+                                        value={maintenceCharge}
+                                        onChange={(e) => setMaintenceCharge(e.target.value)}
+                                    />
+                                </div>
 
-                            <div>
-                                <Label>Corpus Fund</Label>
-                                <Input
-                                    value={corpusFund}
-                                    onChange={(e) => setCorpusFund(e.target.value)}
-                                />
-                            </div>
+                                <div>
+                                    <Label>Documentation Fee</Label>
+                                    <Input
+                                        value={documentationFee}
+                                        onChange={(e) => setDocumentationFee(e.target.value)}
+                                    />
+                                </div>
 
-                            <div className="pt-4 border-t">
-                                <Label className="text-lg text-primary">Grand Total</Label>
-                                <Input
-                                    value={grandTotal}
-                                    onChange={(e) => setGrandTotal(e.target.value)}
-                                    className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14"
-                                />
+                                <div>
+                                    <Label>Corpus Fund</Label>
+                                    <Input
+                                        value={corpusFund}
+                                        onChange={(e) => setCorpusFund(e.target.value)}
+                                    />
+                                </div>
+
+                                <div className="pt-4 border-t">
+                                    <Label className="text-lg text-primary">Grand Total</Label>
+                                    <Input
+                                        value={grandTotal}
+                                        onChange={(e) => setGrandTotal(e.target.value)}
+                                        className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14"
+                                    />
+                                </div>
                             </div>
                         </div>
                     </div>
