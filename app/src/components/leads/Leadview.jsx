@@ -12,6 +12,7 @@ import Leadnotestab from "./viewtabs/Leadnotestab.jsx";
 import TransferleadModal from "./TransferleadModal.jsx";
 import Leadactivities from "./viewtabs/Leadactivities.jsx";
 import Updateleadstage from "./leadstages/Updateleadstage.jsx";
+import CostSheetDrawer from "./costSheetDrawer.jsx";
 import Uploadleadprofile from "../shared/Uploadleadprofile.jsx";
 import Leadsdocumentswrapper from "./documents/Leadsdocumentswrapper.jsx";
 import profileStatic from "../../../public/assets/customer_static_image.jpg";
@@ -24,6 +25,8 @@ function Leadview() {
   const permissions = useEmployeeDetails((state) => state.permissions);
   const [errorMessage, setErrorMessage] = useState("");
   const [isLoadingEffect, setIsLoadingEffect] = useState(false);
+
+  const [costSheetDrawer, setCostSheetDrawer] = useState(false);
 
   const availableTabs = [
     permissions?.leads_page?.includes("lead_documents") && { key: "documents", label: "Documents" },
@@ -243,7 +246,7 @@ function Leadview() {
 
 
             {permissions?.leads_page?.includes("generate_cost_sheet") && (
-              <button className="px-4 py-2 text-sm font-medium text-white bg-cyan-400 border border-cyan-500 rounded-lg hover:bg-cyan-600 transition-colors shadow-sm cursor-pointer">
+              <button onClick={() => setCostSheetDrawer(true)} className="px-4 py-2 text-sm font-medium text-white bg-cyan-400 border border-cyan-500 rounded-lg hover:bg-cyan-600 transition-colors shadow-sm cursor-pointer">
                 Cost Sheet
               </button>
             )}
@@ -455,6 +458,12 @@ function Leadview() {
           />
         )}
       </Modal>
+
+
+      <CostSheetDrawer
+        open={costSheetDrawer}
+        onOpenChange={setCostSheetDrawer}
+      />
     </>
   );
 }
