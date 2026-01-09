@@ -11,6 +11,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
 import { IconX } from "@tabler/icons-react";
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select";
 import Flatapi from "../api/Flatapi";
 import Settingsapi from "../api/Settingsapi";
 import Customerapi from "../api/Customerapi";
@@ -609,11 +616,15 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
                                 <div>
                                     <Label>Status</Label>
-                                    <Input
-                                        value={status}
-                                        onChange={(e) => setStatus(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
+                                    <Select value={status} onValueChange={setStatus}>
+                                        <SelectTrigger className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
+                                            <SelectValue placeholder="Select Status" />
+                                        </SelectTrigger>
+                                        <SelectContent className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
+                                            <SelectItem value="Under Construction">Under Construction</SelectItem>
+                                            <SelectItem value="Constructed">Constructed</SelectItem>
+                                        </SelectContent>
+                                    </Select>
                                     {statusError && <p className="text-red-500 text-xs mt-1">{statusError}</p>}
                                 </div>
 
