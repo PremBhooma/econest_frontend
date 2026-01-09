@@ -1,12 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import {
-    Drawer,
-    DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
-    DrawerDescription,
-    DrawerClose,
-} from "@/components/ui/drawerCostSheet";
+
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
@@ -23,10 +16,9 @@ import Flatapi from "../api/Flatapi";
 import Settingsapi from "../api/Settingsapi";
 import Customerapi from "../api/Customerapi";
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
-import dayjs from "dayjs";
 import { toast } from "react-toastify";
 import Errorpanel from "../shared/Errorpanel";
-import { CloudCog } from 'lucide-react';
+import { Datepicker } from '@nayeshdaggula/tailify';
 
 const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) => {
     const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
@@ -57,6 +49,14 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     // Application Date
     const [applicationDate, setApplicationDate] = useState("");
     const [applicationDateError, setApplicationDateError] = useState('');
+
+    const updateApplicationDate = (value) => {
+        setApplicationDate(value);
+        setApplicationDateError("");
+    };
+
+    const [openDate, setOpenDate] = useState(false);
+    const [date, setDate] = useState(new Date());
 
     // Charges
     const [floorRise, setFloorRise] = useState('25');
@@ -418,257 +418,266 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
 
     return (
-        <Drawer direction="right" open={open} onOpenChange={onOpenChange}>
-            <DrawerContent className="!fixed !inset-y-0 !right-0 !left-auto !mt-0 !w-[80%] !h-full !rounded-none !border-l bg-white [&>div.bg-muted]:hidden">
-                <DrawerHeader className="flex justify-between items-center border-b pb-4 px-6 mb-0">
-                    <div>
-                        <DrawerTitle>Cost Sheet</DrawerTitle>
-                        <DrawerDescription>
-                            Generate cost sheet for {leadData?.full_name}
-                        </DrawerDescription>
+        <div
+            className={`fixed inset-0 z-50 transition-opacity duration-300 ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+        >
+            {/* Backdrop */}
+            <div
+                className="absolute inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+                onClick={() => onOpenChange(false)}
+            />
+
+            {/* Drawer Panel */}
+            <div
+                className={`absolute top-0 right-0 h-full w-[80%] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out ${open ? "translate-x-0" : "translate-x-full"}`}
+            >
+                <div className="h-full flex flex-col">
+                    <div className="px-6 py-4 border-b border-gray-300 flex items-center justify-between bg-gray-50/50">
+                        <div>
+                            <h2 className="text-xl font-semibold text-gray-800">Cost Sheet</h2>
+                            <p className="text-sm text-gray-500">
+                                Generate cost sheet for {leadData?.full_name}
+                            </p>
+                        </div>
+                        <button
+                            onClick={() => onOpenChange(false)}
+                            className="p-2 hover:bg-gray-200 rounded-full transition-colors group"
+                        >
+                            <IconX size={24} className="text-gray-500 group-hover:text-gray-700" />
+                        </button>
                     </div>
-                    <DrawerClose asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 rounded-full">
-                            <IconX size={20} />
-                        </Button>
-                    </DrawerClose>
-                </DrawerHeader>
 
-                <div className="flex-1 overflow-y-auto pt-0 scrollbar-hide">
+                    <div className="flex-1 overflow-y-auto pt-0 scrollbar-hide">
 
-                    {/* Customer Details Section */}
-                    <div className="px-6 py-4 bg-gray-50 border-b mb-4">
-                        <div className="grid grid-cols-2 gap-4">
-                            <div>
-                                <p className="text-xs text-gray-500 mb-1">Lead Name</p>
-                                <p className="font-medium text-sm">{leadData?.full_name}</p>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500 mb-1">Email</p>
-                                <p className="font-medium text-sm">{leadData?.email || '-'}</p>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500 mb-1">Phone Number</p>
-                                <p className="font-medium text-sm">{leadData?.phone_code && leadData?.phone_number ? `+${leadData.phone_code} ${leadData.phone_number}` : '-'} </p>
-                            </div>
-                            <div>
-                                <p className="text-xs text-gray-500 mb-1">Assigned Employee</p>
-                                <p className="font-medium text-sm">{leadData?.assigned_to || 'No Assigned'}</p>
+                        {/* Customer Details Section */}
+                        <div className="px-6 py-4 bg-gray-50 border-b border-gray-300 mb-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-1">Lead Name</p>
+                                    <p className="font-medium text-sm">{leadData?.full_name}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-1">Email</p>
+                                    <p className="font-medium text-sm">{leadData?.email || '-'}</p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-1">Phone Number</p>
+                                    <p className="font-medium text-sm">{leadData?.phone_code && leadData?.phone_number ? `+${leadData.phone_code} ${leadData.phone_number}` : '-'} </p>
+                                </div>
+                                <div>
+                                    <p className="text-xs text-gray-500 mb-1">Assigned Employee</p>
+                                    <p className="font-medium text-sm">{leadData?.assigned_to || 'No Assigned'}</p>
+                                </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="px-6">
-                        {/* Loading Overlay */}
-                        {isLoadingEffect && (
-                            <div className="absolute inset-0 z-50 bg-white/50 flex items-center justify-center">
-                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
-                            </div>
-                        )}
-
-                        {/* Flat Selection */}
-                        <div className="mb-6 relative">
-                            <Label>Select Flat *</Label>
-                            <Input
-                                value={searchedFlat}
-                                onChange={updateSearchedLocation}
-                                placeholder="Enter Flat No"
-                                className="mt-1 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                            />
-                            {showDropdown && flat.length > 0 && (
-                                <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
-                                    {flat.map((item) => (
-                                        <li
-                                            key={item.value}
-                                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                                            onClick={() => handleSelectFlat(item)}
-                                        >
-                                            {item.label}
-                                        </li>
-                                    ))}
-                                </ul>
+                        <div className="px-6">
+                            {/* Loading Overlay */}
+                            {isLoadingEffect && (
+                                <div className="absolute inset-0 z-50 bg-white/50 flex items-center justify-center">
+                                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+                                </div>
                             )}
-                            {selectedFlatError && <p className="text-red-500 text-xs mt-1">{selectedFlatError}</p>}
-                        </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div className="space-y-4">
-                                <div>
-                                    <Label>Application Date *</Label>
-                                    <Input
-                                        type="date"
-                                        value={applicationDate}
-                                        onChange={(e) => {
-                                            setApplicationDate(e.target.value);
-                                            setApplicationDateError('');
-                                        }}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                    {applicationDateError && <p className="text-red-500 text-xs mt-1">{applicationDateError}</p>}
-                                </div>
-
-                                <div>
-                                    <Label>Saleable Area (sq.ft) *</Label>
-                                    <Input
-                                        type="number"
-                                        value={saleableAreaSqFt}
-                                        onChange={(e) => {
-                                            setSaleableAreaSqFt(e.target.value);
-                                            setSaleableAreaSqFtError('');
-                                        }}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                    {saleableAreaSqFtError && <p className="text-red-500 text-xs mt-1">{saleableAreaSqFtError}</p>}
-                                </div>
-
-                                <div>
-                                    <Label>Rate Per sq.ft *</Label>
-                                    <Input
-                                        type="number"
-                                        value={ratePerSqFt}
-                                        onChange={(e) => {
-                                            setRatePerSqFt(e.target.value);
-                                            setRatePerSqFtError('');
-                                        }}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                    {ratePerSqFtError && <p className="text-red-500 text-xs mt-1">{ratePerSqFtError}</p>}
-                                </div>
-
-                                <div>
-                                    <Label>Discount Per sq.ft</Label>
-                                    <Input
-                                        type="number"
-                                        value={discount}
-                                        onChange={(e) => setDiscount(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
-
-                                <div>
-                                    <Label>Base Cost</Label>
-                                    <Input
-                                        value={baseCostUnit}
-                                        readOnly
-                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
-
-                                {selectedFlat?.floor_no >= 5 && (
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <Label>Floor Rise (Per sq.ft)</Label>
-                                            <Input
-                                                value={floorRise}
-                                                onChange={(e) => setFloorRise(e.target.value)}
-                                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label>Total Floor Rise</Label>
-                                            <Input value={floorRiseXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
-                                        </div>
-                                    </div>
+                            {/* Flat Selection */}
+                            <div className="mb-6 relative">
+                                <Label>Select Flat *</Label>
+                                <Input
+                                    value={searchedFlat}
+                                    onChange={updateSearchedLocation}
+                                    placeholder="Enter Flat No"
+                                    className="mt-1 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                />
+                                {showDropdown && flat.length > 0 && (
+                                    <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
+                                        {flat.map((item) => (
+                                            <li
+                                                key={item.value}
+                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                                                onClick={() => handleSelectFlat(item)}
+                                            >
+                                                {item.label}
+                                            </li>
+                                        ))}
+                                    </ul>
                                 )}
-
-                                {selectedFlat?.facing === "East" && (
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <Label>East Facing (Per sq.ft)</Label>
-                                            <Input
-                                                value={eastFacing}
-                                                onChange={(e) => setEastFacing(e.target.value)}
-                                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label>Total East Facing</Label>
-                                            <Input value={eastFacingXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
-                                        </div>
-                                    </div>
-                                )}
-
-                                {selectedFlat?.corner && (
-                                    <div className="grid grid-cols-2 gap-2">
-                                        <div>
-                                            <Label>Corner (Per sq.ft)</Label>
-                                            <Input
-                                                value={corner}
-                                                onChange={(e) => setCorner(e.target.value)}
-                                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                            />
-                                        </div>
-                                        <div>
-                                            <Label>Total Corner</Label>
-                                            <Input value={cornerXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div>
-                                    <Label>Amenities</Label>
-                                    <Input
-                                        value={amenities}
-                                        onChange={(e) => setAmenities(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                    {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
-                                </div>
-
-                                <div>
-                                    <Label>Status</Label>
-                                    <Select value={status} onValueChange={setStatus}>
-                                        <SelectTrigger className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
-                                            <SelectValue placeholder="Select Status" />
-                                        </SelectTrigger>
-                                        <SelectContent className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
-                                            <SelectItem value="Under Construction">Under Construction</SelectItem>
-                                            <SelectItem value="Constructed">Constructed</SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    {statusError && <p className="text-red-500 text-xs mt-1">{statusError}</p>}
-                                </div>
-
-                                <div>
-                                    <Label>Description</Label>
-                                    <Textarea
-                                        value={description}
-                                        onChange={(e) => setDescription(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                    {descriptionError && <p className="text-red-500 text-xs mt-1">{descriptionError}</p>}
-                                </div>
+                                {selectedFlatError && <p className="text-red-500 text-xs mt-1">{selectedFlatError}</p>}
                             </div>
 
-                            <div className="space-y-4">
-                                <div>
-                                    <Label>Total Cost of Unit</Label>
-                                    <Input
-                                        value={totalCostofUnit}
-                                        readOnly
-                                        className="bg-gray-50 font-bold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div className="space-y-4">
+
+                                    <Datepicker
+                                        label="Application Date"
+                                        value={applicationDate}
+                                        onChange={updateApplicationDate}
+                                        error={applicationDateError}
+                                        labelClassName="text-sm font-medium text-gray-600 !mb-1 -mt-1"
+                                        inputClassName="!h-10 border border-gray-300 !rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:!border-black"
                                     />
+
+                                    <div>
+                                        <Label>Saleable Area (sq.ft) *</Label>
+                                        <Input
+                                            type="number"
+                                            value={saleableAreaSqFt}
+                                            onChange={(e) => {
+                                                setSaleableAreaSqFt(e.target.value);
+                                                setSaleableAreaSqFtError('');
+                                            }}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                        {saleableAreaSqFtError && <p className="text-red-500 text-xs mt-1">{saleableAreaSqFtError}</p>}
+                                    </div>
+
+                                    <div>
+                                        <Label>Rate Per sq.ft *</Label>
+                                        <Input
+                                            type="number"
+                                            value={ratePerSqFt}
+                                            onChange={(e) => {
+                                                setRatePerSqFt(e.target.value);
+                                                setRatePerSqFtError('');
+                                            }}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                        {ratePerSqFtError && <p className="text-red-500 text-xs mt-1">{ratePerSqFtError}</p>}
+                                    </div>
+
+                                    <div>
+                                        <Label>Discount Per sq.ft</Label>
+                                        <Input
+                                            type="number"
+                                            value={discount}
+                                            onChange={(e) => setDiscount(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <Label>Base Cost</Label>
+                                        <Input
+                                            value={baseCostUnit}
+                                            readOnly
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
+
+                                    {selectedFlat?.floor_no >= 5 && (
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <Label>Floor Rise (Per sq.ft)</Label>
+                                                <Input
+                                                    value={floorRise}
+                                                    onChange={(e) => setFloorRise(e.target.value)}
+                                                    className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label>Total Floor Rise</Label>
+                                                <Input value={floorRiseXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {selectedFlat?.facing === "East" && (
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <Label>East Facing (Per sq.ft)</Label>
+                                                <Input
+                                                    value={eastFacing}
+                                                    onChange={(e) => setEastFacing(e.target.value)}
+                                                    className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label>Total East Facing</Label>
+                                                <Input value={eastFacingXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    {selectedFlat?.corner && (
+                                        <div className="grid grid-cols-2 gap-2">
+                                            <div>
+                                                <Label>Corner (Per sq.ft)</Label>
+                                                <Input
+                                                    value={corner}
+                                                    onChange={(e) => setCorner(e.target.value)}
+                                                    className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                                />
+                                            </div>
+                                            <div>
+                                                <Label>Total Corner</Label>
+                                                <Input value={cornerXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
+                                            </div>
+                                        </div>
+                                    )}
+
+                                    <div>
+                                        <Label>Amenities</Label>
+                                        <Input
+                                            value={amenities}
+                                            onChange={(e) => setAmenities(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                        {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
+                                    </div>
+
+                                    <div>
+                                        <Label>Status</Label>
+                                        <Select value={status} onValueChange={setStatus}>
+                                            <SelectTrigger className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
+                                                <SelectValue placeholder="Select Status" />
+                                            </SelectTrigger>
+                                            <SelectContent className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
+                                                <SelectItem value="Under Construction">Under Construction</SelectItem>
+                                                <SelectItem value="Constructed">Constructed</SelectItem>
+                                            </SelectContent>
+                                        </Select>
+                                        {statusError && <p className="text-red-500 text-xs mt-1">{statusError}</p>}
+                                    </div>
+
+                                    <div>
+                                        <Label>Description</Label>
+                                        <Textarea
+                                            value={description}
+                                            onChange={(e) => setDescription(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                        {descriptionError && <p className="text-red-500 text-xs mt-1">{descriptionError}</p>}
+                                    </div>
                                 </div>
 
-                                <div>
-                                    <Label>GST (5%)</Label>
-                                    <Input
-                                        value={gst}
-                                        readOnly
-                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
+                                <div className="space-y-4">
+                                    <div>
+                                        <Label>Total Cost of Unit</Label>
+                                        <Input
+                                            value={totalCostofUnit}
+                                            readOnly
+                                            className="bg-gray-50 font-bold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
 
-                                <div>
-                                    <Label>Cost of Unit with Tax</Label>
-                                    <Input
-                                        value={costofUnitWithTax}
-                                        readOnly
-                                        className="bg-gray-50 font-semibold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
+                                    <div>
+                                        <Label>GST (5%)</Label>
+                                        <Input
+                                            value={gst}
+                                            readOnly
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
 
-                                {/* <div>
+                                    <div>
+                                        <Label>Cost of Unit with Tax</Label>
+                                        <Input
+                                            value={costofUnitWithTax}
+                                            readOnly
+                                            className="bg-gray-50 font-semibold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
+
+                                    {/* <div>
                                     <Label>Registration Charges</Label>
                                     <Input
                                         value={registartionCharge}
@@ -677,65 +686,66 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     />
                                 </div> */}
 
-                                <div>
-                                    <Label>Manjeera Connection Charges</Label>
-                                    <Input
-                                        value={manjeeraConnectionCharge}
-                                        onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
+                                    <div>
+                                        <Label>Manjeera Connection Charges</Label>
+                                        <Input
+                                            value={manjeeraConnectionCharge}
+                                            onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
 
-                                <div>
-                                    <Label>Maintenance Charges</Label>
-                                    <Input
-                                        value={maintenceCharge}
-                                        onChange={(e) => setMaintenceCharge(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
+                                    <div>
+                                        <Label>Maintenance Charges</Label>
+                                        <Input
+                                            value={maintenceCharge}
+                                            onChange={(e) => setMaintenceCharge(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
 
-                                <div>
-                                    <Label>Documentation Fee</Label>
-                                    <Input
-                                        value={documentationFee}
-                                        onChange={(e) => setDocumentationFee(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
+                                    <div>
+                                        <Label>Documentation Fee</Label>
+                                        <Input
+                                            value={documentationFee}
+                                            onChange={(e) => setDocumentationFee(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
 
-                                <div>
-                                    <Label>Corpus Fund</Label>
-                                    <Input
-                                        value={corpusFund}
-                                        onChange={(e) => setCorpusFund(e.target.value)}
-                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
-                                </div>
+                                    <div>
+                                        <Label>Corpus Fund</Label>
+                                        <Input
+                                            value={corpusFund}
+                                            onChange={(e) => setCorpusFund(e.target.value)}
+                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
 
-                                <div className="pt-4 border-t">
-                                    <Label className="text-lg text-primary">Grand Total</Label>
-                                    <Input
-                                        value={grandTotal}
-                                        onChange={(e) => setGrandTotal(e.target.value)}
-                                        className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
-                                    />
+                                    <div className="pt-4 border-t">
+                                        <Label className="text-lg text-primary">Grand Total</Label>
+                                        <Input
+                                            value={grandTotal}
+                                            onChange={(e) => setGrandTotal(e.target.value)}
+                                            className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        />
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
 
-                    <div className="mt-8 flex justify-end gap-3 sticky bottom-0 bg-white p-4 items-center border-t">
-                        <div className="flex-1">
-                            {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
+                        <div className="mt-8 flex justify-end gap-3 sticky bottom-0 bg-white p-4 items-center border-t border-gray-300">
+                            <div className="flex-1">
+                                {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
+                            </div>
+                            <Button variant="outline" onClick={() => onOpenChange(false)} type="button">Cancel</Button>
+                            <Button onClick={handleSubmit} className="bg-[#931f42] hover:bg-[#a6234b]">Save Cost Sheet</Button>
                         </div>
-                        <Button variant="outline" onClick={() => onOpenChange(false)} type="button">Cancel</Button>
-                        <Button onClick={handleSubmit} className="bg-[#931f42] hover:bg-[#a6234b]">Save Cost Sheet</Button>
-                    </div>
 
+                    </div>
                 </div>
-            </DrawerContent>
-        </Drawer>
+            </div>
+        </div>
     );
 };
 
