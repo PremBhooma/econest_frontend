@@ -69,6 +69,12 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     const [amenities, setAmenities] = useState("");
     const [amenitiesError, setAmenitiesError] = useState('');
 
+    const [status, setStatus] = useState("");
+    const [statusError, setStatusError] = useState('');
+
+    const [description, setDescription] = useState("");
+    const [descriptionError, setDescriptionError] = useState('');
+
     const [totalCostofUnit, setTotalCostofUnit] = useState("");
     const [totalCostofUnitError, setTotalCostofUnitError] = useState('');
 
@@ -80,6 +86,9 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
     const [registartionCharge, setRegistrationCharge] = useState("");
     const [registrationChargeError, setRegistrationChargeError] = useState('');
+
+    const [manjeeraConnectionCharge, setManjeeraConnectionCharge] = useState("50000");
+    const [manjeeraConnectionChargeError, setManjeeraConnectionChargeError] = useState('');
 
     const [maintenceCharge, setMaintenceCharge] = useState("");
     const [maintenceChargeError, setMaintenceChargeError] = useState('');
@@ -268,8 +277,8 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
             setCostofUnitWithTax(parseFloat(totalCostofUnit) + parseFloat(gstValue));
 
-            let registerCharge = ((parseFloat(totalCostofUnit) * 0.076) + 1050).toFixed(2);
-            setRegistrationCharge(parseFloat(registerCharge));
+            // let registerCharge = ((parseFloat(totalCostofUnit) * 0.076) + 1050).toFixed(2);
+            // setRegistrationCharge(parseFloat(registerCharge));
 
             if (saleableAreaSqFt) {
                 let maintainCharge = ((parseFloat(saleableAreaSqFt) * 3) * 24).toFixed(2);
@@ -277,12 +286,12 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                 let corpusFund = (parseFloat(saleableAreaSqFt) * 50).toFixed(2);
                 setCorpusFund(parseFloat(corpusFund));
 
-                setGrandTotal(parseFloat(totalCostofUnit) + parseFloat(gstValue) + parseFloat(registerCharge) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFee))
+                setGrandTotal(parseFloat(totalCostofUnit) + parseFloat(gstValue) + parseFloat(manjeeraConnectionCharge) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFee))
             }
         } else {
             setGst("");
             setCostofUnitWithTax("");
-            setRegistrationCharge("");
+            // setRegistrationCharge("");
             setMaintenceCharge("");
             setCorpusFund("");
             setGrandTotal("");
@@ -356,6 +365,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                 gst: parseFloat(gst),
                 costofunitwithtax: parseFloat(costofUnitWithTax),
                 registrationcharge: parseFloat(registartionCharge),
+                manjeeraconnectioncharge: parseFloat(manjeeraConnectionCharge),
                 maintenancecharge: parseFloat(maintenceCharge),
                 documentaionfee: parseFloat(documentationFee),
                 corpusfund: parseFloat(corpusFund),
@@ -455,7 +465,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                 value={searchedFlat}
                                 onChange={updateSearchedLocation}
                                 placeholder="Enter Flat No"
-                                className="mt-1"
+                                className="mt-1 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                             />
                             {showDropdown && flat.length > 0 && (
                                 <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
@@ -484,6 +494,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             setApplicationDate(e.target.value);
                                             setApplicationDateError('');
                                         }}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {applicationDateError && <p className="text-red-500 text-xs mt-1">{applicationDateError}</p>}
                                 </div>
@@ -497,6 +508,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             setSaleableAreaSqFt(e.target.value);
                                             setSaleableAreaSqFtError('');
                                         }}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {saleableAreaSqFtError && <p className="text-red-500 text-xs mt-1">{saleableAreaSqFtError}</p>}
                                 </div>
@@ -510,6 +522,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             setRatePerSqFt(e.target.value);
                                             setRatePerSqFtError('');
                                         }}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {ratePerSqFtError && <p className="text-red-500 text-xs mt-1">{ratePerSqFtError}</p>}
                                 </div>
@@ -520,6 +533,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         type="number"
                                         value={discount}
                                         onChange={(e) => setDiscount(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -528,7 +542,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={baseCostUnit}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -539,11 +553,12 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             <Input
                                                 value={floorRise}
                                                 onChange={(e) => setFloorRise(e.target.value)}
+                                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                         </div>
                                         <div>
                                             <Label>Total Floor Rise</Label>
-                                            <Input value={floorRiseXPerSft} readOnly className="bg-gray-50" />
+                                            <Input value={floorRiseXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
                                         </div>
                                     </div>
                                 )}
@@ -555,11 +570,12 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             <Input
                                                 value={eastFacing}
                                                 onChange={(e) => setEastFacing(e.target.value)}
+                                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                         </div>
                                         <div>
                                             <Label>Total East Facing</Label>
-                                            <Input value={eastFacingXPerSft} readOnly className="bg-gray-50" />
+                                            <Input value={eastFacingXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
                                         </div>
                                     </div>
                                 )}
@@ -571,11 +587,12 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             <Input
                                                 value={corner}
                                                 onChange={(e) => setCorner(e.target.value)}
+                                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                         </div>
                                         <div>
                                             <Label>Total Corner</Label>
-                                            <Input value={cornerXPerSft} readOnly className="bg-gray-50" />
+                                            <Input value={cornerXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
                                         </div>
                                     </div>
                                 )}
@@ -585,8 +602,29 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={amenities}
                                         onChange={(e) => setAmenities(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
+                                </div>
+
+                                <div>
+                                    <Label>Status</Label>
+                                    <Input
+                                        value={status}
+                                        onChange={(e) => setStatus(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                    />
+                                    {statusError && <p className="text-red-500 text-xs mt-1">{statusError}</p>}
+                                </div>
+
+                                <div>
+                                    <Label>Description</Label>
+                                    <Input
+                                        value={description}
+                                        onChange={(e) => setDescription(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                    />
+                                    {descriptionError && <p className="text-red-500 text-xs mt-1">{descriptionError}</p>}
                                 </div>
                             </div>
 
@@ -596,7 +634,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={totalCostofUnit}
                                         readOnly
-                                        className="bg-gray-50 font-bold"
+                                        className="bg-gray-50 font-bold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -605,7 +643,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={gst}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -614,15 +652,25 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={costofUnitWithTax}
                                         readOnly
-                                        className="bg-gray-50 font-semibold"
+                                        className="bg-gray-50 font-semibold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
-                                <div>
+                                {/* <div>
                                     <Label>Registration Charges</Label>
                                     <Input
                                         value={registartionCharge}
                                         onChange={(e) => setRegistrationCharge(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                    />
+                                </div> */}
+
+                                <div>
+                                    <Label>Manjeera Connection Charges</Label>
+                                    <Input
+                                        value={manjeeraConnectionCharge}
+                                        onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -631,6 +679,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={maintenceCharge}
                                         onChange={(e) => setMaintenceCharge(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -639,6 +688,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={documentationFee}
                                         onChange={(e) => setDocumentationFee(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -647,6 +697,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={corpusFund}
                                         onChange={(e) => setCorpusFund(e.target.value)}
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -655,7 +706,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <Input
                                         value={grandTotal}
                                         onChange={(e) => setGrandTotal(e.target.value)}
-                                        className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14"
+                                        className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
                             </div>
