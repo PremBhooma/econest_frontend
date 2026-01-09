@@ -132,8 +132,8 @@ function Leadwrapper() {
       subordinateId: subordinateid
     };
 
-    if (dateRange.startDate) params.startDate = dateRange.startDate;
-    if (dateRange.endDate) params.endDate = dateRange.endDate;
+    // if (dateRange.startDate) params.startDate = dateRange.startDate;
+    // if (dateRange.endDate) params.endDate = dateRange.endDate;
 
     await Leadapi.get("/get-all-leads", {
       params,
@@ -631,10 +631,10 @@ function Leadwrapper() {
                   dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
                 />
               </div>
-              <Datefilter
+              {/* <Datefilter
                 onFilterChange={handleDateFilterChange}
                 onClearFilter={handleDateFilterChange}
-              />
+              /> */}
               <div ref={containerRef} className="relative">
                 <button
                   onClick={() => setShowColumnToggle(!showColumnToggle)}
