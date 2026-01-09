@@ -463,6 +463,8 @@ function Leadview() {
       <CostSheetDrawer
         open={costSheetDrawer}
         onOpenChange={setCostSheetDrawer}
+        leadData={leadData}
+        refreshLeadDetails={refreshLeadDetails}
       />
     </>
   );
