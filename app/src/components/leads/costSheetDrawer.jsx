@@ -118,17 +118,17 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     };
 
     // Charges
-    const [floorRise, setFloorRise] = useState('25');
+    const [floorRise, setFloorRise] = useState('0');
     const [floorRiseError, setFloorRiseError] = useState('');
     const [floorRiseXPerSft, setFloorRiseXPerSft] = useState('');
     const [floorRiseXPerSftError, setFloorRiseXPerSftError] = useState('');
 
-    const [eastFacing, setEastFacing] = useState('100');
+    const [eastFacing, setEastFacing] = useState('0');
     const [eastFacingError, setEastFacingError] = useState('');
     const [eastFacingXPerSft, setEastFacingXPerSft] = useState('');
     const [eastFacingXPerSftError, setEastFacingXPerSftError] = useState('');
 
-    const [corner, setCorner] = useState('100');
+    const [corner, setCorner] = useState('0');
     const [cornerError, setCornerError] = useState('');
     const [cornerXPerSft, setCornerXPerSft] = useState('');
     const [cornerXPerSftError, setCornerXPerSftError] = useState('');
@@ -168,6 +168,12 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
     const [grandTotal, setGrandTotal] = useState('');
     const [grandTotalError, setGrandTotalError] = useState('');
+
+    const [projectRates, setProjectRates] = useState({
+        floor_rise: 0,
+        east_facing: 0,
+        corner: 0
+    });
 
     // Update form when closed/opened
     useEffect(() => {
@@ -247,24 +253,72 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
         }
     }
 
+    const getProjectCharges = async (projectId) => {
+        if (!projectId) return;
+        try {
+            const response = await Flatapi.get('get-project-charges', {
+                params: { project_id: projectId } // Use project_id
+            });
+            const data = response?.data;
+            if (data?.status === 'success') {
+                return data.charges;
+            }
+        } catch (error) {
+            console.error("Error fetching project charges:", error);
+        }
+        return null;
+    };
+
 
     useEffect(() => {
-        if (selectedFlat) {
-            getAmenitiesData(selectedFlat?.type);
-        }
+        const fetchAndSetData = async () => {
+            if (selectedFlat) {
+                // Fetch Amenities
+                getAmenitiesData(selectedFlat?.type);
+
+                // Fetch Project Charges
+                if (selectedFlat?.project_id) {
+                    const charges = await getProjectCharges(selectedFlat.project_id);
+                    if (charges) {
+                        setProjectRates({
+                            floor_rise: charges.floor_rise_price || 0,
+                            east_facing: charges.east_price || 0,
+                            corner: charges.corner_price || 0
+                        });
+
+                        // Set Static Charges directly from project
+                        setEastFacing(charges.east_price?.toString() || '0');
+                        setCorner(charges.corner_price?.toString() || '0');
+
+                        // Calculate Floor Rise based on new rates
+                        if (selectedFlat?.floor_no && selectedFlat?.floor_no >= 6) {
+                            const floorsToCharge = selectedFlat.floor_no - 6 + 1;
+                            setFloorRise((floorsToCharge * (charges.floor_rise_price || 0)).toString());
+                        } else {
+                            setFloorRise('0');
+                        }
+                    }
+                }
+            } else {
+                setProjectRates({ floor_rise: 0, east_facing: 0, corner: 0 });
+            }
+        };
+
+        fetchAndSetData();
+
         if (!searchedFlat) {
             setSelectedFlat(null);
             setAmenities('');
             setSaleableAreaSqFt('');
+            setFloorRise('0');
+            setEastFacing('0');
+            setCorner('0');
         }
-        if (selectedFlat?.floor_no) {
-            if (selectedFlat?.floor_no >= 6) {
-                const floorsToCharge = selectedFlat.floor_no - 6 + 1;
-                setFloorRise(floorsToCharge * 25);
-            } else {
-                setFloorRise(0);
-            }
-        }
+
+        // This part is now handled inside fetchAndSetData to ensure we have rates first
+        // But for when floor_no exists but we might not refetch project data if selectedFlat object updates without id change (unlikely but safe to keep logic consistent)
+        // We rely on fetchAndSetData for the main updates.
+
     }, [searchedFlat, selectedFlat]);
 
     // Calculation Logic
