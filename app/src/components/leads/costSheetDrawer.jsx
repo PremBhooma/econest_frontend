@@ -28,6 +28,66 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoadingEffect, setIsLoadingEffect] = useState(false);
 
+    // Reset Form when Drawer Closes
+    useEffect(() => {
+        if (!open) {
+            setErrorMessage("");
+            setSelectedFlat(null);
+            setSearchedFlat("");
+            setFlat([]);
+            setSaleableAreaSqFt("");
+            setRatePerSqFt("");
+            setDiscount("");
+            setTotalDiscount(0);
+            setTotalBaseCost(0);
+            setBaseCostUnit("");
+            setApplicationDate(""); // Or keep default if needed
+            setFloorRise('25');
+            setFloorRiseXPerSft("");
+            setEastFacing('100');
+            setEastFacingXPerSft("");
+            setCorner('100');
+            setCornerXPerSft("");
+            setAmenities("");
+            setStatus("");
+            setDescription("");
+            setTotalCostofUnit("");
+            setGst("");
+            setCostofUnitWithTax("");
+            setRegistrationCharge("");
+            setManjeeraConnectionCharge("50000");
+            setMaintenceCharge("");
+            setDocumentationFee("15000");
+            setCorpusFund("");
+            setGrandTotal("");
+
+            // Clear Errors
+            setSelectedFlatError("");
+            setSaleableAreaSqFtError("");
+            setRatePerSqFtError("");
+            setBaseCostUnitError("");
+            setApplicationDateError("");
+            setFloorRiseError("");
+            setFloorRiseXPerSftError("");
+            setEastFacingError("");
+            setEastFacingXPerSftError("");
+            setCornerError("");
+            setCornerXPerSftError("");
+            setAmenitiesError("");
+            setStatusError("");
+            setDescriptionError("");
+            setTotalCostofUnitError("");
+            setGstError("");
+            setCostofUnitWithTaxError("");
+            setRegistrationChargeError("");
+            setManjeeraConnectionChargeError("");
+            setMaintenceChargeError("");
+            setDocumentationFeeError("");
+            setCorpusFundError("");
+            setGrandTotalError("");
+        }
+    }, [open]);
+
     // Flat Search State
     const [selectedFlat, setSelectedFlat] = useState(null);
     const [selectedFlatError, setSelectedFlatError] = useState('');
