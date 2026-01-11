@@ -924,7 +924,7 @@ function Flatswrapper() {
                       {visibleColumns.type && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
                           <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                            {typeToLabelMap[flat?.type] || '---'}
+                            {flat?.type || '---'}
                           </p>
                         </td>
                       )}

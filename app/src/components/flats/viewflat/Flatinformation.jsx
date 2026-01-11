@@ -8,19 +8,11 @@ import 'react-modern-drawer/dist/index.css'
 function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails, flatCostUpdate, openFlatCostUpdate, closeFlatCostUpdate }) {
   if (!flatDetails) return null;
 
+  console.log("flatDetails", flatDetails);
+
   const typeToLabelMap = {
-    Studio: "Studio",
-    OneBHK: "1 BHK",
-    OnePointFiveBHK: "1.5 BHK",
     TwoBHK: "2 BHK",
-    TwoPointFiveBHK: "2.5 BHK",
     ThreeBHK: "3 BHK",
-    ThreePointFiveBHK: "3.5 BHK",
-    FourBHK: "4 BHK",
-    FourPointFiveBHK: "4.5 BHK",
-    FiveBHK: "5 BHK",
-    Penthouse: "Penthouse",
-    Duplex: "Duplex",
   };
 
   const basicInfoItems = [
@@ -42,17 +34,17 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
       isLink: true,
       linkType: "phone",
     },
-    { label: "Group/Owner", value: flatDetails?.group_owner?.name ? flatDetails?.group_owner?.name : "---" },
-    { label: "UDL Number", value: flatDetails?.udl ? flatDetails?.udl : "---" },
-    { label: "Deed Number", value: flatDetails?.deed_number ? flatDetails?.deed_number : "---" },
+    // { label: "Group/Owner", value: flatDetails?.group_owner?.name ? flatDetails?.group_owner?.name : "---" },
+    // { label: "UDL Number", value: flatDetails?.udl ? flatDetails?.udl : "---" },
+    // { label: "Deed Number", value: flatDetails?.deed_number ? flatDetails?.deed_number : "---" },
     { label: "Block", value: flatDetails?.block?.block_name ? flatDetails?.block?.block_name : "---" },
     { label: "Area", value: flatDetails?.square_feet ? `${flatDetails?.square_feet} sq.ft` : "---" },
-    { label: "Type", value: typeToLabelMap[flatDetails?.type] || "---" },
-    { label: "Bedrooms", value: flatDetails?.bedrooms ? flatDetails?.bedrooms : "---" },
-    { label: "Bathrooms", value: flatDetails?.bathrooms ? flatDetails?.bathrooms : "---" },
-    { label: "Balconies", value: flatDetails?.balconies ? flatDetails?.balconies : "---" },
-    { label: "Furnished Status", value: flatDetails?.furnished_status ? flatDetails?.furnished_status : "---" },
-    { label: "Parking Area", value: flatDetails?.parking ? `${flatDetails?.parking} sq.ft` : "---" },
+    { label: "Type", value: flatDetails?.type || "---" },
+    // { label: "Bedrooms", value: flatDetails?.bedrooms ? flatDetails?.bedrooms : "---" },
+    // { label: "Bathrooms", value: flatDetails?.bathrooms ? flatDetails?.bathrooms : "---" },
+    // { label: "Balconies", value: flatDetails?.balconies ? flatDetails?.balconies : "---" },
+    // { label: "Furnished Status", value: flatDetails?.furnished_status ? flatDetails?.furnished_status : "---" },
+    // { label: "Parking Area", value: flatDetails?.parking ? `${flatDetails?.parking} sq.ft` : "---" },
     { label: "Mortgage", value: flatDetails?.mortgage == true ? "Yes" : "No" },
     { label: "Corner", value: flatDetails?.corner == true ? "Yes" : "No" },
     { label: "East Facing", value: flatDetails?.east_face ? flatDetails?.east_face : "---" },
@@ -60,12 +52,12 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
     { label: "North Facing", value: flatDetails?.north_face ? flatDetails?.north_face : "---" },
     { label: "South Facing", value: flatDetails?.south_face ? flatDetails?.south_face : "---" },
     { label: "Main-Door Facing", value: flatDetails?.facing ? flatDetails?.facing : "---" },
-    {
-      label: "Google Map Link",
-      value: flatDetails?.google_map_link ? flatDetails?.google_map_link : "---",
-      isLink: true,
-      linkType: "map"
-    },
+    // {
+    //   label: "Google Map Link",
+    //   value: flatDetails?.google_map_link ? flatDetails?.google_map_link : "---",
+    //   isLink: true,
+    //   linkType: "map"
+    // },
     { label: "Status", value: flatDetails?.status, isStatus: true },
     // {
     //   label: "Application Date",
@@ -157,10 +149,10 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
             );
           })}
 
-          <div className="flex flex-col gap-y-1 col-span-3">
+          {/* <div className="flex flex-col gap-y-1 col-span-3">
             <p className="text-sm text-gray-600">Description</p>
             <p className="text-sm text-gray-900 font-semibold">{flatDetails?.description ? flatDetails?.description : "---"}</p>
-          </div>
+          </div> */}
         </div>
         {customerFlatDetails && (
           <>

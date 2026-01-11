@@ -553,19 +553,19 @@ function Viewflat() {
                 }
               </>
             )}
-            <div className={`font-semibold px-4 py-2 text-[12px] rounded-sm ${flatDetails?.status === 'Sold' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
+            <div className={`font-semibold px-4 py-2 text-[14px] rounded-sm ${flatDetails?.status === 'Sold' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
               {flatDetails?.status}
             </div>
             {permissions?.flats_page?.includes("edit_flat") && (
-              <Link to={`/flats/edit-flat/${uuid}`} className="text-[12px] text-white font-semibold px-5 py-1.5 border border-[#0083bf] !rounded-sm !bg-[#0083bf] hover:!bg-[#0083bf]/90">
+              <Link to={`/flats/edit-flat/${uuid}`} className="text-[14px] text-white font-semibold px-5 py-1.5 border border-[#0083bf] !rounded-sm !bg-[#0083bf] hover:!bg-[#0083bf]/90">
                 Edit
               </Link>
             )}
 
-            <Link to={"/flats"} className="text-[#0083bf] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
+            {/* <Link to={"/flats"} className="text-[#0083bf] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
               <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
               Back
-            </Link>
+            </Link> */}
           </div>
         </div>
 
