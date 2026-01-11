@@ -989,7 +989,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {ratePerSqFtError && <p className="text-xs text-red-500">{ratePerSqFtError}</p>}
-                                    {totalBaseCost > 0 && <p className="text-xs text-gray-500">Base: ₹ {totalBaseCost.toLocaleString('en-IN')}</p>}
+                                    {totalBaseCost > 0 && <p className="text-xs">Scaleable Area (sq.ft.) * Rate Per Sq.ft = <span className="font-semibold">₹ {totalBaseCost.toLocaleString('en-IN')}</span></p>}
                                 </div>
 
                                 <div className="space-y-2">
@@ -1001,7 +1001,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         placeholder="Enter Discount"
                                         className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
-                                    {totalDiscount > 0 && <p className="text-xs text-green-600">Discount: ₹ {totalDiscount.toLocaleString('en-IN')}</p>}
+                                    {totalDiscount > 0 && <p className="text-xs">Scaleable Area (sq.ft.) * Discount Per Sq.ft = <span className="font-semibold">₹ {totalDiscount.toLocaleString('en-IN')}</span></p>}
                                 </div>
 
                                 <div className="space-y-2 md:col-span-2">
@@ -1016,7 +1016,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 {selectedFlat?.floor_no >= 6 && (
                                     <>
                                         <div className="space-y-2">
-                                            <Label>Floor Rise (Per Sq.ft) <span className="text-red-500">*</span></Label>
+                                            <Label>Floor Rise (Per Sq.ft) (₹) <span className="text-red-500">*</span></Label>
                                             <Input
                                                 type="number"
                                                 value={floorRise}
@@ -1027,7 +1027,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             {floorRiseError && <p className="text-xs text-red-500">{floorRiseError}</p>}
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Total Floor Rise Charge</Label>
+                                            <Label>Total Floor Rise Charge (₹)</Label>
                                             <Input
                                                 value={floorRiseXPerSft ? parseFloat(floorRiseXPerSft).toLocaleString('en-IN') : ''}
                                                 readOnly
@@ -1040,7 +1040,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 {selectedFlat?.facing === "East" && (
                                     <>
                                         <div className="space-y-2">
-                                            <Label>East Facing (Per Sq.ft) <span className="text-red-500">*</span></Label>
+                                            <Label>East Facing (Per Sq.ft) (₹) <span className="text-red-500">*</span></Label>
                                             <Input
                                                 type="number"
                                                 value={eastFacing}
@@ -1051,7 +1051,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             {eastFacingError && <p className="text-xs text-red-500">{eastFacingError}</p>}
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Total East Facing Charge</Label>
+                                            <Label>Total East Facing Charge (₹)</Label>
                                             <Input
                                                 value={eastFacingXPerSft ? parseFloat(eastFacingXPerSft).toLocaleString('en-IN') : ''}
                                                 readOnly
@@ -1064,7 +1064,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 {selectedFlat?.corner === true && (
                                     <>
                                         <div className="space-y-2">
-                                            <Label>Corner (Per Sq.ft) <span className="text-red-500">*</span></Label>
+                                            <Label>Corner (Per Sq.ft) (₹) <span className="text-red-500">*</span></Label>
                                             <Input
                                                 type="number"
                                                 value={corner}
@@ -1075,7 +1075,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             {cornerError && <p className="text-xs text-red-500">{cornerError}</p>}
                                         </div>
                                         <div className="space-y-2">
-                                            <Label>Total Corner Charge</Label>
+                                            <Label>Total Corner Charge (₹)</Label>
                                             <Input
                                                 value={cornerXPerSft ? parseFloat(cornerXPerSft).toLocaleString('en-IN') : ''}
                                                 readOnly
@@ -1105,7 +1105,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>GST (5%)</Label>
+                                    <Label>GST (5%) (₹)</Label>
                                     <Input
                                         value={gst ? parseFloat(gst).toLocaleString('en-IN') : ''}
                                         readOnly
@@ -1114,7 +1114,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Cost with Tax</Label>
+                                    <Label>Cost with Tax (₹)</Label>
                                     <Input
                                         value={costofUnitWithTax ? parseFloat(costofUnitWithTax).toLocaleString('en-IN') : ''}
                                         readOnly
@@ -1123,7 +1123,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Manjeera Connection Charges <span className="text-red-500">*</span></Label>
+                                    <Label>Manjeera Connection Charges (₹) <span className="text-red-500">*</span></Label>
                                     <Input
                                         value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
                                         onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
@@ -1144,7 +1144,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Documentation Fee <span className="text-red-500">*</span></Label>
+                                    <Label>Documentation Fee (₹) <span className="text-red-500">*</span></Label>
                                     <Input
                                         value={documentationFee ? parseFloat(documentationFee).toLocaleString('en-IN') : ''}
                                         readOnly

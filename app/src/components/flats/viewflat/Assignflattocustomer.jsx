@@ -1045,7 +1045,7 @@ function Assignflattocustomer({ closeFlatToCustomer, flatNo, block_id, refreshUs
                         {selectedFlat?.floor_no >= 6 && (
                             <>
                                 <div className="space-y-2">
-                                    <Label>Floor Rise Charge Per Sq.ft (₹)</Label>
+                                    <Label>Floor Rise (Per Sq.ft) (₹) <span className="text-red-500">*</span></Label>
                                     <Input
                                         type="number"
                                         value={floorRise}
@@ -1056,7 +1056,7 @@ function Assignflattocustomer({ closeFlatToCustomer, flatNo, block_id, refreshUs
                                     {floorRiseError && <p className="text-xs text-red-500">{floorRiseError}</p>}
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Total Charge of Floor Rise (₹)</Label>
+                                    <Label>Total Floor Rise Charge (₹)</Label>
                                     <Input
                                         value={floorRiseXPerSft ? parseFloat(floorRiseXPerSft).toLocaleString('en-IN') : ''}
                                         readOnly
@@ -1068,7 +1068,7 @@ function Assignflattocustomer({ closeFlatToCustomer, flatNo, block_id, refreshUs
                         {selectedFlat?.facing === "East" && (
                             <>
                                 <div className="space-y-2">
-                                    <Label>East Facing Charge Per Sq.ft (₹)</Label>
+                                    <Label>East Facing (Per Sq.ft) (₹) <span className="text-red-500">*</span></Label>
                                     <Input
                                         type="number"
                                         value={eastFacing}
@@ -1079,7 +1079,7 @@ function Assignflattocustomer({ closeFlatToCustomer, flatNo, block_id, refreshUs
                                     {eastFacingError && <p className="text-xs text-red-500">{eastFacingError}</p>}
                                 </div>
                                 <div className="space-y-2">
-                                    <Label>Total Charge of East Facing (₹)</Label>
+                                    <Label>Total East Facing Charge (₹)</Label>
                                     <Input
                                         value={eastFacingXPerSft ? parseFloat(eastFacingXPerSft).toLocaleString('en-IN') : ''}
                                         readOnly
@@ -1092,7 +1092,7 @@ function Assignflattocustomer({ closeFlatToCustomer, flatNo, block_id, refreshUs
                         {selectedFlat?.corner === true && (
                             <>
                                 <div className="space-y-2">
-                                    <Label>Corner Charge Per Sq.ft (₹)</Label>
+                                    <Label>Corner (Per Sq.ft) (₹) <span className="text-red-500">*</span></Label>
                                     <Input
                                         type="number"
                                         value={corner}
@@ -1163,7 +1163,7 @@ function Assignflattocustomer({ closeFlatToCustomer, flatNo, block_id, refreshUs
 
 
                         <div className="space-y-2">
-                            <Label>Manjeera Connection Charges <span className="text-red-500">*</span></Label>
+                            <Label>Manjeera Connection Charges (₹) <span className="text-red-500">*</span></Label>
                             <Input
                                 value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
                                 onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
