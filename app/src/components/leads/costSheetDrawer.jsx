@@ -635,7 +635,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Base Cost</Label>
                                         <Input
-                                            value={baseCostUnit}
+                                            value={baseCostUnit ? parseFloat(baseCostUnit).toLocaleString('en-IN') : ''}
                                             readOnly
                                             className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -646,7 +646,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             <div>
                                                 <Label>Floor Rise (Per sq.ft)</Label>
                                                 <Input
-                                                    value={floorRise}
+                                                    value={floorRise ? parseFloat(floorRise).toLocaleString('en-IN') : ''}
                                                     readOnly
                                                     onChange={(e) => setFloorRise(e.target.value)}
                                                     className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -654,7 +654,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             </div>
                                             <div>
                                                 <Label>Total Floor Rise</Label>
-                                                <Input value={floorRiseXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
+                                                <Input value={floorRiseXPerSft ? parseFloat(floorRiseXPerSft).toLocaleString('en-IN') : ''} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
                                             </div>
                                         </div>
                                     )}
@@ -664,7 +664,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             <div>
                                                 <Label>East Facing (Per sq.ft)</Label>
                                                 <Input
-                                                    value={eastFacing}
+                                                    value={eastFacing ? parseFloat(eastFacing).toLocaleString('en-IN') : ''}
                                                     readOnly
                                                     onChange={(e) => setEastFacing(e.target.value)}
                                                     className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -672,7 +672,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             </div>
                                             <div>
                                                 <Label>Total East Facing</Label>
-                                                <Input value={eastFacingXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
+                                                <Input value={eastFacingXPerSft ? parseFloat(eastFacingXPerSft).toLocaleString('en-IN') : ''} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
                                             </div>
                                         </div>
                                     )}
@@ -682,7 +682,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             <div>
                                                 <Label>Corner (Per sq.ft)</Label>
                                                 <Input
-                                                    value={corner}
+                                                    value={corner ? parseFloat(corner).toLocaleString('en-IN') : ''}
                                                     readOnly
                                                     onChange={(e) => setCorner(e.target.value)}
                                                     className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -690,7 +690,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             </div>
                                             <div>
                                                 <Label>Total Corner</Label>
-                                                <Input value={cornerXPerSft} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
+                                                <Input value={cornerXPerSft ? parseFloat(cornerXPerSft).toLocaleString('en-IN') : ''} readOnly className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black" />
                                             </div>
                                         </div>
                                     )}
@@ -698,7 +698,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Amenities</Label>
                                         <Input
-                                            value={amenities}
+                                            value={amenities ? parseFloat(amenities).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setAmenities(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -735,7 +735,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Total Cost of Unit</Label>
                                         <Input
-                                            value={totalCostofUnit}
+                                            value={totalCostofUnit ? parseFloat(totalCostofUnit).toLocaleString('en-IN') : ''}
                                             readOnly
                                             className="bg-gray-50 font-bold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -744,7 +744,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>GST (5%)</Label>
                                         <Input
-                                            value={gst}
+                                            value={gst ? parseFloat(gst).toLocaleString('en-IN') : ''}
                                             readOnly
                                             className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -753,7 +753,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Cost of Unit with Tax</Label>
                                         <Input
-                                            value={costofUnitWithTax}
+                                            value={costofUnitWithTax ? parseFloat(costofUnitWithTax).toLocaleString('en-IN') : ''}
                                             readOnly
                                             className="bg-gray-50 font-semibold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -771,7 +771,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Manjeera Connection Charges</Label>
                                         <Input
-                                            value={manjeeraConnectionCharge}
+                                            value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -781,7 +781,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Maintenance Charges</Label>
                                         <Input
-                                            value={maintenceCharge}
+                                            value={maintenceCharge ? parseFloat(maintenceCharge).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setMaintenceCharge(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -791,7 +791,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Documentation Fee</Label>
                                         <Input
-                                            value={documentationFee}
+                                            value={documentationFee ? parseFloat(documentationFee).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setDocumentationFee(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -801,7 +801,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div>
                                         <Label>Corpus Fund</Label>
                                         <Input
-                                            value={corpusFund}
+                                            value={corpusFund ? parseFloat(corpusFund).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setCorpusFund(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
@@ -811,7 +811,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     <div className="pt-4 border-t">
                                         <Label className="text-lg text-primary">Grand Total</Label>
                                         <Input
-                                            value={grandTotal}
+                                            value={grandTotal ? parseFloat(grandTotal).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setGrandTotal(e.target.value)}
                                             className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
