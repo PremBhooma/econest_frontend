@@ -597,6 +597,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label>Saleable Area (sq.ft) *</Label>
                                         <Input
                                             type="number"
+                                            readOnly
                                             value={saleableAreaSqFt}
                                             onChange={(e) => {
                                                 setSaleableAreaSqFt(e.target.value);
@@ -646,6 +647,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                 <Label>Floor Rise (Per sq.ft)</Label>
                                                 <Input
                                                     value={floorRise}
+                                                    readOnly
                                                     onChange={(e) => setFloorRise(e.target.value)}
                                                     className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                                 />
@@ -663,6 +665,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                 <Label>East Facing (Per sq.ft)</Label>
                                                 <Input
                                                     value={eastFacing}
+                                                    readOnly
                                                     onChange={(e) => setEastFacing(e.target.value)}
                                                     className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                                 />
@@ -680,6 +683,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                 <Label>Corner (Per sq.ft)</Label>
                                                 <Input
                                                     value={corner}
+                                                    readOnly
                                                     onChange={(e) => setCorner(e.target.value)}
                                                     className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                                 />
@@ -695,6 +699,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label>Amenities</Label>
                                         <Input
                                             value={amenities}
+                                            readOnly
                                             onChange={(e) => setAmenities(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -767,6 +772,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label>Manjeera Connection Charges</Label>
                                         <Input
                                             value={manjeeraConnectionCharge}
+                                            readOnly
                                             onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -776,6 +782,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label>Maintenance Charges</Label>
                                         <Input
                                             value={maintenceCharge}
+                                            readOnly
                                             onChange={(e) => setMaintenceCharge(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -785,6 +792,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label>Documentation Fee</Label>
                                         <Input
                                             value={documentationFee}
+                                            readOnly
                                             onChange={(e) => setDocumentationFee(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -794,6 +802,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label>Corpus Fund</Label>
                                         <Input
                                             value={corpusFund}
+                                            readOnly
                                             onChange={(e) => setCorpusFund(e.target.value)}
                                             className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
@@ -803,6 +812,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         <Label className="text-lg text-primary">Grand Total</Label>
                                         <Input
                                             value={grandTotal}
+                                            readOnly
                                             onChange={(e) => setGrandTotal(e.target.value)}
                                             className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
