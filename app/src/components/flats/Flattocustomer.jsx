@@ -774,7 +774,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                 toatlcostofuint: parseFloat(totalCostofUnit),
                 gst: parseFloat(gst),
                 costofunitwithtax: parseFloat(costofUnitWithTax),
-                registrationcharge: parseFloat(registartionCharge),
+                // registrationcharge: parseFloat(registartionCharge),
                 maintenancecharge: parseFloat(maintenceCharge),
                 documentaionfee: parseFloat(documentationFee),
                 corpusfund: parseFloat(corpusFund),
