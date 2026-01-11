@@ -714,7 +714,10 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
 
                                     <div>
                                         <Label>Status</Label>
-                                        <Select value={status} onValueChange={setStatus}>
+                                        <Select value={status} onValueChange={(value) => {
+                                            setStatus(value);
+                                            setStatusError("");
+                                        }}>
                                             <SelectTrigger className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:ring-0 focus:ring-offset-0 focus:border-black">
                                                 <SelectValue placeholder="Select Status" />
                                             </SelectTrigger>
