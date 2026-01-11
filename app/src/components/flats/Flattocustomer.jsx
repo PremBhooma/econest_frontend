@@ -860,10 +860,10 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         placeholder="Enter Flat No"
                                         value={searchedFlat}
                                         onChange={updateSearchedLocation}
-                                        className="w-full"
+                                        className="mt-1 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {showDropdown && (
-                                        <div className="absolute top-full left-0 w-full z-10 mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-48 overflow-y-auto">
+                                        <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
                                             {flatLoading ? (
                                                 <div className="p-3 text-sm text-gray-500">Loading...</div>
                                             ) : flat.length > 0 ? (
@@ -907,10 +907,10 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         placeholder="Enter Name, Phone or Email"
                                         value={searchedCustomer}
                                         onChange={updateSearchedCustomer}
-                                        className="w-full"
+                                        className="mt-1 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {showDropdownCustomer && (
-                                        <div className="absolute top-full left-0 w-full z-10 mt-1 bg-white border  rounded-md shadow-lg max-h-48 overflow-y-auto">
+                                        <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
                                             {customerLoading ? (
                                                 <div className="p-3 text-sm text-gray-500">Loading...</div>
                                             ) : customer.length > 0 ? (
@@ -955,18 +955,17 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
 
                         {/* Right Side: Cost Sheet Form */}
                         <div className="w-full lg:w-2/3 bg-white p-6 rounded-lg border border-gray-300 shadow-sm h-fit">
-                            <h3 className="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-300">Cost Sheet Details</h3>
+                            <h3 className="text-lg font-semibold text-gray-900 mb-6 pb-2 border-b border-gray-300">Cost Details</h3>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                                 <div className="space-y-2">
                                     <Datepicker
                                         label="Application Date"
-                                        withAsterisk
                                         value={applicationDate}
                                         error={applicationDateError}
                                         onChange={updateApplicationDate}
-                                        labelClassName="text-sm font-medium text-gray-700"
-                                        inputClassName="w-full px-3 py-2 border border-input rounded-md focus:border-black focus:ring-1 focus:ring-black outline-none bg-white text-sm"
+                                        labelClassName="text-sm font-medium !text-gray-600 !mb-1"
+                                        inputClassName="!h-10 bg-white border border-gray-300 !rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:!border-black"
                                     />
                                 </div>
 
@@ -975,7 +974,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Input
                                         value={saleableAreaSqFt}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {saleableAreaSqFtError && <p className="text-xs text-red-500">{saleableAreaSqFtError}</p>}
                                 </div>
@@ -987,6 +986,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         value={ratePerSqFt}
                                         onChange={updateRatePerSqFt}
                                         placeholder="Enter Rate"
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {ratePerSqFtError && <p className="text-xs text-red-500">{ratePerSqFtError}</p>}
                                     {totalBaseCost > 0 && <p className="text-xs text-gray-500">Base: ₹ {totalBaseCost.toLocaleString('en-IN')}</p>}
@@ -999,6 +999,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         value={discount}
                                         onChange={updateDiscount}
                                         placeholder="Enter Discount"
+                                        className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {totalDiscount > 0 && <p className="text-xs text-green-600">Discount: ₹ {totalDiscount.toLocaleString('en-IN')}</p>}
                                 </div>
@@ -1008,7 +1009,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Input
                                         value={baseCostUnit ? parseFloat(baseCostUnit).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-gray-50 font-medium"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -1019,7 +1020,9 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             <Input
                                                 type="number"
                                                 value={floorRise}
+                                                readOnly
                                                 onChange={updateFloorRise}
+                                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                             {floorRiseError && <p className="text-xs text-red-500">{floorRiseError}</p>}
                                         </div>
@@ -1028,7 +1031,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             <Input
                                                 value={floorRiseXPerSft ? parseFloat(floorRiseXPerSft).toLocaleString('en-IN') : ''}
                                                 readOnly
-                                                className="bg-gray-50"
+                                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                         </div>
                                     </>
@@ -1041,7 +1044,9 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             <Input
                                                 type="number"
                                                 value={eastFacing}
+                                                readOnly
                                                 onChange={updateEastFacing}
+                                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                             {eastFacingError && <p className="text-xs text-red-500">{eastFacingError}</p>}
                                         </div>
@@ -1050,7 +1055,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             <Input
                                                 value={eastFacingXPerSft ? parseFloat(eastFacingXPerSft).toLocaleString('en-IN') : ''}
                                                 readOnly
-                                                className="bg-gray-50"
+                                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                         </div>
                                     </>
@@ -1063,7 +1068,9 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             <Input
                                                 type="number"
                                                 value={corner}
+                                                readOnly
                                                 onChange={updateCorner}
+                                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                             {cornerError && <p className="text-xs text-red-500">{cornerError}</p>}
                                         </div>
@@ -1072,7 +1079,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                             <Input
                                                 value={cornerXPerSft ? parseFloat(cornerXPerSft).toLocaleString('en-IN') : ''}
                                                 readOnly
-                                                className="bg-gray-50"
+                                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                             />
                                         </div>
                                     </>
@@ -1081,11 +1088,10 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                 <div className="space-y-2">
                                     <Label>Amenities (₹) <span className="text-red-500">*</span></Label>
                                     <Input
-                                        type="number"
-                                        value={amenities}
+                                        value={amenities ? parseFloat(amenities).toLocaleString('en-IN') : ''}
                                         onChange={updateAmenities}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -1094,7 +1100,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Input
                                         value={totalCostofUnit ? parseFloat(totalCostofUnit).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-gray-50 font-bold text-gray-800"
+                                        className="bg-gray-50 font-bold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -1103,7 +1109,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Input
                                         value={gst ? parseFloat(gst).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -1112,7 +1118,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Input
                                         value={costofUnitWithTax ? parseFloat(costofUnitWithTax).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 font-semibold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -1120,36 +1126,39 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Label>Manjeera Connection Charges <span className="text-red-500">*</span></Label>
                                     <Input
                                         value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
-                                        onChange={(e) => setManjeeraConnectionCharge(e.target.value.replace(/[^0-9.]/g, ''))}
+                                        onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
                                         placeholder="Enter Amount"
+                                        readOnly
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                     {manjeeraConnectionChargeError && <p className="text-xs text-red-500">{manjeeraConnectionChargeError}</p>}
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Maintenance (2 Yrs)</Label>
+                                    <Label>Maintenance @3/- per sqft for 2 Yrs (₹)</Label>
                                     <Input
                                         value={maintenceCharge ? parseFloat(maintenceCharge).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
                                     <Label>Documentation Fee <span className="text-red-500">*</span></Label>
                                     <Input
-                                        type="number"
-                                        value={documentationFee}
+                                        value={documentationFee ? parseFloat(documentationFee).toLocaleString('en-IN') : ''}
+                                        readOnly
                                         onChange={updateDocumenationFee}
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
                                 <div className="space-y-2">
-                                    <Label>Corpus Fund (50/sft)</Label>
+                                    <Label>Corpus Fund (50 * SFT) (₹)</Label>
                                     <Input
                                         value={corpusFund ? parseFloat(corpusFund).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-gray-50"
+                                        className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
 
@@ -1158,7 +1167,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                     <Input
                                         value={grandTotal ? parseFloat(grandTotal).toLocaleString('en-IN') : ''}
                                         readOnly
-                                        className="bg-green-50 border-green-200 text-green-700 font-bold text-lg h-12"
+                                        className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
                             </div>
