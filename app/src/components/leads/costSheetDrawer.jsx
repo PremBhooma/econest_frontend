@@ -447,6 +447,10 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
             setRatePerSqFtError("Rate Per sq.ft is required");
             return;
         }
+        if (!status) {
+            setStatusError('Status is required');
+            return;
+        }
         if (!grandTotal) {
             setGrandTotalError('Grand total calculation failed');
             return;
