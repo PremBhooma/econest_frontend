@@ -565,17 +565,23 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                     placeholder="Enter Flat No"
                                     className="mt-1 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                 />
-                                {showDropdown && flat.length > 0 && (
+                                {showDropdown && (
                                     <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
-                                        {flat.map((item) => (
-                                            <li
-                                                key={item.value}
-                                                className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                                                onClick={() => handleSelectFlat(item)}
-                                            >
-                                                {item.label}
+                                        {flat.length > 0 ? (
+                                            flat.map((item) => (
+                                                <li
+                                                    key={item.value}
+                                                    className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                                                    onClick={() => handleSelectFlat(item)}
+                                                >
+                                                    {item.label}
+                                                </li>
+                                            ))
+                                        ) : (
+                                            <li className="px-4 py-2 text-sm text-gray-500 cursor-default">
+                                                No flat found
                                             </li>
-                                        ))}
+                                        )}
                                     </ul>
                                 )}
                                 {selectedFlatError && <p className="text-red-500 text-xs mt-1">{selectedFlatError}</p>}
@@ -590,7 +596,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         onChange={updateApplicationDate}
                                         error={applicationDateError}
                                         labelClassName="text-sm font-medium text-gray-600 !mb-1 -mt-1"
-                                        inputClassName="!h-10 border border-gray-300 !rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:!border-black"
+                                        inputClassName="!h-10 bg-white border border-gray-300 !rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:!border-black"
                                     />
 
                                     <div>
@@ -603,7 +609,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                 setSaleableAreaSqFt(e.target.value);
                                                 setSaleableAreaSqFtError('');
                                             }}
-                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
                                         {saleableAreaSqFtError && <p className="text-red-500 text-xs mt-1">{saleableAreaSqFtError}</p>}
                                     </div>
@@ -649,7 +655,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                     value={floorRise ? parseFloat(floorRise).toLocaleString('en-IN') : ''}
                                                     readOnly
                                                     onChange={(e) => setFloorRise(e.target.value)}
-                                                    className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                                    className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                                 />
                                             </div>
                                             <div>
@@ -667,7 +673,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                     value={eastFacing ? parseFloat(eastFacing).toLocaleString('en-IN') : ''}
                                                     readOnly
                                                     onChange={(e) => setEastFacing(e.target.value)}
-                                                    className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                                    className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                                 />
                                             </div>
                                             <div>
@@ -685,7 +691,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                                     value={corner ? parseFloat(corner).toLocaleString('en-IN') : ''}
                                                     readOnly
                                                     onChange={(e) => setCorner(e.target.value)}
-                                                    className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                                    className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                                 />
                                             </div>
                                             <div>
@@ -701,7 +707,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             value={amenities ? parseFloat(amenities).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setAmenities(e.target.value)}
-                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
                                         {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
                                     </div>
@@ -774,7 +780,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
-                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
                                     </div>
 
@@ -784,7 +790,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             value={maintenceCharge ? parseFloat(maintenceCharge).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setMaintenceCharge(e.target.value)}
-                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
                                     </div>
 
@@ -794,7 +800,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             value={documentationFee ? parseFloat(documentationFee).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setDocumentationFee(e.target.value)}
-                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
                                     </div>
 
@@ -804,7 +810,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             value={corpusFund ? parseFloat(corpusFund).toLocaleString('en-IN') : ''}
                                             readOnly
                                             onChange={(e) => setCorpusFund(e.target.value)}
-                                            className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                            className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                         />
                                     </div>
 
