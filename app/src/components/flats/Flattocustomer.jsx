@@ -8,6 +8,8 @@ import noImageStaticImage from "../../../public/assets/no_image.png"
 import { toast } from "react-toastify";
 import { Datepicker, Loadingoverlay, Textinput } from "@nayeshdaggula/tailify";
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
 
 function capitalize(str) {
     if (!str) return '';
@@ -27,6 +29,14 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
     const [customerLoading, setCustomerLoading] = useState(false);
     const [showDropdownCustomer, setShowDropdownCustomer] = useState(false);
     const [debounceTimerCustomer, setDebounceTimerCustomer] = useState(null);
+
+
+
+    const [manjeeraConnectionCharge, setManjeeraConnectionCharge] = useState("50000");
+    const [manjeeraConnectionChargeError, setManjeeraConnectionChargeError] = useState('');
+
+
+
     const updateSearchedCustomer = (e) => {
         const value = e.target.value;
         setSearchedCustomer(value);
@@ -552,7 +562,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                 let corpusFund = (parseFloat(saleableAreaSqFt) * 50).toFixed(2);
                 setCorpusFund(parseFloat(corpusFund));
 
-                setGrandTotal(parseFloat(totalCostofUnit) + parseFloat(gstValue) + parseFloat(registerCharge) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFee))
+                setGrandTotal(parseFloat(totalCostofUnit) + parseFloat(gstValue) + parseFloat(manjeeraConnectionCharge) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFee))
             }
         } else {
             setGst("");
@@ -1100,7 +1110,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
                         />
-                        <Textinput
+                        {/* <Textinput
                             placeholder="Enter registration charge (₹)"
                             label="Registration @ 7.6% + 1050/- (₹)"
                             withAsterisk
@@ -1110,7 +1120,17 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                             onChange={updateRegistrationCharge}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                        />
+                        /> */}
+
+                        <div>
+                            <Label>Manjeera Connection Charges</Label>
+                            <Input
+                                value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
+                                readOnly
+                                onChange={(e) => setManjeeraConnectionCharge(e.target.value)}
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                        </div>
                         <Textinput
                             placeholder="Enter maintenance charge (₹)"
                             label="Maintenance @3/- per sqft for 2 Yrs (₹)"
