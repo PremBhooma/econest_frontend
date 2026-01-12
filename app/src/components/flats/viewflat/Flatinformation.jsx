@@ -221,9 +221,14 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
                 <p className="text-sm text-gray-600">Cost of Unit with Tax (₹)</p>
                 <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.costofunitwithtax).toFixed(2) || '---'}</p>
               </div>
-              <div className="flex flex-col gap-y-1">
+              {/* <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Registration (₹)</p>
                 <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.registrationcharge).toFixed(2) || '---'}</p>
+              </div> */}
+
+              <div className="flex flex-col gap-y-1">
+                <p className="text-sm text-gray-600">Manjeera Connection Charge (₹)</p>
+                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.manjeera_connection_charge).toFixed(2) || '---'}</p>
               </div>
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Maintenance (₹)</p>
