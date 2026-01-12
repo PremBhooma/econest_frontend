@@ -214,6 +214,43 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         setGrandTotal(value)
         setGrandTotalError('')
     }
+    const [projectRates, setProjectRates] = useState({
+        floor_rise: 0,
+        east_facing: 0,
+        corner: 0
+    });
+
+    const getProjectCharges = async (projectId) => {
+        if (!projectId) return;
+        try {
+            const response = await Flatapi.get('get-project-charges', {
+                params: { project_id: projectId }
+            });
+            const data = response?.data;
+            if (data?.status === 'success') {
+                return data.charges;
+            }
+        } catch (error) {
+            console.error("Error fetching project charges:", error);
+        }
+        return null;
+    };
+
+    useEffect(() => {
+        const fetchProjectRates = async () => {
+            if (flatDetails?.project_id) {
+                const charges = await getProjectCharges(flatDetails.project_id);
+                if (charges) {
+                    setProjectRates({
+                        floor_rise: charges.floor_rise_price || 0,
+                        east_facing: charges.east_price || 0,
+                        corner: charges.corner_price || 0
+                    });
+                }
+            }
+        }
+        fetchProjectRates();
+    }, [flatDetails?.project_id]);
 
 
 
@@ -265,7 +302,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
 
             // Floor Rise (per sq.ft * area)
             let floorRiseTotal = 0;
-            if (floorRiseVal) {
+            if (floorRiseVal !== "" && floorRiseVal !== undefined) {
                 floorRiseTotal = parseNum(floorRiseVal) * parseNum(saleableArea);
                 setFloorRiseXPerSft(floorRiseTotal);
             } else {
@@ -274,7 +311,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
 
             // East Facing (per sq.ft * area)
             let eastFacingTotal = 0;
-            if (eastFacingVal) {
+            if (eastFacingVal !== "" && eastFacingVal !== undefined) {
                 eastFacingTotal = parseNum(eastFacingVal) * parseNum(saleableArea);
                 setEastFacingXPerSft(eastFacingTotal);
             } else {
@@ -283,7 +320,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
 
             // Corner (per sq.ft * area)
             let cornerTotal = 0;
-            if (cornerVal) {
+            if (cornerVal !== "" && cornerVal !== undefined) {
                 cornerTotal = parseNum(cornerVal) * parseNum(saleableArea);
                 setCornerXPerSft(cornerTotal);
             } else {
@@ -347,7 +384,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         } else {
             // Reset all if no base values
             setBaseCostUnit("");
-            setAmenties("");
+            // setAmenties(""); 
             setFloorRiseXPerSft("");
             setEastFacingXPerSft("");
             setCornerXPerSft("");
@@ -446,20 +483,47 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
             setTotalCostofUnit(customerFlatDetails?.toatlcostofuint || '');
             setGst(customerFlatDetails?.gst || '');
             setCostofUnitWithTax(customerFlatDetails?.costofunitwithtax || '');
-            setRegistrationCharge(customerFlatDetails?.registrationcharge || '');
+            // setRegistrationCharge(customerFlatDetails?.registrationcharge || '');
             setMaintenceCharge(customerFlatDetails?.maintenancecharge || '');
             setDocumentationFee(customerFlatDetails?.documentaionfee || '');
             setCorpusFund(customerFlatDetails?.corpusfund || '');
-            setManjeeraConnectionCharge(customerFlatDetails?.manjeera_connection_charge || '50000');
-            setFloorRise(flatDetails?.floor_no >= 5 ? customerFlatDetails?.floor_rise_per_sq_ft : '');
-            setFloorRiseXPerSft(flatDetails?.floor_no >= 5 ? customerFlatDetails?.total_floor_rise : '');
-            setEastFacing(flatDetails?.facing === "East" ? customerFlatDetails?.east_facing_per_sq_ft : '');
-            setEastFacingXPerSft(flatDetails?.facing === "East" ? customerFlatDetails?.total_east_facing : '');
-            setCorner(flatDetails?.corner === true ? customerFlatDetails?.corner_per_sq_ft : '');
-            setCornerXPerSft(flatDetails?.corner === true ? customerFlatDetails?.total_corner : '');
+            setManjeeraConnectionCharge(customerFlatDetails?.manjeera_connection_charge ?? '50000');
+
+            // Logic to prioritize customerFlatDetails, fallback to projectRates if new booking/calc
+            // Note: For existing bookings, we usually want to keep the saved values.
+            // But if they are missing or 0, we *might* want defaults. 
+            // However, sticking to the "update" nature, we primarily trust `customerFlatDetails`.
+            // The "logic" part is ensuring the *conditions* (floor >= 6) are correct.
+
+            // Calculate effective project floor rise rate (Base * Multiplier)
+            let effectiveProjectFloorRise = 0;
+            let effectiveTotalFloorRise = 0;
+            const saleableArea = customerFlatDetails?.saleable_area_sq_ft ? parseFloat(customerFlatDetails.saleable_area_sq_ft) : 0;
+
+            if (flatDetails?.floor_no >= 6) {
+                const floorsToCharge = flatDetails.floor_no - 6 + 1;
+                effectiveProjectFloorRise = floorsToCharge * projectRates.floor_rise;
+                effectiveTotalFloorRise = effectiveProjectFloorRise * saleableArea;
+            }
+
+            setFloorRise(flatDetails?.floor_no >= 6 ? (customerFlatDetails?.floor_rise_per_sq_ft ?? effectiveProjectFloorRise) : '');
+            setFloorRiseXPerSft(flatDetails?.floor_no >= 6 ? (customerFlatDetails?.total_floor_rise ?? effectiveTotalFloorRise) : '');
+
+            const effectiveEastFacing = projectRates.east_facing;
+            const effectiveTotalEastFacing = effectiveEastFacing * saleableArea;
+
+            setEastFacing(flatDetails?.facing === "East" ? (customerFlatDetails?.east_facing_per_sq_ft ?? effectiveEastFacing) : '');
+            setEastFacingXPerSft(flatDetails?.facing === "East" ? (customerFlatDetails?.total_east_facing ?? effectiveTotalEastFacing) : '');
+
+            const effectiveCorner = projectRates.corner;
+            const effectiveTotalCorner = effectiveCorner * saleableArea;
+
+            setCorner(flatDetails?.corner === true ? (customerFlatDetails?.corner_per_sq_ft ?? effectiveCorner) : '');
+            setCornerXPerSft(flatDetails?.corner === true ? (customerFlatDetails?.total_corner ?? effectiveTotalCorner) : '');
+
             setGrandTotal(customerFlatDetails?.grand_total || '');
         }
-    }, [customerFlatDetails, flatDetails]);
+    }, [customerFlatDetails, flatDetails, projectRates]);
 
 
     const handleSubmit = async () => {
@@ -520,8 +584,8 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
             setIsLoadingEffect(false)
             return false
         }
-        if (registartionCharge === "") {
-            setRegistrationChargeError('Enter Registartion Charge')
+        if (manjeeraConnectionCharge === "") {
+            setManjeeraConnectionChargeError('Enter Manjeera Connection Charge')
             setIsLoadingEffect(false)
             return false
         }
@@ -541,13 +605,13 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
             return false
         }
 
-        if (flatDetails?.floor_no >= 5 && floorRise === "") {
+        if (flatDetails?.floor_no >= 6 && floorRise === "") {
             setFloorRiseError('Enter floor rise charge per sq.ft.')
             setIsLoadingEffect(false)
             return false
         }
 
-        if (flatDetails?.floor_no >= 5 && floorRiseXPerSft === "") {
+        if (flatDetails?.floor_no >= 6 && floorRiseXPerSft === "") {
             setFloorRiseXPerSftError('Total floor rise is empty')
             setIsLoadingEffect(false)
             return false
@@ -613,7 +677,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                 maintenancecharge: parseFloat(maintenceCharge),
                 documentaionfee: parseFloat(documentationFee),
                 corpusfund: parseFloat(corpusFund),
-                floor_rise_per_sq_ft: flatDetails?.floor_no >= 5 ? parseFloat(floorRise) : null,
+                floor_rise_per_sq_ft: flatDetails?.floor_no >= 6 ? parseFloat(floorRise) : null,
                 total_floor_rise: parseFloat(floorRiseXPerSft),
                 east_facing_per_sq_ft: flatDetails?.facing === "East" ? parseFloat(eastFacing) : null,
                 total_east_facing: parseFloat(eastFacingXPerSft),
@@ -708,7 +772,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                 labelClassName="text-sm font-medium text-gray-600 mb-1"
                                 inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                             />
-                            {totalBaseCost > 0 && <p className="text-xs">Saleable Area (sq.ft.) * Rate Per Sq.ft = <span className="font-semibold">₹ {totalBaseCost}</span></p>}
+                            {totalBaseCost > 0 && <p className="text-xs">Saleable Area (sq.ft.) * Rate Per Sq.ft = <span className="font-semibold">₹ {totalBaseCost ? parseFloat(totalBaseCost).toLocaleString('en-IN') : ''}</span></p>}
                         </div>
                         <div className="flex flex-col gap-2">
                             <Textinput
@@ -722,30 +786,30 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                 labelClassName="text-sm font-medium text-gray-600 mb-1"
                                 inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                             />
-                            {totalDiscount > 0 && <p className="text-xs">Saleable Area (sq.ft.) * Discount Sq.ft = <span className="font-semibold">₹ {totalDiscount}</span></p>}
+                            {totalDiscount > 0 && <p className="text-xs">Saleable Area (sq.ft.) * Discount Sq.ft = <span className="font-semibold">₹ {totalDiscount ? parseFloat(totalDiscount).toLocaleString('en-IN') : ''}</span></p>}
                         </div>
                         <Textinput
                             placeholder="Enter Base Cost of the Unit (₹)"
                             label="Base Cost of the Unit (₹)"
                             withAsterisk
-                            value={baseCostUnit}
+                            value={baseCostUnit ? parseFloat(baseCostUnit).toLocaleString('en-IN') : ''}
                             error={baseCostUnitError}
                             onChange={updateBaseCostUnit}
                             inputProps={{ disabled: true }}
-                            type="number"
+                            // type="number"
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
                         />
-                        {flatDetails?.floor_no >= 5 && (
+                        {flatDetails?.floor_no >= 6 && (
                             <>
                                 <Textinput
                                     placeholder="Enter Foor Rise Charge Per Sq.ft (₹)"
                                     label="Floor Rise Charge Per Sq.ft (₹)"
                                     withAsterisk
-                                    value={floorRise}
+                                    value={floorRise ? parseFloat(floorRise).toLocaleString('en-IN') : ''}
                                     error={floorRiseError}
                                     onChange={updateFloorRise}
-                                    type="number"
+                                    inputProps={{ disabled: true }}
                                     labelClassName="text-sm font-medium text-gray-600 mb-1"
                                     inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                                 />
@@ -753,10 +817,9 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                     placeholder="Total Charge of Floor Rise (₹)"
                                     label="Total Charge of Floor Rise (₹)"
                                     withAsterisk
-                                    value={floorRiseXPerSft}
+                                    value={floorRiseXPerSft ? parseFloat(floorRiseXPerSft).toLocaleString('en-IN') : ''}
                                     error={floorRiseXPerSftError}
                                     onChange={updateFloorRiseXPerSft}
-                                    type="number"
                                     inputProps={{ disabled: true, }}
                                     labelClassName="text-sm font-medium text-gray-600 mb-1"
                                     inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
@@ -769,10 +832,10 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                     placeholder="Enter East Facing Charge Per Sq.ft (₹)"
                                     label="East Facing Charge Per Sq.ft (₹)"
                                     withAsterisk
-                                    value={eastFacing}
+                                    value={eastFacing ? parseFloat(eastFacing).toLocaleString('en-IN') : ''}
                                     error={eastFacingError}
                                     onChange={updateEastFacing}
-                                    type="number"
+                                    inputProps={{ disabled: true }}
                                     labelClassName="text-sm font-medium text-gray-600 mb-1"
                                     inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                                 />
@@ -780,10 +843,9 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                     placeholder="Total Charge of East Facing (₹)"
                                     label="Total Charge of East Facing (₹)"
                                     withAsterisk
-                                    value={eastFacingXPerSft}
+                                    value={eastFacingXPerSft ? parseFloat(eastFacingXPerSft).toLocaleString('en-IN') : ''}
                                     error={eastFacingXPerSftError}
                                     onChange={updateEastFacingXPerSft}
-                                    type="number"
                                     inputProps={{ disabled: true, }}
                                     labelClassName="text-sm font-medium text-gray-600 mb-1"
                                     inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
@@ -797,10 +859,10 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                     placeholder="Enter Corner Charge Per Sq.ft (₹)"
                                     label="Corner Charge Per Sq.ft (₹)"
                                     withAsterisk
-                                    value={corner}
+                                    value={corner ? parseFloat(corner).toLocaleString('en-IN') : ''}
                                     error={cornerError}
                                     onChange={updateCorner}
-                                    type="number"
+                                    inputProps={{ disabled: true }}
                                     labelClassName="text-sm font-medium text-gray-600 mb-1"
                                     inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                                 />
@@ -808,10 +870,9 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                                     placeholder="Total Charge of Corner (₹)"
                                     label="Total Charge of Corner (₹)"
                                     withAsterisk
-                                    value={cornerXPerSft}
+                                    value={cornerXPerSft ? parseFloat(cornerXPerSft).toLocaleString('en-IN') : ''}
                                     error={cornerXPerSftError}
                                     onChange={updateCornerXPerSft}
-                                    type="number"
                                     labelClassName="text-sm font-medium text-gray-600 mb-1"
                                     inputProps={{ disabled: true, }}
                                     inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
@@ -822,7 +883,8 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             placeholder="Enter Amenities (₹)"
                             label="Amenities (₹)"
                             withAsterisk
-                            value={amenities}
+                            inputProps={{ disabled: true }}
+                            value={amenities ? parseFloat(amenities).toLocaleString('en-IN') : ''}
                             error={amenitiesError}
                             onChange={updateAmenities}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -832,7 +894,8 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             placeholder="Enter total cost of flat (₹)"
                             label="Total Cost of Flat (₹)"
                             withAsterisk
-                            value={totalCostofUnit}
+                            inputProps={{ disabled: true }}
+                            value={totalCostofUnit ? parseFloat(totalCostofUnit).toLocaleString('en-IN') : ''}
                             error={totalCostofUnitError}
                             onChange={updateTotalCostofUnit}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -843,7 +906,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             label="GST (5%) (₹)"
                             withAsterisk
                             inputProps={{ disabled: true }}
-                            value={gst}
+                            value={gst ? parseFloat(gst).toLocaleString('en-IN') : ''}
                             error={gstError}
                             onChange={updateGst}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -854,7 +917,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             label="Cost of Unit with Tax (₹)"
                             withAsterisk
                             inputProps={{ disabled: true }}
-                            value={costofUnitWithTax}
+                            value={costofUnitWithTax ? parseFloat(costofUnitWithTax).toLocaleString('en-IN') : ''}
                             error={costofUnitWithTaxError}
                             onChange={updateCostofUnitWithTax}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -875,7 +938,8 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             placeholder="Enter Manjeera Connection Charge (₹)"
                             label="Manjeera Connection Charge (₹)"
                             withAsterisk
-                            value={manjeeraConnectionCharge}
+                            inputProps={{ disabled: true }}
+                            value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
                             error={manjeeraConnectionChargeError}
                             onChange={updateManjeeraConnectionCharge}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -886,7 +950,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             label="Maintenance @3/- per sqft for 2 Yrs (₹)"
                             withAsterisk
                             inputProps={{ disabled: true }}
-                            value={maintenceCharge}
+                            value={maintenceCharge ? parseFloat(maintenceCharge).toLocaleString('en-IN') : ''}
                             error={maintenceChargeError}
                             onChange={updateMaintenceCharge}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -896,9 +960,10 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             placeholder="Enter documenation fee (₹)"
                             label="Documentation Fee (₹)"
                             withAsterisk
-                            value={documentationFee}
+                            value={documentationFee ? parseFloat(documentationFee).toLocaleString('en-IN') : ''}
                             error={documenationFeeError}
                             onChange={updateDocumenationFee}
+                            inputProps={{ disabled: true }}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                         />
@@ -907,7 +972,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             label="Corpus Fund (50 * SFT) (₹)"
                             withAsterisk
                             inputProps={{ disabled: true }}
-                            value={corpusFund}
+                            value={corpusFund ? parseFloat(corpusFund).toLocaleString('en-IN') : ''}
                             error={corpusFundError}
                             onChange={updateCorpusFund}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
@@ -918,7 +983,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             label="Grand Total (₹)"
                             withAsterisk
                             inputProps={{ disabled: true }}
-                            value={grandTotal}
+                            value={grandTotal ? parseFloat(grandTotal).toLocaleString('en-IN') : ''}
                             error={grandTotalError}
                             onChange={updateGrandTotal}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
