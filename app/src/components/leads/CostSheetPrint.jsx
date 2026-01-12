@@ -157,7 +157,7 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
                 )}
 
                 <div className="grid grid-cols-12 border-b border-black">
-                    <div className="col-span-6 border-r border-black p-1 pl-2">Amenities Charges (1 X Car Parking)</div>
+                    <div className="col-span-6 border-r border-black p-1 pl-2">Amenities Charges</div>
                     <div className="col-span-3 border-r border-black p-1 text-right pr-2">{formatCurrency(amenitiesCost)}</div>
                     <div className="col-span-3 p-1 text-right pr-2">{formatCurrency(amenitiesCost)}</div>
                 </div>

@@ -57,7 +57,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
             setRegistrationCharge("");
             setManjeeraConnectionCharge("50000");
             setMaintenceCharge("");
-            setDocumentationFee("15000");
+            setDocumentationFee("20000");
             setCorpusFund("");
             setGrandTotal("");
 
