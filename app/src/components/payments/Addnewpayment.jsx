@@ -322,10 +322,10 @@ function Addnewpayment() {
                     </Link>
                 </div>
             </div>
-            <div className=' relative flex flex-col justify-between gap-8 border border-[#ebecef] rounded-xl bg-white px-8 py-4'>
+            <div className=' relative flex flex-col justify-between gap-8 border border-[#ebecef] rounded-xl bg-white p-6'>
 
                 <div className='w-full flex flex-row gap-6'>
-                    <div className="w-1/2 mt-6">
+                    <div className="w-1/2">
                         <div className='grid grid-cols-2 gap-2'>
                             <Textinput
                                 placeholder="Enter Amount"
@@ -443,11 +443,11 @@ function Addnewpayment() {
                         </div>
                     </div>
 
-                    <div className="w-1/2 flex flex-col gap-4 mt-6">
+                    <div className="w-1/2 flex flex-col gap-4">
                         {/* Search Type Selection */}
-                        <div className='flex flex-col gap-4 w-full ' >
+                        <div className='flex flex-col gap-2 w-full ' >
                             <h1 className='text-sm font-bold text-gray-700 '>Search by Flat No or Customer</h1>
-                            <div className="flex gap-6 mb-4">
+                            <div className="flex gap-6">
                                 <label className="flex items-center gap-2">
                                     <input
                                         type="radio"
@@ -516,7 +516,7 @@ function Addnewpayment() {
                         </div>
                         {/* Selected Flat/Customer Details & Payment Info */}
                         {(selectedFlat || paymentDetails) && (
-                            <div className="flex flex-col gap-6 w-full animate-in fade-in duration-500">
+                            <div className="flex flex-col gap-4 w-full animate-in fade-in duration-500">
                                 {loadingDetails ? (
                                     <div className="bg-white border rounded-xl p-8 flex justify-center items-center">
                                         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -590,32 +590,39 @@ function Addnewpayment() {
                                             </div>
                                             <div className="max-h-60 overflow-y-auto">
                                                 {paymentDetails.payment_history?.length > 0 ? (
-                                                    <table className="w-full text-sm text-left">
+                                                    <table className="w-full text-sm text-left table-fixed">
                                                         <thead className="text-xs text-gray-500 uppercase bg-gray-50 sticky top-0">
                                                             <tr>
-                                                                <th className="px-4 py-2">Date</th>
-                                                                <th className="px-4 py-2">Type</th>
-                                                                <th className="px-4 py-2">Txn ID</th>
-                                                                <th className="px-4 py-2 text-right">Amount</th>
+                                                                <th className="px-4 py-2 w-[20%]">Date</th>
+                                                                <th className="px-4 py-2 w-[20%]">Type</th>
+                                                                <th className="px-4 py-2 w-[20%]">Txn ID</th>
+                                                                <th className="px-4 py-2 w-[20%] text-right">Amount</th>
                                                             </tr>
                                                         </thead>
+
                                                         <tbody className="divide-y divide-gray-100">
                                                             {paymentDetails.payment_history.map((pay) => (
                                                                 <tr key={pay.id} className="hover:bg-gray-50">
-                                                                    <td className="px-4 py-2 font-medium text-gray-900">
+                                                                    <td className="w-[20%] px-4 py-2 font-medium text-gray-900">
                                                                         {dayjs(pay.payment_date).format('DD MMM YYYY')}
                                                                     </td>
-                                                                    <td className="px-4 py-2 text-gray-600">{pay.payment_type}</td>
-                                                                    <td className="px-4 py-2 text-gray-500 font-mono text-xs">
+
+                                                                    <td className="w-[20%] px-4 py-2 text-gray-600">
+                                                                        {pay.payment_type}
+                                                                    </td>
+
+                                                                    <td className="w-[20%] px-4 py-2 text-gray-500 font-mono text-xs break-all">
                                                                         {pay.trasnaction_id || '-'}
                                                                     </td>
-                                                                    <td className="px-4 py-2 text-right font-semibold text-gray-900">
+
+                                                                    <td className="w-[20%] px-4 py-2 text-right font-semibold text-gray-900">
                                                                         ₹{pay.amount?.toLocaleString()}
                                                                     </td>
                                                                 </tr>
                                                             ))}
                                                         </tbody>
                                                     </table>
+
                                                 ) : (
                                                     <div className="p-6 text-center text-gray-500 text-sm">
                                                         No previous payments found.
