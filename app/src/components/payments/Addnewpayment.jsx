@@ -105,6 +105,8 @@ function Addnewpayment() {
     const [loading, setLoading] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [debounceTimer, setDebounceTimer] = useState(null);
+    const [paymentDetails, setPaymentDetails] = useState(null);
+    const [loadingDetails, setLoadingDetails] = useState(false);
 
     const handleSearchTypeChange = (e) => {
         setSearchType(e.target.value);
@@ -114,6 +116,7 @@ function Addnewpayment() {
         setSelectedFlatError('');
         setSearchError('');
         setShowDropdown(false);
+        setPaymentDetails(null);
     };
 
     const updateSearchQuery = (e) => {
@@ -141,6 +144,20 @@ function Addnewpayment() {
         setSelectedFlat(flat);
         setShowDropdown(false);
         setSelectedFlatError('');
+        setPaymentDetails(null);
+
+        // Fetch payment details for the selected flat
+        if (flat?.id) {
+            setLoadingDetails(true);
+            Flatapi.get(`/get-flat-payment-details?flat_id=${flat.id}`)
+                .then(res => {
+                    if (res.data?.status === 'success') {
+                        setPaymentDetails(res.data.data);
+                    }
+                })
+                .catch(err => console.error(err))
+                .finally(() => setLoadingDetails(false));
+        }
     };
 
     useEffect(() => {
@@ -497,45 +514,124 @@ function Addnewpayment() {
                                 )}
                             </div>
                         </div>
-                        {/* Selected Flat/Customer Details */}
-                        {selectedFlat && (
-                            <div className="flex flex-col gap-6 w-full">
-                                <div className="bg-white border border-[#ced4da] rounded-md p-4">
-                                    <div className="text-lg font-semibold text-gray-800 mb-2">
-                                        Flat No: {selectedFlat?.flat_no}
+                        {/* Selected Flat/Customer Details & Payment Info */}
+                        {(selectedFlat || paymentDetails) && (
+                            <div className="flex flex-col gap-6 w-full animate-in fade-in duration-500">
+                                {loadingDetails ? (
+                                    <div className="bg-white border rounded-xl p-8 flex justify-center items-center">
+                                        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                                     </div>
-                                    <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                                        <div><span className="font-medium">Block:</span> {selectedFlat?.block_name || 'N/A'}</div>
-                                        <div><span className="font-medium">Facing:</span> {selectedFlat?.facing}</div>
-                                        <div><span className="font-medium">Floor:</span> {selectedFlat?.floor_no}</div>
-                                        <div><span className="font-medium">Size:</span> {selectedFlat?.square_feet} sqft</div>
-                                        <div><span className="font-medium">Furnished:</span> {selectedFlat?.furnished_status}</div>
-                                        <div><span className="font-medium">Type:</span> {selectedFlat?.type}</div>
-                                        <div><span className="font-medium">Bedrooms:</span> {selectedFlat?.bedrooms}</div>
-                                        <div><span className="font-medium">Bathrooms:</span> {selectedFlat?.bathrooms}</div>
-                                        <div><span className="font-medium">Balconies:</span> {selectedFlat?.balconies}</div>
-                                        <div><span className="font-medium">Parking:</span> {selectedFlat?.parking ? "Yes" : "No"}</div>
-                                    </div>
-                                </div>
-                                {selectedFlat.customer && (
-                                    <div className="bg-white border border-[#ced4da] rounded-md p-4">
-                                        <div className="flex flex-col md:flex-row gap-4">
-                                            <div className="w-full md:w-[120px] flex justify-center items-center">
-                                                <img
-                                                    crossOrigin="anonymous"
-                                                    src={selectedFlat.customer.profile_pic_url || noImageStaticImage}
-                                                    alt="Profile"
-                                                    className="w-full h-[130px] rounded-lg object-cover border border-gray-300"
-                                                />
+                                ) : paymentDetails ? (
+                                    <>
+                                        {/* Financial Summary Cards */}
+                                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                            <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200 shadow-sm">
+                                                <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider">Grand Total</div>
+                                                <div className="text-xl font-bold text-blue-900 mt-1">
+                                                    ₹{paymentDetails.financials?.grand_total?.toLocaleString() || 0}
+                                                </div>
                                             </div>
-                                            <div className="flex-1 grid grid-cols-1 gap-3">
-                                                {infoItems.map(({ label, value }) => (
-                                                    <div key={label} className="flex flex-col gap-y-1">
-                                                        <p className="text-sm text-gray-600">{label}</p>
-                                                        <p className="text-sm text-gray-900 font-semibold break-all">{value || '-'}</p>
+                                            <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-xl border border-emerald-200 shadow-sm">
+                                                <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Total Paid</div>
+                                                <div className="text-xl font-bold text-emerald-900 mt-1">
+                                                    ₹{paymentDetails.financials?.total_paid?.toLocaleString() || 0}
+                                                </div>
+                                            </div>
+                                            <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200 shadow-sm">
+                                                <div className="text-xs font-semibold text-orange-600 uppercase tracking-wider">Balance Due</div>
+                                                <div className="text-xl font-bold text-orange-900 mt-1">
+                                                    ₹{paymentDetails.financials?.balance?.toLocaleString() || 0}
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        {/* Customer Profile Card */}
+                                        {paymentDetails.customer_details && (
+                                            <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                                                <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                                                    <h3 className="font-semibold text-gray-800">Customer Profile</h3>
+                                                    <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">
+                                                        Flat {paymentDetails.flat_no}
+                                                    </span>
+                                                </div>
+                                                <div className="p-4 flex items-center gap-5">
+                                                    <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 overflow-hidden flex-shrink-0">
+                                                        {paymentDetails.customer_details.profile_pic_url ? (
+                                                            <img src={`${process.env.API_URL}${paymentDetails.customer_details.profile_pic_url}`} alt="Profile" className="h-full w-full object-cover" />
+                                                        ) : (
+                                                            <span className="text-xl font-bold text-gray-400">
+                                                                {paymentDetails.customer_details.first_name?.[0]}{paymentDetails.customer_details.last_name?.[0]}
+                                                            </span>
+                                                        )}
                                                     </div>
-                                                ))}
+                                                    <div className="flex-1">
+                                                        <h4 className="text-lg font-bold text-gray-900">
+                                                            {paymentDetails.customer_details.first_name} {paymentDetails.customer_details.last_name}
+                                                        </h4>
+                                                        <div className="grid grid-cols-1 md:grid-cols-2 gap-y-1 gap-x-4 mt-1">
+                                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                                                {paymentDetails.customer_details.email}
+                                                            </div>
+                                                            <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                                                {paymentDetails.customer_details.phone_code} {paymentDetails.customer_details.phone_number}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </div>
+                                        )}
+
+                                        {/* Payment History Table */}
+                                        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                                            <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                                                <h3 className="font-semibold text-gray-800">Payment History</h3>
+                                            </div>
+                                            <div className="max-h-60 overflow-y-auto">
+                                                {paymentDetails.payment_history?.length > 0 ? (
+                                                    <table className="w-full text-sm text-left">
+                                                        <thead className="text-xs text-gray-500 uppercase bg-gray-50 sticky top-0">
+                                                            <tr>
+                                                                <th className="px-4 py-2">Date</th>
+                                                                <th className="px-4 py-2">Type</th>
+                                                                <th className="px-4 py-2">Txn ID</th>
+                                                                <th className="px-4 py-2 text-right">Amount</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody className="divide-y divide-gray-100">
+                                                            {paymentDetails.payment_history.map((pay) => (
+                                                                <tr key={pay.id} className="hover:bg-gray-50">
+                                                                    <td className="px-4 py-2 font-medium text-gray-900">
+                                                                        {dayjs(pay.payment_date).format('DD MMM YYYY')}
+                                                                    </td>
+                                                                    <td className="px-4 py-2 text-gray-600">{pay.payment_type}</td>
+                                                                    <td className="px-4 py-2 text-gray-500 font-mono text-xs">
+                                                                        {pay.trasnaction_id || '-'}
+                                                                    </td>
+                                                                    <td className="px-4 py-2 text-right font-semibold text-gray-900">
+                                                                        ₹{pay.amount?.toLocaleString()}
+                                                                    </td>
+                                                                </tr>
+                                                            ))}
+                                                        </tbody>
+                                                    </table>
+                                                ) : (
+                                                    <div className="p-6 text-center text-gray-500 text-sm">
+                                                        No previous payments found.
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </>
+                                ) : selectedFlat && (
+                                    // Fallback if API fails but we have selectedFlat (legacy view or simple info)
+                                    <div className="bg-white border border-[#ced4da] rounded-md p-4">
+                                        <div className="text-lg font-semibold text-gray-800 mb-2">
+                                            Flat No: {selectedFlat?.flat_no}
+                                        </div>
+                                        <div className="text-sm text-gray-500">
+                                            Loading additional details...
                                         </div>
                                     </div>
                                 )}
