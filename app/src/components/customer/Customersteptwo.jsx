@@ -4,8 +4,11 @@ import Customerapi from "../api/Customerapi";
 import Settingsapi from "../api/Settingsapi";
 import Errorpanel from "@/components/shared/Errorpanel.jsx";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { Textinput, Loadingoverlay, Datepicker } from "@nayeshdaggula/tailify";
+import { Datepicker, Loadingoverlay } from "@nayeshdaggula/tailify";
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { IconX } from "@tabler/icons-react";
 
 const Customersteptwo = forwardRef((props, ref) => {
 
@@ -26,6 +29,28 @@ const Customersteptwo = forwardRef((props, ref) => {
     const [flatLoading, setFlatLoading] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [debounceTimer, setDebounceTimer] = useState(null);
+    const [projectRates, setProjectRates] = useState({
+        floor_rise: 0,
+        east_facing: 0,
+        corner: 0
+    });
+
+    const getProjectCharges = async (projectId) => {
+        if (!projectId) return;
+        try {
+            const response = await Flatapi.get('get-project-charges', {
+                params: { project_id: projectId }
+            });
+            const data = response?.data;
+            if (data?.status === 'success') {
+                return data.charges;
+            }
+        } catch (error) {
+            console.error("Error fetching project charges:", error);
+        }
+        return null;
+    };
+
     const updateSearchedLocation = (e) => {
         const value = e.target.value;
         setSearchedFlat(value);
@@ -56,21 +81,47 @@ const Customersteptwo = forwardRef((props, ref) => {
     };
 
     useEffect(() => {
-        if (selectedFlat) {
-            getAmenitiesData(selectedFlat?.type);
-        }
+        const fetchAndSetData = async () => {
+            if (selectedFlat) {
+                getAmenitiesData(selectedFlat?.type);
+
+                // Fetch Project Charges
+                if (selectedFlat?.project_id) {
+                    const charges = await getProjectCharges(selectedFlat.project_id);
+                    if (charges) {
+                        setProjectRates({
+                            floor_rise: charges.floor_rise_price || 0,
+                            east_facing: charges.east_price || 0,
+                            corner: charges.corner_price || 0
+                        });
+
+                        // Set Static Charges directly from project
+                        setEastFacing(charges.east_price?.toString() || '0');
+                        setCorner(charges.corner_price?.toString() || '0');
+
+                        // Calculate Floor Rise based on new rates
+                        if (selectedFlat?.floor_no && selectedFlat?.floor_no >= 6) {
+                            const floorsToCharge = selectedFlat.floor_no - 6 + 1;
+                            setFloorRise((floorsToCharge * (charges.floor_rise_price || 0)).toString());
+                        } else {
+                            setFloorRise('0');
+                        }
+                    }
+                }
+            } else {
+                setProjectRates({ floor_rise: 0, east_facing: 0, corner: 0 });
+                setAmenties('');
+                setSaleableAreaSqFt('');
+                setFloorRise('0');
+                setEastFacing('0');
+                setCorner('0');
+            }
+        };
+
+        fetchAndSetData();
+
         if (!searchedFlat) {
             setSelectedFlat(null);
-            setAmenties('');
-            setSaleableAreaSqFt('');
-        }
-        if (selectedFlat?.floor_no) {
-            if (selectedFlat?.floor_no >= 5) {
-                const floorsToCharge = selectedFlat.floor_no - 5 + 1;
-                setFloorRise(floorsToCharge * 25);
-            } else {
-                setFloorRise(0);
-            }
         }
     }, [searchedFlat, selectedFlat]);
 
@@ -312,6 +363,9 @@ const Customersteptwo = forwardRef((props, ref) => {
         setGrandTotalError('')
     }
 
+    const [manjeeraConnectionCharge, setManjeeraConnectionCharge] = useState('50000')
+    const [manjeeraConnectionChargeError, setManjeeraConnectionChargeError] = useState('')
+
     async function getAmenitiesData(flatType) {
         try {
             setIsLoadingEffect(true);
@@ -454,7 +508,7 @@ const Customersteptwo = forwardRef((props, ref) => {
 
         // Floor Rise
         let floorRiseCost = 0;
-        if (selectedFlat?.floor_no >= 5 && area && flRise) {
+        if (selectedFlat?.floor_no >= 6 && area && flRise) {
             floorRiseCost = flRise * area;
             setFloorRiseXPerSft(floorRiseCost);
         } else {
@@ -508,7 +562,7 @@ const Customersteptwo = forwardRef((props, ref) => {
                 let corpusFund = (parseFloat(saleableAreaSqFt) * 50).toFixed(2);
                 setCorpusFund(parseFloat(corpusFund));
 
-                setGrandTotal(parseFloat(totalCostofUnit) + parseFloat(gstValue) + parseFloat(registerCharge) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFee))
+                setGrandTotal(parseFloat(totalCostofUnit) + parseFloat(gstValue) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFee) + parseFloat(manjeeraConnectionCharge))
             }
         } else {
             setGst("");
@@ -518,7 +572,7 @@ const Customersteptwo = forwardRef((props, ref) => {
             setCorpusFund("");
             setGrandTotal("");
         }
-    }, [totalCostofUnit, saleableAreaSqFt, documentationFee]);
+    }, [totalCostofUnit, saleableAreaSqFt, documentationFee, manjeeraConnectionCharge]);
 
 
     const validateAndSubmit = async () => {
@@ -574,11 +628,11 @@ const Customersteptwo = forwardRef((props, ref) => {
             setIsLoadingEffect(false)
             return false
         }
-        if (registartionCharge === "") {
-            setRegistrationChargeError('Enter Registartion Charge')
-            setIsLoadingEffect(false)
-            return false
-        }
+        // if (registartionCharge === "") {
+        //     setRegistrationChargeError('Enter Registartion Charge')
+        //     setIsLoadingEffect(false)
+        //     return false
+        // }
         if (maintenceCharge === "") {
             setMaintenceChargeError('Enter Maintence Charge')
             setIsLoadingEffect(false)
@@ -595,13 +649,19 @@ const Customersteptwo = forwardRef((props, ref) => {
             return false
         }
 
-        if (selectedFlat?.floor_no >= 5 && floorRise === "") {
+        if (manjeeraConnectionCharge === "") {
+            setManjeeraConnectionChargeError('Enter Manjeera Connection Charge')
+            setIsLoadingEffect(false)
+            return false
+        }
+
+        if (selectedFlat?.floor_no >= 6 && floorRise === "") {
             setFloorRiseError('Enter floor rise charge per sq.ft.')
             setIsLoadingEffect(false)
             return false
         }
 
-        if (selectedFlat?.floor_no >= 5 && floorRiseXPerSft === "") {
+        if (selectedFlat?.floor_no >= 6 && floorRiseXPerSft === "") {
             setFloorRiseXPerSftError('Total floor rise is empty')
             setIsLoadingEffect(false)
             return false
@@ -663,17 +723,18 @@ const Customersteptwo = forwardRef((props, ref) => {
                 toatlcostofuint: parseFloat(totalCostofUnit),
                 gst: parseFloat(gst),
                 costofunitwithtax: parseFloat(costofUnitWithTax),
-                registrationcharge: parseFloat(registartionCharge),
+                // registrationcharge: parseFloat(registartionCharge),
                 maintenancecharge: parseFloat(maintenceCharge),
                 documentaionfee: parseFloat(documentationFee),
                 corpusfund: parseFloat(corpusFund),
-                floor_rise_per_sq_ft: selectedFlat?.floor_no >= 5 ? parseFloat(floorRise) : null,
+                manjeeraConnectionCharge: parseFloat(manjeeraConnectionCharge),
+                floor_rise_per_sq_ft: selectedFlat?.floor_no >= 6 ? parseFloat(floorRise) : null,
                 total_floor_rise: parseFloat(floorRiseXPerSft),
                 east_facing_per_sq_ft: selectedFlat?.facing === "East" ? parseFloat(eastFacing) : null,
                 total_east_facing: parseFloat(eastFacingXPerSft),
                 corner_per_sq_ft: selectedFlat?.corner === true ? parseFloat(corner) : null,
                 total_corner: parseFloat(cornerXPerSft),
-                grand_total: parseFloat(grandTotal),
+                grand_total: Number(grandTotal),
                 employeeId: employeeId
             }, {
                 headers: {
@@ -721,316 +782,317 @@ const Customersteptwo = forwardRef((props, ref) => {
 
 
     return (
-        <div className="flex gap-3 w-full">
-            <div className="flex flex-col gap-3 w-[40%] items-start">
-                <div className="relative w-full">
-                    <div className="flex items-center gap-2 w-full">
-                        <input
+        <>
+            <div className="grid grid-cols-[1fr_2fr]  gap-3 w-full">
+                <div className="flex flex-col gap-3">
+                    <div className="relative w-full">
+                        <Input
                             placeholder="Search with Flats No"
                             value={searchedFlat}
                             onChange={updateSearchedLocation}
-                            className="w-full border border-[#ced4da] px-3 py-2 rounded-md outline-none placeholder:text-[14px] placeholder:text-black/50 text-[14px] text-black/60"
+                            className="w-full bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                         />
-                    </div>
 
-                    {showDropdown && (
-                        <div className="absolute top-full left-0 w-full z-10 mt-1">
-                            <div className="bg-white border border-[#ced4da] rounded-md max-h-48  overflow-y-auto">
-                                {flatLoading ? (
-                                    <div className="p-3 text-sm text-gray-500">Loading...</div>
-                                ) : flat.length > 0 ? (
-                                    <ul>
-                                        {flat.map((flat) => (
-                                            <li
-                                                key={flat?.value}
-                                                className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-[14px] text-black/60"
-                                                onClick={() => handleSelectCity(flat)}
-                                            >
-                                                {flat?.label}
-                                            </li>
-                                        ))}
-                                    </ul>
-                                ) : (
-                                    <div className="p-3 text-sm text-gray-500">No Result</div>
-                                )}
-                            </div>
-                        </div>
-                    )}
-                </div>
-
-                {selectedFlat && (
-                    <div className="bg-white border border-[#ced4da] rounded-md max-h-96 overflow-y-auto w-full">
-                        <div className="p-4 border-b last:border-none hover:bg-gray-50 transition">
-                            <div className="flex items-center justify-between mb-2">
-                                <div className="text-lg font-semibold text-gray-800">
-                                    Flat No: {selectedFlat?.flat_no}
+                        {showDropdown && (
+                            <div className="absolute z-50 w-full bg-white border border-gray-200 rounded-md shadow-lg max-h-60 overflow-y-auto mt-1">
+                                <div className="">
+                                    {flatLoading ? (
+                                        <div className="p-3 text-sm text-gray-500">Loading...</div>
+                                    ) : flat.length > 0 ? (
+                                        <ul>
+                                            {flat.map((flat) => (
+                                                <li
+                                                    key={flat?.value}
+                                                    className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                                                    onClick={() => handleSelectCity(flat)}
+                                                >
+                                                    {flat?.label}
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    ) : (
+                                        <div className="p-3 text-sm text-gray-500">No Result</div>
+                                    )}
                                 </div>
-                                <div className="text-sm text-gray-600">{selectedFlat?.block_name}</div>
                             </div>
+                        )}
+                    </div>
 
-                            <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
-                                <div><span className="font-medium">Facing:</span> {selectedFlat?.facing}</div>
-                                <div><span className="font-medium">Floor:</span> {selectedFlat?.floor_no}</div>
-                                <div><span className="font-medium">Area:</span> {selectedFlat?.square_feet} sqft</div>
-                                <div><span className="font-medium">Furnished:</span> {selectedFlat?.furnished_status}</div>
-                                <div><span className="font-medium">Type:</span> {selectedFlat?.type}</div>
-                                <div><span className="font-medium">Bedrooms:</span> {selectedFlat?.bedrooms}</div>
-                                <div><span className="font-medium">Bathrooms:</span> {selectedFlat?.bathrooms}</div>
-                                <div><span className="font-medium">Balconies:</span> {selectedFlat?.balconies}</div>
-                                <div><span className="font-medium">Parking:</span> {selectedFlat?.parking ? "Yes" : "No"}</div>
+                    {selectedFlat && (
+                        <div className="bg-white border border-gray-300 rounded-md max-h-96 overflow-y-auto w-full">
+                            <div className="p-4 border-b last:border-none hover:bg-gray-50 transition">
+                                <div className="flex items-center justify-between mb-2">
+                                    <div className="text-md font-semibold text-gray-800">
+                                        {selectedFlat?.project_name}
+                                    </div>
+                                    <div className="text-md font-semibold text-gray-800">Flat No: {selectedFlat?.flat_no}</div>
+                                </div>
+
+                                <div className="grid grid-cols-2 gap-2 text-sm text-gray-700">
+                                    <div><span className="font-medium">Facing:</span> {selectedFlat?.facing}</div>
+                                    <div><span className="font-medium">Floor:</span> {selectedFlat?.floor_no}</div>
+                                    <div><span className="font-medium">Area:</span> {selectedFlat?.square_feet} sqft</div>
+                                    <div><span className="font-medium">Type:</span> {selectedFlat?.type}</div>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                )}
-                {selectedFlat !== '' && (
-                    <p className="mt-1 text-xs text-red-600 font-medium">{selectedFlatError}</p>
-                )}
-            </div>
+                    )}
+                    {selectedFlat !== '' && (
+                        <p className="mt-1 text-xs text-red-600 font-medium">{selectedFlatError}</p>
+                    )}
+                </div>
 
-            <div className="border border-[#ced4da] p-3 w-[60%] rounded-md">
-                <div className="grid grid-cols-2 gap-4">
-                    <Datepicker
-                        label="Application Date"
-                        withAsterisk
-                        value={applicationDate}
-                        error={applicationDateError}
-                        onChange={updateApplicationDate}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                    />
-                    <Textinput
-                        placeholder="Enter Saleable Area (sq.ft.)"
-                        label="Saleable Area (sq.ft.)"
-                        withAsterisk
-                        value={saleableAreaSqFt}
-                        error={saleableAreaSqFtError}
-                        onChange={updateSaleableAreaSqFt}
-                        type="number"
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                        inputProps={{ disabled: true }}
-                    />
-                    <div className="flex flex-col gap-2">
-                        <Textinput
-                            placeholder="Enter Rate Per Sq.ft (₹)"
-                            label="Rate Per Sq.ft (₹)"
+                <div className="border border-gray-300 p-3 rounded-md">
+                    <div className="grid grid-cols-2 gap-4">
+                        <Datepicker
+                            label="Application Date"
                             withAsterisk
-                            value={ratePerSqFt}
-                            error={ratePerSqFtError}
-                            onChange={updateRatePerSqFt}
-                            type="number"
-                            labelClassName="text-sm font-medium text-gray-600 mb-1"
-                            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                            value={applicationDate}
+                            error={applicationDateError}
+                            onChange={updateApplicationDate}
+                            labelClassName="text-sm font-medium !text-gray-600 !mb-1"
+                            inputClassName="!h-10 bg-white border border-gray-300 !rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:!border-black"
                         />
-                        {totalBaseCost > 0 && <p className="text-xs">Saleable Area (sq.ft.) * Rate Per Sq.ft = <span className="font-semibold">₹ {totalBaseCost}</span></p>}
-                    </div>
-                    <div className="flex flex-col gap-2">
-                        <Textinput
-                            placeholder="Enter Discount Sq.ft (₹)"
-                            label="Discount Rate Per Sq.ft (₹)"
-                            // withAsterisk
-                            value={discount}
-                            error={discountError}
-                            onChange={updateDiscount}
-                            type="number"
-                            labelClassName="text-sm font-medium text-gray-600 mb-1"
-                            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                        />
-                        {totalDiscount > 0 && <p className="text-xs">Saleable Area (sq.ft.) * Discount Sq.ft = <span className="font-semibold">₹ {totalDiscount}</span></p>}
-                    </div>
-                    <Textinput
-                        placeholder="Enter Base Cost of the Unit (₹)"
-                        label="Base Cost of the Unit (₹)"
-                        withAsterisk
-                        value={baseCostUnit}
-                        error={baseCostUnitError}
-                        onChange={updateBaseCostUnit}
-                        type="number"
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                    />
-                    {selectedFlat?.floor_no >= 5 && (
-                        <>
-                            <Textinput
-                                placeholder="Enter Foor Rise Charge Per Sq.ft (₹)"
-                                label="Floor Rise Charge Per Sq.ft (₹)"
-                                withAsterisk
-                                value={floorRise}
-                                error={floorRiseError}
-                                onChange={updateFloorRise}
-                                type="number"
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                            />
-                            <Textinput
-                                placeholder="Total Charge of Floor Rise (₹)"
-                                label="Total Charge of Floor Rise (₹)"
-                                withAsterisk
-                                value={floorRiseXPerSft}
-                                error={floorRiseXPerSftError}
-                                onChange={updateFloorRiseXPerSft}
-                                type="number"
-                                inputProps={{ disabled: true, }}
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                            />
-                        </>
-                    )}
-                    {selectedFlat?.facing === "East" && (
-                        <>
-                            <Textinput
-                                placeholder="Enter East Facing Charge Per Sq.ft (₹)"
-                                label="East Facing Charge Per Sq.ft (₹)"
-                                withAsterisk
-                                value={eastFacing}
-                                error={eastFacingError}
-                                onChange={updateEastFacing}
-                                type="number"
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                            />
-                            <Textinput
-                                placeholder="Total Charge of East Facing (₹)"
-                                label="Total Charge of East Facing (₹)"
-                                withAsterisk
-                                value={eastFacingXPerSft}
-                                error={eastFacingXPerSftError}
-                                onChange={updateEastFacingXPerSft}
-                                type="number"
-                                inputProps={{ disabled: true, }}
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                            />
-                        </>
-                    )}
 
-                    {selectedFlat?.corner === true && (
-                        <>
-                            <Textinput
-                                placeholder="Enter Corner Charge Per Sq.ft (₹)"
-                                label="Corner Charge Per Sq.ft (₹)"
-                                withAsterisk
-                                value={corner}
-                                error={cornerError}
-                                onChange={updateCorner}
+                        <div className="space-y-1">
+                            <Label>Saleable Area (sq.ft.) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter Saleable Area (sq.ft.)"
+                                value={saleableAreaSqFt}
+                                onChange={updateSaleableAreaSqFt}
                                 type="number"
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                             />
-                            <Textinput
-                                placeholder="Total Charge of Corner (₹)"
-                                label="Total Charge of Corner (₹)"
-                                withAsterisk
-                                value={cornerXPerSft}
-                                error={cornerXPerSftError}
-                                onChange={updateCornerXPerSft}
+                            {saleableAreaSqFtError && <p className="text-xs text-red-500">{saleableAreaSqFtError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Rate Per Sq.ft (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter Rate Per Sq.ft"
+                                value={ratePerSqFt}
+                                onChange={updateRatePerSqFt}
                                 type="number"
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputProps={{ disabled: true, }}
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
+                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                             />
-                        </>
-                    )}
-                    <Textinput
-                        placeholder="Enter Amenities (₹)"
-                        label="Amenities (₹)"
-                        withAsterisk
-                        value={amenities}
-                        error={amenitiesError}
-                        onChange={updateAmenities}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                    />
-                    <Textinput
-                        placeholder="Enter total cost of flat (₹)"
-                        label="Total Cost of Flat (₹)"
-                        withAsterisk
-                        value={totalCostofUnit}
-                        error={totalCostofUnitError}
-                        onChange={updateTotalCostofUnit}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                    />
-                    <Textinput
-                        placeholder="Enter GST (₹)"
-                        label="GST (5%) (₹)"
-                        withAsterisk
-                        inputProps={{ disabled: true }}
-                        value={gst}
-                        error={gstError}
-                        onChange={updateGst}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                    />
-                    <Textinput
-                        placeholder="Enter cost of unit with tax (₹)"
-                        label="Cost of Unit with Tax (₹)"
-                        withAsterisk
-                        inputProps={{ disabled: true }}
-                        value={costofUnitWithTax}
-                        error={costofUnitWithTaxError}
-                        onChange={updateCostofUnitWithTax}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                    />
-                    <Textinput
-                        placeholder="Enter registration charge (₹)"
-                        label="Registration @ 7.6% + 1050/- (₹)"
-                        withAsterisk
-                        inputProps={{ disabled: true }}
-                        value={registartionCharge}
-                        error={registrationChargeError}
-                        onChange={updateRegistrationCharge}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                    />
-                    <Textinput
-                        placeholder="Enter maintenance charge (₹)"
-                        label="Maintenance @3/- per sqft for 2 Yrs (₹)"
-                        withAsterisk
-                        inputProps={{ disabled: true }}
-                        value={maintenceCharge}
-                        error={maintenceChargeError}
-                        onChange={updateMaintenceCharge}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                    />
-                    <Textinput
-                        placeholder="Enter documenation fee (₹)"
-                        label="Documentation Fee (₹)"
-                        withAsterisk
-                        value={documentationFee}
-                        error={documenationFeeError}
-                        onChange={updateDocumenationFee}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                    />
-                    <Textinput
-                        placeholder="Enter Corpus Fund (₹)"
-                        label="Corpus Fund (50 * SFT) (₹)"
-                        withAsterisk
-                        inputProps={{ disabled: true }}
-                        value={corpusFund}
-                        error={corpusFundError}
-                        onChange={updateCorpusFund}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                    />
-                    <Textinput
-                        placeholder="Enter Grand Total (₹)"
-                        label="Grand Total (₹)"
-                        withAsterisk
-                        inputProps={{ disabled: true }}
-                        value={grandTotal}
-                        error={grandTotalError}
-                        onChange={updateGrandTotal}
-                        labelClassName="text-sm font-medium text-gray-600 mb-1"
-                        inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
-                    />
+                            {ratePerSqFtError && <p className="text-xs text-red-500">{ratePerSqFtError}</p>}
+                            {totalBaseCost > 0 && <p className="text-xs text-muted-foreground">Saleable Area * Rate = <span className="font-medium">₹ {parseFloat(totalBaseCost).toLocaleString('en-IN')}</span></p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Discount (₹)</Label>
+                            <Input
+                                placeholder="Enter Discount"
+                                value={discount}
+                                onChange={updateDiscount}
+                                type="number"
+                                className="bg-white border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {totalDiscount > 0 && <p className="text-xs text-green-600">Discount Applied: ₹ {parseFloat(totalDiscount).toLocaleString('en-IN')}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Base Cost Unit (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter Base Cost Unit"
+                                value={baseCostUnit ? parseFloat(baseCostUnit).toLocaleString('en-IN') : ''}
+                                onChange={updateBaseCostUnit}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {baseCostUnitError && <p className="text-xs text-red-500">{baseCostUnitError}</p>}
+                        </div>
+
+                        {selectedFlat?.floor_no >= 6 && (
+                            <div className="space-y-1">
+                                <Label>Floor Rise (₹)</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="Per Sq.ft"
+                                        value={floorRise ? parseFloat(floorRise).toLocaleString('en-IN') : ''}
+                                        onChange={updateFloorRise}
+                                        className="w-1/3 bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        readOnly
+                                    />
+                                    <Input
+                                        placeholder="Total Floor Rise"
+                                        value={floorRiseXPerSft ? parseFloat(floorRiseXPerSft).toLocaleString('en-IN') : ''}
+                                        onChange={updateFloorRiseXPerSft}
+                                        className="w-2/3 bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        readOnly
+                                    />
+                                </div>
+                                {floorRiseError && <p className="text-xs text-red-500">{floorRiseError}</p>}
+                            </div>
+                        )}
+                        {selectedFlat?.facing === "East" && (
+                            <div className="space-y-1">
+                                <Label>East Facing (₹)</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="Per Sq.ft"
+                                        value={eastFacing ? parseFloat(eastFacing).toLocaleString('en-IN') : ''}
+                                        onChange={updateEastFacing}
+                                        className="w-1/3 bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        readOnly
+                                    />
+                                    <Input
+                                        placeholder="Total East Facing"
+                                        value={eastFacingXPerSft ? parseFloat(eastFacingXPerSft).toLocaleString('en-IN') : ''}
+                                        onChange={updateEastFacingXPerSft}
+                                        className="w-2/3 bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        readOnly
+                                    />
+                                </div>
+                                {eastFacingError && <p className="text-xs text-red-500">{eastFacingError}</p>}
+                            </div>
+                        )}
+
+                        {selectedFlat?.corner === true && (
+                            <div className="space-y-1">
+                                <Label>Corner (₹)</Label>
+                                <div className="flex gap-2">
+                                    <Input
+                                        placeholder="Per Sq.ft"
+                                        value={corner ? parseFloat(corner).toLocaleString('en-IN') : ''}
+                                        onChange={updateCorner}
+                                        className="w-1/3 bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        readOnly
+                                    />
+                                    <Input
+                                        placeholder="Total Corner"
+                                        value={cornerXPerSft ? parseFloat(cornerXPerSft).toLocaleString('en-IN') : ''}
+                                        onChange={updateCornerXPerSft}
+                                        className="w-2/3 bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                                        readOnly
+                                    />
+                                </div>
+                                {cornerError && <p className="text-xs text-red-500">{cornerError}</p>}
+                            </div>
+                        )}
+
+                        <div className="space-y-1">
+                            <Label>Ammenities (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter Amenities"
+                                value={amenities ? parseFloat(amenities).toLocaleString('en-IN') : ''}
+                                onChange={updateAmenities}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {amenitiesError && <p className="text-xs text-red-500">{amenitiesError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Total Cost of Unit (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter Total Cost of Unit"
+                                value={totalCostofUnit ? parseFloat(totalCostofUnit).toLocaleString('en-IN') : ''}
+                                onChange={updateTotalCostofUnit}
+                                readOnly
+                                className="bg-gray-50 font-bold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {totalCostofUnitError && <p className="text-xs text-red-500">{totalCostofUnitError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>GST (5%) (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter GST"
+                                value={gst ? parseFloat(gst).toLocaleString('en-IN') : ''}
+                                onChange={updateGst}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {gstError && <p className="text-xs text-red-500">{gstError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Cost of Unit with Tax (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                placeholder="Enter Cost of Unit with Tax"
+                                value={costofUnitWithTax ? parseFloat(costofUnitWithTax).toLocaleString('en-IN') : ''}
+                                onChange={updateCostofUnitWithTax}
+                                readOnly
+                                className="bg-gray-50 font-semibold border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {costofUnitWithTaxError && <p className="text-xs text-red-500">{costofUnitWithTaxError}</p>}
+                        </div>
+
+                        {/* Registration Charge - Commented out as per requirement */}
+                        {/* <div className="space-y-1">
+                        <Label>Registration Charges (7.6%) (₹) <span className="text-red-500">*</span></Label>
+                        <Input
+                             value={registartionCharge}
+                             onChange={updateRegistrationCharge}
+                             disabled
+                             className="bg-gray-100"
+                        />
+                    </div> */}
+
+                        <div className="space-y-1">
+                            <Label>Maintence Charges (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                value={maintenceCharge ? parseFloat(maintenceCharge).toLocaleString('en-IN') : ''}
+                                onChange={updateMaintenceCharge}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {maintenceChargeError && <p className="text-xs text-red-500">{maintenceChargeError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Manjeera Connection Charges (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                value={manjeeraConnectionCharge ? parseFloat(manjeeraConnectionCharge).toLocaleString('en-IN') : ''}
+                                onChange={(e) => {
+                                    const val = e.target.value.replace(/,/g, '');
+                                    if (!isNaN(val)) {
+                                        setManjeeraConnectionCharge(val);
+                                        setManjeeraConnectionChargeError('');
+                                    }
+                                }}
+                                placeholder="Enter Amount"
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {manjeeraConnectionChargeError && <p className="text-xs text-red-500">{manjeeraConnectionChargeError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Documentation Charges (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                value={documentationFee ? parseFloat(documentationFee).toLocaleString('en-IN') : ''}
+                                onChange={updateDocumenationFee}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {documenationFeeError && <p className="text-xs text-red-500">{documenationFeeError}</p>}
+                        </div>
+
+                        <div className="space-y-1">
+                            <Label>Corpus Fund (₹) <span className="text-red-500">*</span></Label>
+                            <Input
+                                value={corpusFund ? parseFloat(corpusFund).toLocaleString('en-IN') : ''}
+                                onChange={updateCorpusFund}
+                                readOnly
+                                className="bg-gray-50 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                            {corpusFundError && <p className="text-xs text-red-500">{corpusFundError}</p>}
+                        </div>
+
+                        <div className="space-y-1 col-span-2">
+                            <Label className="text-base font-bold">Grand Total (₹)</Label>
+                            <Input
+                                value={grandTotal ? parseFloat(grandTotal).toLocaleString('en-IN') : ''}
+                                readOnly
+                                className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
+                            />
+                        </div>
+                    </div>
                 </div>
             </div>
-
-
             {isLoadingEffect && (
                 <div className="fixed inset-0 bg-[#2b2b2bcc] flex flex-row justify-center items-center z-50">
                     <Loadingoverlay
@@ -1041,7 +1103,7 @@ const Customersteptwo = forwardRef((props, ref) => {
             )}
 
             {errorMessage && <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />}
-        </div>
+        </>
     );
 })
 
