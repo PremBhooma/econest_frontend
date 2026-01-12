@@ -101,6 +101,7 @@ function Addnewpayment() {
     const [results, setResults] = useState([]);
     const [selectedFlat, setSelectedFlat] = useState(null);
     const [selectedFlatError, setSelectedFlatError] = useState('');
+    const [searchError, setSearchError] = useState('');
     const [loading, setLoading] = useState(false);
     const [showDropdown, setShowDropdown] = useState(false);
     const [debounceTimer, setDebounceTimer] = useState(null);
@@ -111,12 +112,14 @@ function Addnewpayment() {
         setResults([]);
         setSelectedFlat(null);
         setSelectedFlatError('');
+        setSearchError('');
         setShowDropdown(false);
     };
 
     const updateSearchQuery = (e) => {
         const value = e.target.value;
         setSearchQuery(value);
+        setSearchError('');
 
         if (debounceTimer) clearTimeout(debounceTimer);
 
@@ -161,21 +164,20 @@ function Addnewpayment() {
 
             const data = response?.data;
             if (data?.status === "error") {
-                setErrorMessage({
-                    message: data.message,
-                    server_res: data,
-                });
-                setResults([]);
+                if (data.message === "No sold flat found with this number." || data.message === "No customer found with this detail.") {
+                    setResults([]);
+                    setSearchError(''); // Don't show error box, "No Result" dropdown will appear
+                } else {
+                    setSearchError(data.message || "Failed to fetch data");
+                    setResults([]);
+                }
                 return false;
             }
             setResults(data?.data || []);
             return true;
         } catch (error) {
             console.log(error);
-            setErrorMessage({
-                message: error.message,
-                server_res: error.response?.data || null,
-            });
+            setSearchError(error.message || "An unexpected error occurred");
             return false;
         } finally {
             setLoading(false);
@@ -480,13 +482,18 @@ function Addnewpayment() {
                                                     ))}
                                                 </ul>
                                             ) : (
-                                                <div className="p-3 text-sm text-gray-500">No Result</div>
+                                                <div className="px-3 py-2 text-sm text-gray-500">No Result</div>
                                             )}
                                         </div>
                                     </div>
                                 )}
                                 {selectedFlatError && (
                                     <p className="text-xs text-red-600 font-medium">{selectedFlatError}</p>
+                                )}
+                                {searchError && (
+                                    <div className="absolute top-12 left-0 w-full z-0 p-2 bg-red-50 border border-red-200 rounded text-xs text-red-600">
+                                        {searchError}
+                                    </div>
                                 )}
                             </div>
                         </div>
