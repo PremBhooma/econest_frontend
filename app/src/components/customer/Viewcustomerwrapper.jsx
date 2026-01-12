@@ -134,13 +134,13 @@ function Viewcustomerwrapper() {
               </Link>
             )}
 
-            <Link
+            {/* <Link
               to={"/customers"}
               className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200"
             >
               <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
               Back
-            </Link>
+            </Link> */}
           </div>
         </div>
         <div className="min-h-screen">
@@ -194,7 +194,7 @@ function Viewcustomerwrapper() {
                     <div className="flex flex-col w-full">
                       <div className="text-gray-600 shrink-0">Full Name</div>
                       <div className="text-gray-900 font-semibold break-all">
-                       {customerData?.prefixes} {customerData?.first_name} {customerData?.last_name}
+                        {customerData?.prefixes} {customerData?.first_name} {customerData?.last_name}
                       </div>
                     </div>
                     <div className="flex flex-col w-full">

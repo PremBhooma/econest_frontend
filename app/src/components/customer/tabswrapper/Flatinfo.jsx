@@ -105,6 +105,8 @@ function Flatinfo({ customerUuid }) {
         </div>
     );
 
+    console.log("flats___:", customerFlatsData)
+
     return (
         <>
             <div className="flex flex-col gap-4">
@@ -135,22 +137,12 @@ function Flatinfo({ customerUuid }) {
                                         />
                                     </Link>
 
-                                    <div className="w-full md:w-3/4 grid grid-cols-2 md:grid-cols-5 gap-3 mt-3">
+                                    <div className="w-full md:w-3/4 grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
                                         <Info label="Floor No" value={flats?.floor_no} />
                                         <Info label="Area (Sq.ft.)" value={flats?.square_feet} />
                                         <Info label="Type" value={flats?.type} />
                                         <Info label="Facing" value={flats?.facing} />
-                                        <Info label="Bedrooms" value={flats?.bedrooms} />
-                                        <Info label="Bathrooms" value={flats?.bathrooms} />
-                                        <Info label="Balconies" value={flats?.balconies} />
-                                        <Info label="Furnished" value={flats?.furnished_status} />
-                                        <Info label="Parking" value={flats?.parking === true ? "Yes" : "No"} />
-                                        {/* <Info
-                                            label="Status"
-                                            value={flats?.status}
-                                            badge={true}
-                                        /> */}
-                                        <Info label="Corner" value={flats?.corner} />
+                                        <Info label="Corner" value={flats?.corner ? "Yes" : "No"} />
                                     </div>
                                 </div>
 

@@ -1036,7 +1036,7 @@ const Customerstepone = forwardRef((props, ref) => {
                 </p>
               )}
             </div>
-            <div className="w-full">
+            {/* <div className="w-full">
               <label className="block text-sm font-medium text-gray-600 mb-1">
                 Landline Number
               </label>
@@ -1090,7 +1090,7 @@ const Customerstepone = forwardRef((props, ref) => {
                   {landlineNumberError}
                 </p>
               )}
-            </div>
+            </div> */}
 
             <Select
               label="Gender"

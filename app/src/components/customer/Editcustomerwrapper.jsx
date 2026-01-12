@@ -997,7 +997,7 @@ function Editcustomerwrapper() {
               </p>
             )}
           </div>
-          <div className="w-full">
+          {/* <div className="w-full">
             <label className="block text-sm font-medium text-gray-600 mb-1">
               Landline Number
             </label>
@@ -1051,7 +1051,7 @@ function Editcustomerwrapper() {
                 {landlineNumberError}
               </p>
             )}
-          </div>
+          </div> */}
           <div className="w-[100%]">
             <Select
               label="Gender"
@@ -1210,7 +1210,7 @@ function Editcustomerwrapper() {
             labelClassName="text-sm font-medium text-gray-600 mb-1"
             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
           />
-          <Textinput
+          {/* <Textinput
             placeholder="Enter Name of Power of Attorney"
             label="Name of Power of Attorney (POA) Holder"
             value={nameOfPoa}
@@ -1275,7 +1275,7 @@ function Editcustomerwrapper() {
               labelClassName="text-sm font-medium text-gray-600 mb-1"
               inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
             />
-          )}
+          )} */}
         </div>
         <hr className="border border-[#ebecef]" />
         <div className="flex flex-col gap-3">

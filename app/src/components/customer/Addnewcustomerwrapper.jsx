@@ -752,7 +752,7 @@ function Addnewcustomerwrapper() {
               </p>
             )}
           </div>
-          <div className="w-full">
+          {/* <div className="w-full">
             <label className="block text-sm font-medium text-gray-600 mb-1">
               Landline Number
             </label>
@@ -806,7 +806,7 @@ function Addnewcustomerwrapper() {
                 {landlineNumberError}
               </p>
             )}
-          </div>
+          </div> */}
           <Datepicker
             label="Date of Birth"
             withAsterisk

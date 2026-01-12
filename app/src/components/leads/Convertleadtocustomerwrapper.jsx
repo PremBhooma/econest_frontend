@@ -955,7 +955,7 @@ function Convertleadtocustomerwrapper() {
                             </p>
                         )}
                     </div>
-                    <div className="w-full">
+                    {/* <div className="w-full">
                         <label className="block text-sm font-medium text-gray-600 mb-1">
                             Landline Number
                         </label>
@@ -1009,7 +1009,7 @@ function Convertleadtocustomerwrapper() {
                                 {landlineNumberError}
                             </p>
                         )}
-                    </div>
+                    </div> */}
                     <div className="w-[100%]">
                         <Select
                             label="Gender"
