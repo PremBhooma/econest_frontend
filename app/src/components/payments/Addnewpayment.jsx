@@ -324,7 +324,7 @@ function Addnewpayment() {
             </div>
             <div className=' relative flex flex-col justify-between gap-8 border border-[#ebecef] rounded-xl bg-white px-8 py-4'>
 
-                <div className='w-full flex flex-row gap-14'>
+                <div className='w-full flex flex-row gap-6'>
                     <div className="w-1/2 mt-6">
                         <div className='grid grid-cols-2 gap-2'>
                             <Textinput
