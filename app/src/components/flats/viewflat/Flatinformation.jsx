@@ -181,6 +181,12 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
                   })
                   : "---" || '---'}</p>
               </div>
+              {customerFlatDetails?.discount > 0 && (
+                <div className="flex flex-col gap-y-1">
+                  <p className="text-sm text-gray-600">Discount (₹)</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.discount)}</p>
+                </div>
+              )}
               {customerFlatDetails?.floor_rise_per_sq_ft && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">Foor Rise Charge Per (sq.ft.)</p>

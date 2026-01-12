@@ -666,7 +666,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                 applicationdate: formatDateOnly(applicationDate),
                 saleable_area_sq_ft: Number(saleableAreaSqFt),
                 rate_per_sq_ft: Number(ratePerSqFt),
-                discount: discount ? parseFloat(discount) : null,
+                discount: discount ? parseFloat(discount) : 0,
                 base_cost_unit: Number(baseCostUnit),
                 amenities: parseFloat(amenities),
                 toatlcostofuint: parseFloat(totalCostofUnit),
