@@ -30,7 +30,7 @@ function Customerflatinformation({ customerFlatDetails }) {
     },
     {
       label: "Phone Number",
-      value: `+${customer?.phone_code}${customer?.phone_number}`,
+      value: `+${customer?.phone_code} ${customer?.phone_number}`,
       isLink: true,
       linkType: "phone",
     },

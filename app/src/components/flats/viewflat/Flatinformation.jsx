@@ -11,8 +11,16 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
   console.log("flatDetails", flatDetails);
 
   const typeToLabelMap = {
-    TwoBHK: "2 BHK",
     ThreeBHK: "3 BHK",
+  };
+
+  const formatPrice = (price) => {
+    if (price === null || price === undefined || price === "") return "---";
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(price);
   };
 
   const basicInfoItems = [
@@ -176,50 +184,50 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
               {customerFlatDetails?.floor_rise_per_sq_ft && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">Foor Rise Charge Per (sq.ft.)</p>
-                  <p className="text-sm font-semibold text-gray-900">₹ {customerFlatDetails?.floor_rise_per_sq_ft ? parseFloat(customerFlatDetails.floor_rise_per_sq_ft).toFixed(2) : '---'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.floor_rise_per_sq_ft)}</p>
                 </div>
               )}
               {customerFlatDetails?.total_floor_rise && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">Total Foor Rise</p>
-                  <p className="text-sm font-semibold text-gray-900">₹ {customerFlatDetails?.total_floor_rise ? parseFloat(customerFlatDetails.total_floor_rise).toFixed(2) : '---'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.total_floor_rise)}</p>
                 </div>
               )}
               {customerFlatDetails?.east_facing_per_sq_ft && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">East Facing Charge Per (sq.ft.)</p>
-                  <p className="text-sm font-semibold text-gray-900">₹ {customerFlatDetails?.east_facing_per_sq_ft ? parseFloat(customerFlatDetails.east_facing_per_sq_ft).toFixed(2) : '---'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.east_facing_per_sq_ft)}</p>
                 </div>
               )}
               {customerFlatDetails?.total_east_facing && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">Total East Facing</p>
-                  <p className="text-sm font-semibold text-gray-900">₹ {customerFlatDetails?.total_east_facing ? parseFloat(customerFlatDetails.total_east_facing).toFixed(2) : '---'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.total_east_facing)}</p>
                 </div>
               )}
               {customerFlatDetails?.corner_per_sq_ft && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">Corner Charge Per (sq.ft.)</p>
-                  <p className="text-sm font-semibold text-gray-900">₹ {customerFlatDetails?.corner_per_sq_ft ? parseFloat(customerFlatDetails.corner_per_sq_ft).toFixed(2) : '---'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.corner_per_sq_ft)}</p>
                 </div>
               )}
               {customerFlatDetails?.total_corner && (
                 <div className="flex flex-col gap-y-1">
                   <p className="text-sm text-gray-600">Total Corner</p>
-                  <p className="text-sm font-semibold text-gray-900">₹ {customerFlatDetails?.total_corner ? parseFloat(customerFlatDetails.total_corner).toFixed(2) : '---'}</p>
+                  <p className="text-sm font-semibold text-gray-900">{formatPrice(customerFlatDetails?.total_corner)}</p>
                 </div>
               )}
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Amenities (₹)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.amenities).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.amenities)}</p>
               </div>
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">GST (5%)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.gst).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.gst)}</p>
               </div>
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Cost of Unit with Tax (₹)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.costofunitwithtax).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.costofunitwithtax)}</p>
               </div>
               {/* <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Registration (₹)</p>
@@ -228,19 +236,19 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
 
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Manjeera Connection Charge (₹)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.manjeera_connection_charge).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.manjeera_connection_charge)}</p>
               </div>
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Maintenance (₹)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.maintenancecharge).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.maintenancecharge)}</p>
               </div>
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Documentation Fee (₹)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.documentaionfee).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.documentaionfee)}</p>
               </div>
               <div className="flex flex-col gap-y-1">
                 <p className="text-sm text-gray-600">Corpus Fund (₹)</p>
-                <p className='text-sm font-semibold text-gray-900'> ₹ {parseFloat(customerFlatDetails?.corpusfund).toFixed(2) || '---'}</p>
+                <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.corpusfund)}</p>
               </div>
 
             </div>

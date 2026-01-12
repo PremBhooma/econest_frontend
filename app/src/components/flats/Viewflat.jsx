@@ -47,6 +47,15 @@ function Viewflat() {
   const [formate, setFormate] = useState("word");
   const { uuid } = useParams();
 
+  const formatPrice = (price) => {
+    if (price === null || price === undefined || price === "") return "---";
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      minimumFractionDigits: 2,
+    }).format(price);
+  };
+
   const [file, setFile] = useState(null);
   const [fileError, setFileError] = useState("");
   const updateFile = (event) => {
@@ -477,13 +486,18 @@ function Viewflat() {
   return (
     <>
       <div className="w-full">
-        <div className="flex max-sm:flex-wrap justify-between pb-2 mb-2">
-          <div className="pl-1 max-sm:text-center max-sm:w-full max-sm:mb-[10px]">
+        <div className="flex max-sm:flex-wrap justify-between mb-4">
+          <div className="flex flex-row gap-4">
             <h1 className="text-[20px] font-semibold">Flat No: {flatDetails?.flat_no} / {flatDetails?.block?.block_name} / Floor No: {flatDetails?.floor_no}</h1>
+            <div
+              className={`flex items-center gap-2 px-2.5 py-1 rounded-full border text-sm font-medium ${flatDetails?.status === 'Sold' ? 'bg-green-100 text-green-500 border-green-200' : 'bg-red-100 text-red-500 border-red-200'}`}>
+              <span className={`w-1.5 h-1.5 rounded-full ${flatDetails?.status === 'Sold' ? 'bg-green-500' : 'bg-red-500'}`} ></span>
+              <span>{flatDetails?.status}</span>
+            </div>
           </div>
           <div className="flex items-center gap-2">
             {flatDetails?.status !== 'Sold' && canAssignFlat && (
-              <div onClick={openFlatToCustomer} className="cursor-pointer text-[14px] text-white px-4 py-[7px] rounded bg-[#0083bf]">
+              <div onClick={openFlatToCustomer} className="cursor-pointer text-[14px] text-white px-4 py-[7px] rounded  bg-[#b4295e]">
                 Assign Flat to Customer
               </div>
             )}
@@ -494,14 +508,14 @@ function Viewflat() {
                     <>
                       <button
                         onClick={() => openDownloadTemplate('agreement')}
-                        className="text-[#000] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#e1e1e1] transition-colors duration-200 cursor-pointer"
+                        className="text-[#000] px-3 gap-1 text-[14px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#e1e1e1] transition-colors duration-200 cursor-pointer"
                       >
                         <DownloadIcon size={16} color="#000" />
                         Download Agreement
                       </button>
                       <button
                         onClick={openCreateAgreementModal}
-                        className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#000] transition-colors duration-200 cursor-pointer"
+                        className="text-[#fff] px-3 gap-1 text-[14px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#000] transition-colors duration-200 cursor-pointer"
                       >
                         Re-genrate Agreement
                       </button>
@@ -509,7 +523,7 @@ function Viewflat() {
                     :
                     <button
                       onClick={openCreateAgreementModal}
-                      className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#000] transition-colors duration-200 cursor-pointer"
+                      className="text-[#fff] px-3 gap-1 text-[14px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#000] transition-colors duration-200 cursor-pointer"
                     >
                       Create Agreement
                     </button>
@@ -517,7 +531,7 @@ function Viewflat() {
                 {/* {permissions?.flats_page?.includes("upload_sale_deed_template") &&
                   <button
                     onClick={openSaleDeedTemplateModal}
-                    className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#0083bf] transition-colors duration-200 cursor-pointer"
+                    className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#0083bf] transition-colors duration-200 cursor-pointer"
                   >
                     Upload Sale Deed Template
                   </button>
@@ -529,14 +543,14 @@ function Viewflat() {
                         <>
                           <button
                             onClick={() => openDownloadTemplate('saledeed')}
-                            className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#0083bf] transition-colors duration-200 cursor-pointer"
+                            className="text-[#fff] px-3 gap-1 text-[14px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#0083bf] transition-colors duration-200 cursor-pointer"
                           >
                             <DownloadIcon size={16} color="#fff" />
                             Download Sale Deed Template
                           </button>
                           <button
                             onClick={openSaleDeedModal}
-                            className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#e0589c] transition-colors duration-200 cursor-pointer"
+                            className="text-[#fff] px-3 gap-1 text-[14px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#e0589c] transition-colors duration-200 cursor-pointer"
                           >
                             Re-genrate Sale Deed
                           </button>
@@ -544,7 +558,7 @@ function Viewflat() {
                         :
                         <button
                           onClick={openSaleDeedModal}
-                          className="text-[#fff] px-3 gap-1 text-[12px] font-semibold flex items-center justify-center py-1.5 rounded-sm bg-[#e0589c] transition-colors duration-200 cursor-pointer"
+                          className="text-[#fff] px-3 gap-1 text-[14px] font-semibold flex items-center justify-center py-[7px] rounded-sm bg-[#e0589c] transition-colors duration-200 cursor-pointer"
                         >
                           Create Sale Deed
                         </button>
@@ -553,11 +567,13 @@ function Viewflat() {
                 }
               </>
             )}
-            <div className={`font-semibold px-4 py-2 text-[14px] rounded-sm ${flatDetails?.status === 'Sold' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
+            {/* <div className={`font-semibold px-4 py-2 text-[14px] rounded-sm ${flatDetails?.status === 'Sold' ? 'bg-green-100 text-green-500' : 'bg-red-100 text-red-500'}`}>
               {flatDetails?.status}
-            </div>
+            </div> */}
+
+
             {permissions?.flats_page?.includes("edit_flat") && (
-              <Link to={`/flats/edit-flat/${uuid}`} className="text-[14px] text-white font-semibold px-5 py-1.5 border border-[#0083bf] !rounded-sm !bg-[#0083bf] hover:!bg-[#0083bf]/90">
+              <Link to={`/flats/edit-flat/${uuid}`} className="text-[14px] text-white font-semibold px-5 py-[7px] border border-[#0083bf] !rounded-sm !bg-[#0083bf] hover:!bg-[#0083bf]/90">
                 Edit
               </Link>
             )}
@@ -570,7 +586,7 @@ function Viewflat() {
         </div>
 
         <div className="flex gap-2 w-full">
-          <div className="h-fit pb-10 bg-white w-[22%] rounded-lg overflow-hidden shadow-md">
+          <div className="h-fit pb-10 bg-white w-[25%] rounded-lg overflow-hidden shadow-md">
             {/* <div className="h-screen bg-white w-92 rounded-2xl overflow-hidden shadow-xl"> */}
             <div className="flex flex-col gap-2">
               <div className="w-full overflow-hidden bg-white rounded-lg ">
@@ -611,7 +627,7 @@ function Viewflat() {
                           Rate Per (sq.ft)
                         </div>
                         <div className="text-gray-900 font-semibold break-all w-[45%]">
-                          ₹ {parseFloat(customerFlatDetails?.rate_per_sq_ft).toFixed(2) || '---'}
+                          {formatPrice(customerFlatDetails?.rate_per_sq_ft)}
                         </div>
                       </div>
                       <div className="flex flex-row w-full">
@@ -619,23 +635,23 @@ function Viewflat() {
                           Base Cost Unit
                         </div>
                         <div className="text-gray-900 font-semibold break-all w-[45%]">
-                          ₹ {parseFloat(customerFlatDetails?.base_cost_unit).toFixed(2) || '---'}
+                          {formatPrice(customerFlatDetails?.base_cost_unit)}
                         </div>
                       </div>
                       <div className="flex flex-row w-full">
                         <div className="text-gray-600 shrink-0 w-[55%]">
-                          Total Cost of Flat (₹)
+                          Total Cost of Flat
                         </div>
                         <div className="text-gray-900 font-semibold break-all w-[45%]">
-                          ₹ {parseFloat(customerFlatDetails?.toatlcostofuint).toFixed(2) || '---'}
+                          {formatPrice(customerFlatDetails?.toatlcostofuint)}
                         </div>
                       </div>
                       <div className="flex flex-row w-full">
                         <div className="text-gray-600 shrink-0 w-[55%]">
-                          Grand Total (₹)
+                          Grand Total
                         </div>
                         <div className="text-gray-900 font-semibold break-all w-[45%]">
-                          ₹ {parseFloat(customerFlatDetails?.grand_total).toFixed(2) || '---'}
+                          {formatPrice(customerFlatDetails?.grand_total)}
                         </div>
                       </div>
                       <div className="flex flex-col">
@@ -648,7 +664,7 @@ function Viewflat() {
             </div>
           </div>
 
-          <div className="w-[78%] relative">
+          <div className="w-[75%] relative">
             {!isLoadingEffect &&
               <>
                 {
