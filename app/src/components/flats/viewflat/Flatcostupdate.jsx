@@ -158,6 +158,19 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         setRegistrationChargeError('')
     }
 
+    const [manjeeraConnectionCharge, setManjeeraConnectionCharge] = useState('50000')
+    const [manjeeraConnectionChargeError, setManjeeraConnectionChargeError] = useState('')
+    const updateManjeeraConnectionCharge = (e) => {
+        let value = e.target.value
+        if (isNaN(value)) {
+            return false
+        }
+        setManjeeraConnectionCharge(value)
+        setManjeeraConnectionChargeError('')
+        // Pass preserveManualTotal=true to keep the manually entered total cost intact
+        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, value, true);
+    }
+
     const [maintenceCharge, setMaintenceCharge] = useState('')
     const [maintenceChargeError, setMaintenceChargeError] = useState('')
     const updateMaintenceCharge = (e) => {
@@ -203,202 +216,6 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
     }
 
 
-    // const calculateAllValues = (
-    //     newSaleableArea,
-    //     newRatePerSqFt,
-    //     newAmenities,
-    //     newTotalCost,
-    //     newFloorRise,
-    //     newEastFacing,
-    //     newCorner,
-    //     newDiscount,
-    //     newDocumentationFee,
-    // ) => {
-    //     let saleableArea = newSaleableArea !== undefined ? newSaleableArea : saleableAreaSqFt;
-    //     let rate = newRatePerSqFt !== undefined ? newRatePerSqFt : ratePerSqFt;
-    //     let amenitiesCost = newAmenities !== undefined ? newAmenities : amenities;
-    //     let floorRiseVal = newFloorRise !== undefined ? newFloorRise : floorRise;
-    //     let eastFacingVal = newEastFacing !== undefined ? newEastFacing : eastFacing;
-    //     let cornerVal = newCorner !== undefined ? newCorner : corner;
-    //     let discountVal = newDiscount !== undefined ? newDiscount : discount;
-    //     let documentationFeeVal = newDocumentationFee !== undefined ? newDocumentationFee : documentationFee;
-
-    //     let totalCost = newTotalCost !== undefined ? newTotalCost : totalCostofUnit;
-
-    //     let parseNum = (val) => (val && !isNaN(val) ? parseFloat(val) : 0);
-
-    //     let gstValue = 0;
-    //     let registerCharge = 0;
-
-    //     if (saleableArea && rate) {
-    //         // Base cost
-    //         const newBaseCost = parseNum(saleableArea) * parseNum(rate);
-    //         setTotalBaseCost(newBaseCost);
-
-    //         // Discount (per sq.ft * area)
-    //         const totalDiscountPrice = parseNum(saleableArea) * parseNum(discountVal);
-    //         setTotalDiscount(totalDiscountPrice);
-
-    //         // Final base cost after discount
-    //         const finalBaseCost = newBaseCost - totalDiscountPrice;
-    //         setBaseCostUnit(finalBaseCost);
-
-    //         // Floor Rise (per sq.ft * area)
-    //         let floorRiseTotal = 0;
-    //         if (floorRiseVal) {
-    //             floorRiseTotal = parseNum(floorRiseVal) * parseNum(saleableArea);
-    //             setFloorRiseXPerSft(floorRiseTotal);
-    //         } else {
-    //             setFloorRiseXPerSft("");
-    //         }
-
-    //         // East Facing (per sq.ft * area)
-    //         let eastFacingTotal = 0;
-    //         if (eastFacingVal) {
-    //             eastFacingTotal = parseNum(eastFacingVal) * parseNum(saleableArea);
-    //             setEastFacingXPerSft(eastFacingTotal);
-    //         } else {
-    //             setEastFacingXPerSft("");
-    //         }
-
-    //         // Corner (per sq.ft * area)
-    //         let cornerTotal = 0;
-    //         if (cornerVal) {
-    //             cornerTotal = parseNum(cornerVal) * parseNum(saleableArea);
-    //             setCornerXPerSft(cornerTotal);
-    //         } else {
-    //             setCornerXPerSft("");
-    //         }
-
-    //         // Total cost (Final Base + Extras + Amenities)
-    //         if (amenitiesCost && amenitiesCost !== "") {
-    //             if (newTotalCost === undefined) {
-    //                 totalCost =
-    //                     finalBaseCost +
-    //                     floorRiseTotal +
-    //                     eastFacingTotal +
-    //                     cornerTotal +
-    //                     parseNum(amenitiesCost);
-    //             }
-
-    //             setTotalCostofUnit(totalCost);
-
-    //             // GST 5%
-    //             gstValue = (parseNum(totalCost) * 0.05).toFixed(2);
-    //             setGst(gstValue);
-
-    //             // Cost with GST
-    //             setCostofUnitWithTax(parseNum(totalCost) + parseNum(gstValue));
-
-    //             // Registration 7.6% + 1050
-    //             registerCharge = ((parseFloat(totalCost) * 0.076) + 1050).toFixed(2);
-    //             setRegistrationCharge(parseFloat(registerCharge));
-    //         } else {
-    //             setTotalCostofUnit("");
-    //             setGst("");
-    //             setCostofUnitWithTax("");
-    //             setRegistrationCharge("");
-    //         }
-
-    //         // Maintenance & Corpus
-    //         if (saleableArea) {
-    //             let maintainCharge = ((parseFloat(saleableArea) * 3) * 24).toFixed(2);
-    //             setMaintenceCharge(parseFloat(maintainCharge));
-    //             let corpusFund = (parseFloat(saleableArea) * 50).toFixed(2);
-    //             setCorpusFund(parseFloat(corpusFund));
-
-
-    //             setGrandTotal(parseFloat(totalCost) + parseFloat(gstValue) + parseFloat(registerCharge) + parseFloat(maintainCharge) + parseFloat(corpusFund) + parseFloat(documentationFeeVal))
-    //         }
-    //     } else {
-    //         // Reset all if no base values
-    //         setBaseCostUnit("");
-    //         setAmenties("");
-    //         setFloorRiseXPerSft("");
-    //         setEastFacingXPerSft("");
-    //         setCornerXPerSft("");
-    //         setTotalCostofUnit("");
-    //         setGst("");
-    //         setCostofUnitWithTax("");
-    //         setRegistrationCharge("");
-    //         setMaintenceCharge("");
-    //         setCorpusFund("");
-    //         setDiscount("");
-    //         setTotalDiscount(0);
-    //         setTotalBaseCost(0);
-    //         setGrandTotal("")
-    //     }
-    // };
-
-    // const updateSaleableAreaSqFt = (e) => {
-    //     const value = e.target.value;
-    //     setSaleableAreaSqFt(value);
-    //     setSaleableAreaSqFtError("");
-    //     calculateAllValues(value, undefined, undefined, undefined);
-    // };
-
-    // const updateRatePerSqFt = (e) => {
-    //     const value = e.target.value;
-    //     setRatePerSqFt(value);
-    //     setRatePerSqFtError("");
-    //     calculateAllValues(undefined, value, undefined, undefined);
-    // };
-
-    // const updateAmenities = (e) => {
-    //     const value = e.target.value;
-    //     if (isNaN(value)) return false;
-    //     setAmenties(value);
-    //     setAmentiesError("");
-    //     calculateAllValues(undefined, undefined, value, undefined);
-    // };
-
-    // const updateTotalCostofUnit = (e) => {
-    //     const value = e.target.value;
-    //     if (isNaN(value)) return false;
-    //     setTotalCostofUnit(value);
-    //     setTotalCostofUnitError("");
-    //     calculateAllValues(undefined, undefined, undefined, value);
-    // };
-
-    // const updateFloorRise = (e) => {
-    //     const value = e.target.value;
-    //     if (isNaN(value)) return false;
-    //     setFloorRise(value);
-    //     setFloorRiseError("");
-    //     calculateAllValues(undefined, undefined, undefined, undefined, value, undefined, undefined);
-    // };
-
-    // const updateEastFacing = (e) => {
-    //     const value = e.target.value;
-    //     if (isNaN(value)) return false;
-    //     setEastFacing(value);
-    //     setEastFacingError("");
-    //     calculateAllValues(undefined, undefined, undefined, undefined, undefined, value, undefined);
-    // };
-
-    // const updateCorner = (e) => {
-    //     const value = e.target.value;
-    //     if (isNaN(value)) return false;
-    //     setCorner(value);
-    //     setCornerError("");
-    //     calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, value);
-    // };
-
-
-    // const updateDiscount = (e) => {
-    //     const value = e.target.value;
-    //     setDiscount(value);
-    //     setDiscountError("");
-    //     calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, value);
-    // };
-
-    // const updateDocumenationFee = (e) => {
-    //     let value = e.target.value;
-    //     setDocumentationFee(value)
-    //     setDocumenationFeeError('')
-    //     calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, value);
-    // }
-
 
     // 1️⃣ Load API data ONLY - no calculations
 
@@ -412,6 +229,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         newCorner,
         newDiscount,
         newDocumentationFee,
+        newManjeeraConnectionCharge,
         preserveManualTotal = false
     ) => {
         let saleableArea = newSaleableArea !== undefined ? newSaleableArea : saleableAreaSqFt;
@@ -422,6 +240,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         let cornerVal = newCorner !== undefined ? newCorner : corner;
         let discountVal = newDiscount !== undefined ? newDiscount : discount;
         let documentationFeeVal = newDocumentationFee !== undefined ? newDocumentationFee : documentationFee;
+        let manjeeraConnectionChargeVal = newManjeeraConnectionCharge !== undefined ? newManjeeraConnectionCharge : manjeeraConnectionCharge;
 
         // FIXED: Use existing totalCostofUnit if newTotalCost is not provided
         let totalCost = newTotalCost !== undefined ? newTotalCost : totalCostofUnit;
@@ -500,8 +319,8 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                 setCostofUnitWithTax(parseNum(totalCost) + parseNum(gstValue));
 
                 // Registration 7.6% + 1050
-                registerCharge = ((parseFloat(totalCost) * 0.076) + 1050).toFixed(2);
-                setRegistrationCharge(parseFloat(registerCharge));
+                // registerCharge = ((parseFloat(totalCost) * 0.076) + 1050).toFixed(2);
+                // setRegistrationCharge(parseFloat(registerCharge));
             } else {
                 setGst("");
                 setCostofUnitWithTax("");
@@ -517,12 +336,13 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
 
                 // FIXED: Calculate grand total with current values
                 const currentGstValue = parseNum(gstValue);
-                const currentRegisterCharge = parseNum(registerCharge);
+                // const currentRegisterCharge = parseNum(registerCharge);
                 const currentMaintainCharge = parseNum(maintainCharge);
                 const currentCorpusFund = parseNum(corpusFund);
                 const currentDocFee = parseNum(documentationFeeVal);
+                const currentManjeeraConnectionCharge = parseNum(manjeeraConnectionChargeVal);
 
-                setGrandTotal(parseNum(totalCost) + currentGstValue + currentRegisterCharge + currentMaintainCharge + currentCorpusFund + currentDocFee);
+                setGrandTotal(parseNum(totalCost) + currentGstValue + currentManjeeraConnectionCharge + currentMaintainCharge + currentCorpusFund + currentDocFee);
             }
         } else {
             // Reset all if no base values
@@ -548,14 +368,14 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         const value = e.target.value;
         setSaleableAreaSqFt(value);
         setSaleableAreaSqFtError("");
-        calculateAllValues(value, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        calculateAllValues(value, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     };
 
     const updateRatePerSqFt = (e) => {
         const value = e.target.value;
         setRatePerSqFt(value);
         setRatePerSqFtError("");
-        calculateAllValues(undefined, value, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
+        calculateAllValues(undefined, value, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     };
 
     const updateAmenities = (e) => {
@@ -563,7 +383,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         if (isNaN(value)) return false;
         setAmenties(value);
         setAmentiesError("");
-        calculateAllValues(undefined, undefined, value, undefined, undefined, undefined, undefined, undefined, undefined);
+        calculateAllValues(undefined, undefined, value, undefined, undefined, undefined, undefined, undefined, undefined, undefined);
     };
 
     const updateTotalCostofUnit = (e) => {
@@ -571,7 +391,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         if (isNaN(value)) return false;
         setTotalCostofUnit(value);
         setTotalCostofUnitError("");
-        calculateAllValues(undefined, undefined, undefined, value, undefined, undefined, undefined, undefined, undefined);
+        calculateAllValues(undefined, undefined, undefined, value, undefined, undefined, undefined, undefined, undefined, undefined);
     };
 
     const updateFloorRise = (e) => {
@@ -579,7 +399,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         if (isNaN(value)) return false;
         setFloorRise(value);
         setFloorRiseError("");
-        calculateAllValues(undefined, undefined, undefined, undefined, value, undefined, undefined, undefined, undefined);
+        calculateAllValues(undefined, undefined, undefined, undefined, value, undefined, undefined, undefined, undefined, undefined);
     };
 
     const updateEastFacing = (e) => {
@@ -587,7 +407,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         if (isNaN(value)) return false;
         setEastFacing(value);
         setEastFacingError("");
-        calculateAllValues(undefined, undefined, undefined, undefined, undefined, value, undefined, undefined, undefined);
+        calculateAllValues(undefined, undefined, undefined, undefined, undefined, value, undefined, undefined, undefined, undefined);
     };
 
     const updateCorner = (e) => {
@@ -595,14 +415,14 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         if (isNaN(value)) return false;
         setCorner(value);
         setCornerError("");
-        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, value, undefined, undefined);
+        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, value, undefined, undefined, undefined);
     };
 
     const updateDiscount = (e) => {
         const value = e.target.value;
         setDiscount(value);
         setDiscountError("");
-        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, value, undefined);
+        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, value, undefined, undefined);
     };
 
     const updateDocumenationFee = (e) => {
@@ -610,7 +430,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         setDocumentationFee(value);
         setDocumenationFeeError('');
         // Pass preserveManualTotal=true to keep the manually entered total cost intact
-        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, value, true);
+        calculateAllValues(undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, value, undefined, true);
     };
 
     useEffect(() => {
@@ -630,6 +450,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
             setMaintenceCharge(customerFlatDetails?.maintenancecharge || '');
             setDocumentationFee(customerFlatDetails?.documentaionfee || '');
             setCorpusFund(customerFlatDetails?.corpusfund || '');
+            setManjeeraConnectionCharge(customerFlatDetails?.manjeera_connection_charge || '50000');
             setFloorRise(flatDetails?.floor_no >= 5 ? customerFlatDetails?.floor_rise_per_sq_ft : '');
             setFloorRiseXPerSft(flatDetails?.floor_no >= 5 ? customerFlatDetails?.total_floor_rise : '');
             setEastFacing(flatDetails?.facing === "East" ? customerFlatDetails?.east_facing_per_sq_ft : '');
@@ -787,7 +608,8 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                 toatlcostofuint: parseFloat(totalCostofUnit),
                 gst: parseFloat(gst),
                 costofunitwithtax: parseFloat(costofUnitWithTax),
-                registrationcharge: parseFloat(registartionCharge),
+                // registrationcharge: parseFloat(registartionCharge) || 0,
+                manjeeraConnectionCharge: parseFloat(manjeeraConnectionCharge),
                 maintenancecharge: parseFloat(maintenceCharge),
                 documentaionfee: parseFloat(documentationFee),
                 corpusfund: parseFloat(corpusFund),
@@ -1038,7 +860,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
                         />
-                        <Textinput
+                        {/* <Textinput
                             placeholder="Enter registration charge (₹)"
                             label="Registration @ 7.6% + 1050/- (₹)"
                             withAsterisk
@@ -1048,6 +870,16 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             onChange={updateRegistrationCharge}
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
+                        /> */}
+                        <Textinput
+                            placeholder="Enter Manjeera Connection Charge (₹)"
+                            label="Manjeera Connection Charge (₹)"
+                            withAsterisk
+                            value={manjeeraConnectionCharge}
+                            error={manjeeraConnectionChargeError}
+                            onChange={updateManjeeraConnectionCharge}
+                            labelClassName="text-sm font-medium text-gray-600 mb-1"
+                            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
                         />
                         <Textinput
                             placeholder="Enter maintenance charge (₹)"
