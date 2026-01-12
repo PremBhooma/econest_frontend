@@ -795,7 +795,7 @@ function Allpaymentswrapper() {
                                 </div>
                             )}
 
-                            <div className='w-[200px]'>
+                            <div className='w-[160px]'>
                                 <Select
                                     data={customers}
                                     placeholder="Customers"
@@ -819,7 +819,7 @@ function Allpaymentswrapper() {
                                     dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
                                 />
                             </div>
-                            <div className='w-[200px]'>
+                            <div className='w-[160px]'>
                                 <Select
                                     data={flats}
                                     placeholder="Flats"
@@ -848,10 +848,10 @@ function Allpaymentswrapper() {
                                     dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
                                 />
                             </div>
-                            <Datefilter
+                            {/* <Datefilter
                                 onFilterChange={handleDateFilterChange}
                                 onClearFilter={handleDateFilterChange}
-                            />
+                            /> */}
 
                             <div ref={containerRef} className="relative">
                                 <button
