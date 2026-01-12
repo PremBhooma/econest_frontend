@@ -14,7 +14,8 @@ import { toast } from "react-toastify";
 import { Link, NavLink } from "react-router-dom";
 import { useProjectDetails } from "../zustand/useProjectDetails";
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
-import { Button, Modal, Pagination, Select } from "@nayeshdaggula/tailify";
+import { Button, Modal, Pagination } from "@nayeshdaggula/tailify";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "../ui/select";
 import { IconDownload, IconEdit, IconEye, IconSearch, IconTrash } from "@tabler/icons-react";
 import Flatapi from "../api/Flatapi";
 import { Funnel, PrinterIcon } from "lucide-react";
@@ -28,6 +29,7 @@ function Allpaymentswrapper() {
     const containerRef = useRef(null);
     const [isLoading, setIsLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
+    const [filterKey, setFilterKey] = useState(0);
 
     const { projectData, hasFetched, fetchProjectData } = useProjectDetails();
 
@@ -244,7 +246,7 @@ function Allpaymentswrapper() {
         setSelectedCustomer(null);
         setSelectedFlats(null);
         setSelectedBlock(null)
-        GetAllPayments(1, limit, '', null, [], null);
+        setFilterKey(prev => prev + 1);
     };
 
     const isFilterApplied =
@@ -796,57 +798,60 @@ function Allpaymentswrapper() {
                             )}
 
                             <div className='w-[160px]'>
-                                <Select
-                                    data={customers}
-                                    placeholder="Customers"
-                                    value={selectedCustomer}
-                                    onChange={handleCustomerChange}
-                                    searchable
-                                    selectWrapperClass="focus:ring-0 !focus:border-[#fff] focus:outline-none !py-1 !h-9 !bg-white !rounded-md !shadow-none !border !border-[#ebecef]"
-                                    className="!m-0 !p-0 !border-0"
-                                    dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                                />
+                                <Select key={filterKey} value={selectedCustomer || undefined} onValueChange={handleCustomerChange}>
+                                    <SelectTrigger className="w-full h-9 bg-white border-[#ebecef] focus:ring-0 focus:ring-offset-0 shadow-none">
+                                        <SelectValue placeholder="Customers" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {customers?.map((customer) => (
+                                            <SelectItem key={customer.value} value={customer.value}>
+                                                {customer.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className='w-[150px]'>
-                                <Select
-                                    data={blocks}
-                                    placeholder="Blocks"
-                                    value={selectedBlock}
-                                    onChange={handleSelectBlock}
-                                    searchable
-                                    selectWrapperClass="focus:ring-0 !focus:border-[#fff] focus:outline-none !py-1 !h-9 !bg-white !rounded-md !shadow-none !border !border-[#ebecef]"
-                                    className="!m-0 !p-0 !border-0"
-                                    dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                                />
+                                <Select key={filterKey} value={selectedBlock || undefined} onValueChange={handleSelectBlock}>
+                                    <SelectTrigger className="w-full h-9 bg-white border-[#ebecef] focus:ring-0 focus:ring-offset-0 shadow-none">
+                                        <SelectValue placeholder="Blocks" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {blocks?.map((block) => (
+                                            <SelectItem key={block.value} value={block.value}>
+                                                {block.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
                             <div className='w-[160px]'>
-                                <Select
-                                    data={flats}
-                                    placeholder="Flats"
-                                    value={selectedFlats}
-                                    onChange={handleFlatsChange}
-                                    searchable
-                                    selectWrapperClass="focus:ring-0 !focus:border-[#fff] focus:outline-none !py-1 !h-9 !bg-white !rounded-md !shadow-none !border !border-[#ebecef]"
-                                    className="!m-0 !p-0 !border-0"
-                                    dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                                />
+                                <Select key={filterKey} value={selectedFlats || undefined} onValueChange={handleFlatsChange}>
+                                    <SelectTrigger className="w-full h-9 bg-white border-[#ebecef] focus:ring-0 focus:ring-offset-0 shadow-none">
+                                        <SelectValue placeholder="Flats" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {flats?.map((flat) => (
+                                            <SelectItem key={flat.value} value={flat.value}>
+                                                {flat.label}
+                                            </SelectItem>
+                                        ))}
+                                    </SelectContent>
+                                </Select>
                             </div>
-                            <div className='w-[50px]'>
-                                <Select
-                                    data={[
-                                        { value: '10', label: '10' },
-                                        { value: '20', label: '20' },
-                                        { value: '30', label: '30' },
-                                        { value: '40', label: '40' },
-                                        { value: '50', label: '50' },
-                                    ]}
-                                    placeholder="10"
-                                    value={limit}
-                                    onChange={updateLimit}
-                                    selectWrapperClass="focus:ring-0 !focus:border-[#fff] focus:outline-none !py-1 !h-9 !bg-white !rounded-md !shadow-none !border !border-[#ebecef]"
-                                    className="!m-0 !p-0 !border-0"
-                                    dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                                />
+                            <div className='w-[60px]'>
+                                <Select value={limit.toString()} onValueChange={updateLimit}>
+                                    <SelectTrigger className="w-full h-9 bg-white border-[#ebecef] focus:ring-0 focus:ring-offset-0 shadow-none">
+                                        <SelectValue placeholder="10" />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        <SelectItem value="10">10</SelectItem>
+                                        <SelectItem value="20">20</SelectItem>
+                                        <SelectItem value="30">30</SelectItem>
+                                        <SelectItem value="40">40</SelectItem>
+                                        <SelectItem value="50">50</SelectItem>
+                                    </SelectContent>
+                                </Select>
                             </div>
                             {/* <Datefilter
                                 onFilterChange={handleDateFilterChange}
