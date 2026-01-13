@@ -121,7 +121,7 @@ function Flatinfo({ customerUuid }) {
                                 <div className="flex justify-between items-center">
                                     <Link to={`/flats/view-flat/${flats?.uuid}`}>
                                         <h2 className="text-base font-semibold text-gray-800 hover:text-[#0083bf]">
-                                            Flat No: {flats?.flat_no || "-"}
+                                            <span className="text-indigo-600">{flats?.project_name}</span> - Flat No: {flats?.flat_no || "-"}
                                         </h2>
                                     </Link>
                                     <h2 className="text-sm font-medium text-gray-600">{flats?.block || "-"}</h2>
