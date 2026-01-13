@@ -348,6 +348,7 @@ function Editpaymentwrapper() {
         formdata.append('receipt_updated', receiptUpdated.toString());
         formdata.append('payment_uid', payment_uid);
         formdata.append("employee_id", employeeId);
+        formdata.append("project_id", selectedFlat?.project_id);
 
         try {
             const res = await Paymentapi.post('/updatepayment', formdata, {

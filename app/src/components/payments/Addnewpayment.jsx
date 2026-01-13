@@ -275,6 +275,7 @@ function Addnewpayment() {
         formdata.append("flat_id", selectedFlat?.id || null);
         formdata.append("customer_id", selectedFlat?.customer?.id || null);
         formdata.append("employee_id", employeeId);
+        formdata.append("project_id", selectedFlat?.project_id || null);
 
         try {
             const res = await Paymentapi.post('/addpayment', formdata, {
