@@ -87,7 +87,7 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
         });
 
         const paymentTypes = ['Customer Pay', 'Loan Pay'];
-        const paymentTowards = ['Flat', 'GST', 'Corpus fund', 'Registration', 'TDS' ,'Maintenance'];
+        const paymentTowards = ['Flat', 'GST', 'Corpus fund', 'Registration', 'TDS', 'Maintenance'];
         const paymentMethods = ['DD', 'UPI', 'Bank Deposit', 'Cheque', 'Online Transfer (IMPS, NFT)'];
 
         const blockSheet = workbook.addWorksheet('BlockList');
@@ -165,37 +165,39 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
 
 
     return (
-        <div className="text-sm space-y-2 p-4">
-            <div className='w-full flex justify-between items-center'>
-                <div className='font-semibold'>Guidelines:</div>
-                <Button onClick={closeDownloadTemplate} size="sm" variant="default">Close</Button>
+        <div className="flex flex-col gap-5 p-2">
+            <div className='flex justify-between items-center border-b border-gray-100 pb-3'>
+                <div className='flex items-center gap-2'>
+                    <div className="h-8 w-1 bg-[#0083bf] rounded-full"></div>
+                    <h2 className='text-lg font-semibold text-gray-800'>Template Guidelines</h2>
+                </div>
+                <Button onClick={closeDownloadTemplate} size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                    ✕
+                </Button>
             </div>
-            <ul className="list-decimal ml-5 space-y-1">
-                <li>
-                    Date of Payment Format: <strong>DD-MM-YYYY</strong>. Example: <code>27-07-2025</code>
-                </li>
-                <li>
-                    Payment Type: Valid options: <strong>Customer Pay, Loan Pay</strong> (Enter only one)
-                </li>
-                <li>
-                    Payment Towards: Valid options: <strong>Flat, GST, Corpus fund, Registration, TDS, Maintenance</strong> (Enter only one)
-                </li>
-                <li>
-                    Payment Method: Valid options: <strong>DD, UPI, Bank Deposit, Cheque, Online Transfer (IMPS, NFT)</strong> (Enter only one)
-                </li>
-                <li>
-                    Block Type: Select the Valid options in block column.
-                </li>
-            </ul>
 
-            <button
-                className="mt-3 ml-auto items-end justify-end flex px-5 py-2 text-white text-xs bg-[#0083bf] rounded shadow cursor-pointer"
-                onClick={downloadPaymentTemplate}
-            >
-                Download Payment Template
-            </button>
+            <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                <p className="text-sm text-gray-600 mb-3 font-medium">Please follow these rules to ensure successful upload:</p>
+                <ul className="list-disc ml-4 space-y-2 text-sm text-gray-600">
+                    <li><span className="font-semibold text-gray-700">Date of Payment:</span> Enter in <code>DD-MM-YYYY</code> format (e.g., <code>27-07-2025</code>).</li>
+                    <li><span className="font-semibold text-gray-700">Payment Type:</span> Select from dropdown → Customer Pay, Loan Pay.</li>
+                    <li><span className="font-semibold text-gray-700">Payment Towards:</span> Select from dropdown → Flat, GST, Corpus fund, Registration, TDS, Maintenance.</li>
+                    <li><span className="font-semibold text-gray-700">Payment Method:</span> Select from dropdown → DD, UPI, Bank Deposit, Cheque, Online Transfer (IMPS, NFT).</li>
+                    <li><span className="font-semibold text-gray-700">Block:</span> Select a valid block from the dropdown list.</li>
+                </ul>
+            </div>
 
-            {errorMessage && <p className="text-red-500 text-sm mt-2">{errorMessage}</p>}
+            <div className="flex flex-col gap-3 pt-2">
+                <button
+                    className="w-full flex justify-center items-center gap-2 px-5 py-2.5 text-white text-sm font-medium bg-[#0083bf] hover:bg-[#006e9e] rounded-md shadow-sm transition-all duration-200 cursor-pointer"
+                    onClick={downloadPaymentTemplate}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download Payment Template
+                </button>
+            </div>
+
+            {errorMessage && <p className="text-red-500 text-sm mt-2 text-center">{errorMessage}</p>}
         </div>
     );
 }
