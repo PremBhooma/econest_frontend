@@ -8,6 +8,7 @@ import { IconArrowLeft, IconTrash, IconTrashFilled, IconX } from '@tabler/icons-
 import { Link, useNavigate } from 'react-router-dom';
 import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
 import { Textinput, Select, Datepicker, Textarea, Fileinput, Modal } from '@nayeshdaggula/tailify';
+import noImageStaticImage from "../../../public/assets/no_image.png";
 
 
 function Viewparsedpayments() {
@@ -48,6 +49,8 @@ function Viewparsedpayments() {
         results: [],
         loading: false,
         showDropdown: false,
+        paymentDetails: null, // New: Detailed payment info
+        loadingDetails: false, // New: Loading state for details
         error: {
             flat_id: '',
             customer_id: '',
@@ -87,6 +90,7 @@ function Viewparsedpayments() {
                         let flatId = '';
                         let customerId = '';
                         let searchQuery = '';
+                        let paymentDetails = null;
 
                         if (item.flat && item.block) {
                             const flats = await getFlatsData(item.flat, 'flatNo');
@@ -101,6 +105,16 @@ function Viewparsedpayments() {
                                 flatId = match.id || '';
                                 customerId = match.customer?.id || '';
                                 searchQuery = `${match.flat_no} - ${match.block_name || ''}`;
+
+                                // Fetch details if match found
+                                try {
+                                    const detailsRes = await Flatapi.get(`/get-flat-payment-details?flat_id=${match.id}`);
+                                    if (detailsRes.data?.status === 'success') {
+                                        paymentDetails = detailsRes.data.data;
+                                    }
+                                } catch (err) {
+                                    console.error("Error fetching payment details for initial load:", err);
+                                }
                             }
                         }
 
@@ -115,6 +129,8 @@ function Viewparsedpayments() {
                             results: [],
                             loading: false,
                             showDropdown: false,
+                            paymentDetails,
+                            loadingDetails: false,
                             error: {
                                 flat_id: '',
                                 customer_id: '',
@@ -141,6 +157,8 @@ function Viewparsedpayments() {
                     searchType: '',
                     searchQuery: '',
                     results: [],
+                    paymentDetails: null,
+                    loadingDetails: false,
                     error: {
                         flat_id: '',
                         customer_id: '',
@@ -269,6 +287,7 @@ function Viewparsedpayments() {
         updated[index].flat_id = '';
         updated[index].customer_id = '';
         updated[index].showDropdown = false;
+        updated[index].paymentDetails = null; // Reset details
         setBulkUpload(updated);
     };
 
@@ -285,6 +304,7 @@ function Viewparsedpayments() {
             newBulk[index].selectedFlat = null;
             newBulk[index].flat_id = '';
             newBulk[index].customer_id = '';
+            newBulk[index].paymentDetails = null;
             setBulkUpload(newBulk);
 
             if (searchTimeout.current[index]) {
@@ -313,7 +333,7 @@ function Viewparsedpayments() {
 
 
     // ✅ Select a flat for a specific row
-    const handleSelectFlatForRow = (index, flat) => {
+    const handleSelectFlatForRow = async (index, flat) => {
         const updated = [...bulkUpload];
         updated[index].flat_id = flat.id || '';
         updated[index].customer_id = flat.customer?.id || '';
@@ -321,10 +341,46 @@ function Viewparsedpayments() {
         updated[index].searchQuery = flat.label;
         updated[index].results = [];
         updated[index].showDropdown = false;
+        updated[index].paymentDetails = null; // Clear old details
+        updated[index].loadingDetails = true; // Set loading state
 
         updated[index].error.flat_id = '';
         updated[index].error.customer_id = '';
         setBulkUpload(updated);
+
+        // Fetch detailed payment info
+        if (flat?.id) {
+            try {
+                const res = await Flatapi.get(`/get-flat-payment-details?flat_id=${flat.id}`);
+                const finalUpdated = [...updated]; // Use fresh copy or ref if needed in proper context
+                // NOTE: In a real closure, 'updated' might be stale if setBulkUpload happened.
+                // Ideally we use setBulkUpload with callback, but for array index logic:
+
+                // We need to re-copy bulkUpload from state inside async or just update strictly
+                // Since we have 'updated' from before await, let's just modify the same object in the set state callback
+                // to be safe, or just call setBulkUpload(prev => ...)
+
+                setBulkUpload(prev => {
+                    const newRows = [...prev];
+                    if (res.data?.status === 'success') {
+                        newRows[index].paymentDetails = res.data.data;
+                    }
+                    newRows[index].loadingDetails = false;
+                    return newRows;
+                });
+
+            } catch (err) {
+                console.error(err);
+                setBulkUpload(prev => {
+                    const newRows = [...prev];
+                    newRows[index].loadingDetails = false;
+                    return newRows;
+                });
+            }
+        } else {
+            updated[index].loadingDetails = false;
+            setBulkUpload(updated);
+        }
     };
 
     // ✅ Fetch flats from API
@@ -735,40 +791,130 @@ function Viewparsedpayments() {
                                 </div>
 
                                 {/* Selected Flat Info */}
-                                {row?.selectedFlat && (
-                                    <div className="flex flex-col gap-2 w-full border border-[#ced4da] rounded-md p-4">
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div className='flex-1'>
-                                                <div className="text-lg font-semibold text-gray-800">Flat No: {row?.selectedFlat?.flat_no || '---'}</div>
+                                {(row?.selectedFlat || row?.paymentDetails) && (
+                                    <div className="flex flex-col gap-4 w-full animate-in fade-in duration-500">
+                                        {row.loadingDetails ? (
+                                            <div className="bg-white border rounded-xl p-8 flex justify-center items-center">
+                                                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
                                             </div>
-                                            <div className='flex-1'>
-                                                <div className="w-full text-lg font-semibold text-gray-900 break-all">
-                                                    {`${capitalize(row?.selectedFlat.customer.first_name)} ${capitalize(row?.selectedFlat.customer.last_name)}`}
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr className='w-full border border-[#ced4da]' />
-                                        <div className="grid grid-cols-2 gap-2">
-                                            <div className='w-1/2'>
-                                                <div className="flex flex-col gap-2 text-sm text-gray-700">
-                                                    <div className="text-sm text-gray-600">Block: <span className="text-sm text-gray-900 font-semibold break-all capitalize">{row?.selectedFlat?.block_name || '---'}</span></div>
-                                                    <div className="text-sm text-gray-600">Facing: <span className="text-sm text-gray-900 font-semibold break-all capitalize">{row?.selectedFlat?.facing || '---'}</span></div>
-                                                    <div className="text-sm text-gray-600">Floor: <span className="text-sm text-gray-900 font-semibold break-all capitalize">{row?.selectedFlat?.floor_no || '---'}</span></div>
-                                                </div>
-                                            </div>
-                                            {row?.selectedFlat.customer && (
-                                                <div className="flex-1 flex flex-col gap-2">
-                                                    <div className="flex flex-col gap-y-1">
-                                                        <p className="text-sm text-gray-600 break-all">Email: <span className="text-sm text-gray-900 font-semibold">{row?.selectedFlat.customer.email || '---'}</span></p>
+                                        ) : row.paymentDetails ? (
+                                            <>
+                                                {/* Financial Summary Cards */}
+                                                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                                    <div className="bg-gradient-to-br from-blue-50 to-blue-100 p-4 rounded-xl border border-blue-200 shadow-sm">
+                                                        <div className="text-xs font-semibold text-blue-600 uppercase tracking-wider">Grand Total</div>
+                                                        <div className="text-xl font-bold text-blue-900 mt-1">
+                                                            ₹{row.paymentDetails.financials?.grand_total?.toLocaleString() || 0}
+                                                        </div>
                                                     </div>
-
-                                                    <div className="flex flex-col gap-y-1">
-                                                        <p className="text-sm text-gray-600 break-all">Phone Number: <span className="text-sm text-gray-900 font-semibold capitalize">{`+${row?.selectedFlat.customer.phone_code} ${row?.selectedFlat.customer.phone_number}`}</span></p>
-
+                                                    <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 p-4 rounded-xl border border-emerald-200 shadow-sm">
+                                                        <div className="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Total Paid</div>
+                                                        <div className="text-xl font-bold text-emerald-900 mt-1">
+                                                            ₹{row.paymentDetails.financials?.total_paid?.toLocaleString() || 0}
+                                                        </div>
+                                                    </div>
+                                                    <div className="bg-gradient-to-br from-orange-50 to-orange-100 p-4 rounded-xl border border-orange-200 shadow-sm">
+                                                        <div className="text-xs font-semibold text-orange-600 uppercase tracking-wider">Balance Due</div>
+                                                        <div className="text-xl font-bold text-orange-900 mt-1">
+                                                            ₹{row.paymentDetails.financials?.balance?.toLocaleString() || 0}
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            )}
-                                        </div>
+
+                                                {/* Customer Profile Card */}
+                                                {row.paymentDetails.customer_details && (
+                                                    <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                                                        <div className="bg-gray-50 px-4 py-3 border-b border-gray-200 flex justify-between items-center">
+                                                            <h3 className="font-semibold text-gray-800">Customer Profile</h3>
+                                                            <span className="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded font-medium">
+                                                                Flat {row.paymentDetails.flat_no}
+                                                            </span>
+                                                        </div>
+                                                        <div className="p-4 flex items-center gap-5">
+                                                            <div className="h-16 w-16 bg-gray-100 rounded-full flex items-center justify-center border border-gray-200 overflow-hidden flex-shrink-0">
+                                                                {row.paymentDetails.customer_details.profile_pic_url ? (
+                                                                    <img src={`${process.env.API_URL}${row.paymentDetails.customer_details.profile_pic_url}`} alt="Profile" className="h-full w-full object-cover" />
+                                                                ) : (
+                                                                    <img src={noImageStaticImage} alt="Profile" className="h-full w-full object-cover" />
+                                                                )}
+                                                            </div>
+                                                            <div className="flex-1">
+                                                                <h4 className="text-lg font-bold text-gray-900">
+                                                                    {row.paymentDetails.customer_details.first_name} {row.paymentDetails.customer_details.last_name}
+                                                                </h4>
+                                                                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-1 gap-x-4 mt-1">
+                                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path></svg>
+                                                                        {row.paymentDetails.customer_details.email}
+                                                                    </div>
+                                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
+                                                                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path></svg>
+                                                                        {row.paymentDetails.customer_details.phone_code} {row.paymentDetails.customer_details.phone_number}
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                )}
+
+                                                {/* Payment History Table */}
+                                                <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+                                                    <div className="bg-gray-50 px-4 py-3 border-b border-gray-200">
+                                                        <h3 className="font-semibold text-gray-800">Payment History</h3>
+                                                    </div>
+                                                    <div className="max-h-60 overflow-y-auto">
+                                                        {row.paymentDetails.payment_history?.length > 0 ? (
+                                                            <table className="w-full text-sm text-left table-fixed">
+                                                                <thead className="text-xs text-gray-500 uppercase bg-gray-50 sticky top-0">
+                                                                    <tr>
+                                                                        <th className="px-4 py-2 w-[20%]">Date</th>
+                                                                        <th className="px-4 py-2 w-[20%]">Type</th>
+                                                                        <th className="px-4 py-2 w-[20%]">Txn ID</th>
+                                                                        <th className="px-4 py-2 w-[20%] text-right">Amount</th>
+                                                                    </tr>
+                                                                </thead>
+
+                                                                <tbody className="divide-y divide-gray-100">
+                                                                    {row.paymentDetails.payment_history.map((pay) => (
+                                                                        <tr key={pay.id} className="hover:bg-gray-50">
+                                                                            <td className="w-[20%] px-4 py-2 font-medium text-gray-900">
+                                                                                {dayjs(pay.payment_date).format('DD MMM YYYY')}
+                                                                            </td>
+
+                                                                            <td className="w-[20%] px-4 py-2 text-gray-600">
+                                                                                {pay.payment_type}
+                                                                            </td>
+
+                                                                            <td className="w-[20%] px-4 py-2 text-gray-500 font-mono text-xs break-all">
+                                                                                {pay.trasnaction_id || '-'}
+                                                                            </td>
+
+                                                                            <td className="w-[20%] px-4 py-2 text-right font-semibold text-gray-900">
+                                                                                ₹{pay.amount?.toLocaleString()}
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+
+                                                        ) : (
+                                                            <div className="p-6 text-center text-gray-500 text-sm">
+                                                                No previous payments found.
+                                                            </div>
+                                                        )}
+                                                    </div>
+                                                </div>
+                                            </>
+                                        ) : row.selectedFlat && (
+                                            <div className="bg-white border border-[#ced4da] rounded-md p-4">
+                                                <div className="text-lg font-semibold text-gray-800 mb-2">
+                                                    Flat No: {row.selectedFlat?.flat_no}
+                                                </div>
+                                                <div className="text-sm text-gray-500">
+                                                    Loading additional details...
+                                                </div>
+                                            </div>
+                                        )}
                                     </div>
                                 )}
                             </div>
