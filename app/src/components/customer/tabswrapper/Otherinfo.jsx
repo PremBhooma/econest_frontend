@@ -109,7 +109,7 @@ function Otherinfo({ customerData }) {
                     </div>
                     <div className="flex flex-col gap-y-1">
                         <p className="text-sm text-gray-600">Annual Income</p>
-                        <p className="text-sm text-gray-900 font-semibold break-all">{customerData?.current_annual_income || "---"}</p>
+                        <p className="text-sm text-gray-900 font-semibold break-all">{customerData?.current_annual_income ? Number(customerData.current_annual_income).toLocaleString('en-IN') : "---"}</p>
                     </div>
                 </div>
             </div>
@@ -135,14 +135,14 @@ function Otherinfo({ customerData }) {
                         </p>
                     </div>
 
-                    <div className="flex flex-col gap-y-1">
+                    {/* <div className="flex flex-col gap-y-1">
                         <p className="text-sm text-gray-600">Number of years residing at correspondence address</p>
                         <p className="text-sm text-gray-900 font-semibold break-all">{customerData?.no_of_years_correspondence_address || "---"}</p>
                     </div>
                     <div className="flex flex-col gap-y-1">
                         <p className="text-sm text-gray-600">Number of years residing in the city</p>
                         <p className="text-sm text-gray-900 font-semibold break-all">{customerData?.no_of_years_city || "---"}</p>
-                    </div>
+                    </div> */}
                 </div>
             </div>
         </div>
