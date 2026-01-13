@@ -10,7 +10,25 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
     const [errorMessage, setErrorMessage] = useState("");
     const [blocksData, setBlocksData] = useState([]);
 
-    console.log("BlocksDAT:", blocksData)
+    const [projectsData, setProjectsData] = useState([]);
+
+    async function getProjectsData() {
+        try {
+            const response = await Projectapi.get("get-all-projects", {
+                headers: { "Content-Type": "application/json" }
+            });
+            const data = response.data;
+            if (data.status === "error") {
+                console.error("Error fetching projects:", data.message);
+                setProjectsData([]);
+            } else {
+                setProjectsData(data.data || []);
+            }
+        } catch (error) {
+            console.error("Error fetching projects:", error);
+            setProjectsData([]);
+        }
+    }
 
     async function getBlocksData() {
         setIsLoading(true);
@@ -52,6 +70,7 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
 
     useEffect(() => {
         getBlocksData();
+        getProjectsData();
     }, []);
 
 
@@ -77,6 +96,7 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
             'Transaction Id',
             'Flat',
             'Block',
+            'Project',
             'Comment'
         ];
 
@@ -96,6 +116,12 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
         });
         blockSheet.state = 'veryHidden'; // hides sheet in Excel
 
+        const projectSheet = workbook.addWorksheet('ProjectList');
+        projectsData.forEach((project, index) => {
+            projectSheet.getCell(`A${index + 1}`).value = project.project_name;
+        });
+        projectSheet.state = 'veryHidden';
+
         worksheet.addRow([
             "10000",
             paymentTypes[0] || "",
@@ -106,7 +132,7 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
             "ABCDEFGH123456",
             "101",
             blocksData[0]?.name || "",
-            "abcdefgh"
+            projectsData[0]?.project_name || "",
         ]);
 
         const rowCount = 5000;
@@ -152,6 +178,19 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
                 errorTitle: 'Invalid Block',
                 error: 'Please select a valid Block from the dropdown list.',
             };
+
+            // ✅ Reference hidden ProjectList sheet
+            if (projectsData.length > 0) {
+                worksheet.getCell(`J${i}`).dataValidation = {
+                    type: 'list',
+                    allowBlank: false,
+                    formulae: [`ProjectList!$A$1:$A$${projectsData.length}`],
+                    showErrorMessage: true,
+                    errorStyle: 'error',
+                    errorTitle: 'Invalid Project',
+                    error: 'Please select a valid Project from the dropdown list.',
+                };
+            }
         }
 
         const buffer = await workbook.xlsx.writeBuffer();
@@ -184,6 +223,7 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
                     <li><span className="font-semibold text-gray-700">Payment Towards:</span> Select from dropdown → Flat, GST, Corpus fund, Registration, TDS, Maintenance.</li>
                     <li><span className="font-semibold text-gray-700">Payment Method:</span> Select from dropdown → DD, UPI, Bank Deposit, Cheque, Online Transfer (IMPS, NFT).</li>
                     <li><span className="font-semibold text-gray-700">Block:</span> Select a valid block from the dropdown list.</li>
+                    <li><span className="font-semibold text-gray-700">Project:</span> Select a valid Project from the dropdown list.</li>
                 </ul>
             </div>
 
