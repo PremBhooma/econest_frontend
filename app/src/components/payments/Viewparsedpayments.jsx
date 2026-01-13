@@ -104,7 +104,7 @@ function Viewparsedpayments() {
                                 selectedFlat = match;
                                 flatId = match.id || '';
                                 customerId = match.customer?.id || '';
-                                searchQuery = `${match.flat_no} - ${match.block_name || ''}`;
+                                searchQuery = match.label;
 
                                 // Fetch details if match found
                                 try {
@@ -398,8 +398,8 @@ function Viewparsedpayments() {
             return (response?.data?.data || []).map(flat => ({
                 ...flat,
                 label: searchType === 'flatNo'
-                    ? `${flat.flat_no} - ${flat.block_name || ''}`
-                    : `${flat.customer?.first_name || ''} ${flat.customer?.last_name || ''} - ${flat.flat_no}`,
+                    ? `${flat.project_name || 'Project'} - ${flat.flat_no} - ${flat.block_name || ''}`
+                    : `${flat.customer?.first_name || ''} ${flat.customer?.last_name || ''} - ${flat.flat_no} (${flat.project_name || 'Project'})`,
                 value: flat.id,
             }));
         } catch (error) {
@@ -482,6 +482,11 @@ function Viewparsedpayments() {
                 formData.append(`rows[${i}][flat_id]`, row?.flat_id);
                 formData.append(`rows[${i}][customer_id]`, row?.customer_id);
                 formData.append(`rows[${i}][employee_id]`, employeeInfo?.id);
+                // Ensure project_id is passed. Use optional chaining just in case.
+                const projectId = row?.selectedFlat?.project_id || row?.paymentDetails?.flat?.project_id;
+                if (projectId) {
+                    formData.append(`rows[${i}][project_id]`, projectId);
+                }
 
                 // If file exists, append it
                 if (row?.receipt) {
