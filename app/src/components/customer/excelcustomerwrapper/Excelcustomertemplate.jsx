@@ -30,12 +30,12 @@ function Excelcustomertemplate({ closeDownloadTemplate }) {
             "Country of Citizenship",
             "Country of Residence",
             "Mother Tongue",
-            "Name of Power of Attorney (POA) Holder",
-            "If POA Holder is Indian, specify status",
-            "Number of years residing at correspondence address",
-            "Number of years residing at city",
-            "Have you ever owned a Abode home / property?",
-            "If Yes, Project Name",
+            // "Name of Power of Attorney (POA) Holder",
+            // "If POA Holder is Indian, specify status",
+            // "Number of years residing at correspondence address",
+            // "Number of years residing at city",
+            // "Have you ever owned a Abode home / property?",
+            // "If Yes, Project Name",
             "Address of Correspondence, Country",
             "Address of Correspondence, State",
             "Address of Correspondence, City",
@@ -88,12 +88,12 @@ function Excelcustomertemplate({ closeDownloadTemplate }) {
             "India",
             "India",
             "Telugu",
-            "XYZ",
-            "Resident",
-            5,
-            5,
-            "Yes",
-            "Abode Developers",
+            // "XYZ",
+            // "Resident",
+            // 5,
+            // 5,
+            // "Yes",
+            // "Abode Developers",
             "India",
             "Telangana",
             "Hyderabad",
@@ -159,26 +159,26 @@ function Excelcustomertemplate({ closeDownloadTemplate }) {
             };
 
             // POA Holder Status → column V
-            worksheet.getCell(`V${i}`).dataValidation = {
-                type: "list",
-                allowBlank: true,
-                formulae: [`"${ifPOAHolderIsIndian.join(",")}"`],
-                showErrorMessage: true,
-                errorStyle: "error",
-                errorTitle: "Invalid POA Holder Status",
-                error: "Please select Resident or NRI",
-            };
+            // worksheet.getCell(`V${i}`).dataValidation = {
+            //     type: "list",
+            //     allowBlank: true,
+            //     formulae: [`"${ifPOAHolderIsIndian.join(",")}"`],
+            //     showErrorMessage: true,
+            //     errorStyle: "error",
+            //     errorTitle: "Invalid POA Holder Status",
+            //     error: "Please select Resident or NRI",
+            // };
 
             // Owned Abode Property → column Y
-            worksheet.getCell(`Y${i}`).dataValidation = {
-                type: "list",
-                allowBlank: true,
-                formulae: [`"${haveYouEverOwnedAbode.join(",")}"`],
-                showErrorMessage: true,
-                errorStyle: "error",
-                errorTitle: "Invalid Owned Property Option",
-                error: "Please select Yes or No",
-            };
+            // worksheet.getCell(`Y${i}`).dataValidation = {
+            //     type: "list",
+            //     allowBlank: true,
+            //     formulae: [`"${haveYouEverOwnedAbode.join(",")}"`],
+            //     showErrorMessage: true,
+            //     errorStyle: "error",
+            //     errorTitle: "Invalid Owned Property Option",
+            //     error: "Please select Yes or No",
+            // };
         }
 
         const buffer = await workbook.xlsx.writeBuffer();
@@ -191,29 +191,39 @@ function Excelcustomertemplate({ closeDownloadTemplate }) {
 
 
     return (
-        <div className="text-sm space-y-2 p-4">
-            <div className='w-full flex justify-between items-center'>
-                <div className='font-semibold'>Guidelines:</div>
-                <Button onClick={closeDownloadTemplate} size="sm" variant="default">Close</Button>
+        <div className="flex flex-col gap-5 p-2">
+            <div className='flex justify-between items-center border-b border-gray-100 pb-3'>
+                <div className='flex items-center gap-2'>
+                    <div className="h-8 w-1 bg-[#0083bf] rounded-full"></div>
+                    <h2 className='text-lg font-semibold text-gray-800'>Template Guidelines</h2>
+                </div>
+                <Button onClick={closeDownloadTemplate} size="sm" variant="ghost" className="text-gray-500 hover:text-gray-700 hover:bg-gray-100">
+                    ✕
+                </Button>
             </div>
-            <ul className="list-decimal ml-5 space-y-1">
-                <li><strong>Prefixes:</strong> Select from dropdown → Mr, Mrs, Miss, Mx.</li>
-                <li><strong>Gender:</strong> Select from dropdown → Male, Female.</li>
-                <li><strong>Spouse Prefixes:</strong> Select from dropdown → Mr, Mrs, Miss, Mx.</li>
-                <li><strong>Marital Status:</strong> Select from dropdown → Single, Married.</li>
-                <li><strong>If POA Holder is Indian, specify status:</strong> Select from dropdown → Resident, NRI.</li>
-                <li><strong>Have you ever owned a Abode home / property?:</strong> Select from dropdown → Yes, No.</li>
-                <li><strong>Date Fields (Date of Birth, Wedding Anniversary, Spouse DOB):</strong> Enter in
-                    <code> DD-MM-YYYY</code> format (e.g., 12-08-2025).
-                </li>
-            </ul>
 
-            <button
-                className="mt-3 ml-auto items-end justify-end flex px-5 py-2 text-white text-xs bg-[#0083bf] rounded shadow cursor-pointer"
-                onClick={downloadCustomerTemplate}
-            >
-                Download Customer Template
-            </button>
+            <div className="bg-blue-50/50 rounded-lg p-4 border border-blue-100">
+                <p className="text-sm text-gray-600 mb-3 font-medium">Please follow these rules to ensure successful upload:</p>
+                <ul className="list-disc ml-4 space-y-2 text-sm text-gray-600">
+                    <li><span className="font-semibold text-gray-700">Prefixes:</span> Select from dropdown → Mr, Mrs, Miss, Mx.</li>
+                    <li><span className="font-semibold text-gray-700">Gender:</span> Select from dropdown → Male, Female.</li>
+                    <li><span className="font-semibold text-gray-700">Spouse Prefixes:</span> Select from dropdown → Mr, Mrs, Miss, Mx.</li>
+                    <li><span className="font-semibold text-gray-700">Marital Status:</span> Select from dropdown → Single, Married.</li>
+                    {/* <li><span className="font-semibold text-gray-700">If POA Holder is Indian, specify status:</span> Select from dropdown → Resident, NRI.</li> */}
+                    {/* <li><span className="font-semibold text-gray-700">Have you ever owned a Abode home / property?:</span> Select from dropdown → Yes, No.</li> */}
+                    <li><span className="font-semibold text-gray-700">Date Fields:</span> (Date of Birth, Wedding Anniversary, Spouse DOB) Enter in <code>DD-MM-YYYY</code> format.</li>
+                </ul>
+            </div>
+
+            <div className="flex flex-col gap-3 pt-2">
+                <button
+                    className="w-full flex justify-center items-center gap-2 px-5 py-2.5 text-white text-sm font-medium bg-[#0083bf] hover:bg-[#006e9e] rounded-md shadow-sm transition-all duration-200 cursor-pointer"
+                    onClick={downloadCustomerTemplate}
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    Download Customer Template
+                </button>
+            </div>
         </div>
     );
 }
