@@ -90,6 +90,7 @@ const Ageingrecord = () => {
                 <th className="px-6 py-3">Flat Details</th>
                 <th className="px-6 py-3">Project</th>
                 <th className="px-6 py-3">Booking Date</th>
+                <th className="px-6 py-3">Ageing</th>
                 <th className="px-6 py-3">Total Payment</th>
                 <th className="px-6 py-3">Loan Status</th>
                 <th className="px-6 py-3 text-right">Action</th>
@@ -133,6 +134,9 @@ const Ageingrecord = () => {
                   </td>
                   <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
                     {formatDate(record.booking_date)}
+                  </td>
+                  <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
+                    { }
                   </td>
                   <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
                     {record.total_amount}
