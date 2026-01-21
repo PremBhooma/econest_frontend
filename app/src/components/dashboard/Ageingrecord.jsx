@@ -136,7 +136,7 @@ const Ageingrecord = () => {
                     {formatDate(record.booking_date)}
                   </td>
                   <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
-                    {record.ageing_days} days
+                    {record.ageing_days}
                   </td>
                   <td className="px-6 py-3.5 text-neutral-500 text-xs text-nowrap">
                     {record.total_amount}
