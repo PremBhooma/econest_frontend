@@ -158,7 +158,7 @@ const Ageingrecord = () => {
                   <td className="px-6 py-3.5 text-right">
                     <button
                       onClick={() => openCustomerView(record.customer?.uuid)}
-                      className="p-1.5 text-neutral-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-all"
+                      className="p-1.5 cursor-pointer text-neutral-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-all"
                     >
                       <IconEye size={16} />
                     </button>
