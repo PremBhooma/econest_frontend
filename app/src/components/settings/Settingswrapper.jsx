@@ -61,9 +61,9 @@ function Settingswrapper() {
                         { id: 'project', label: 'Project', icon: SquareChartGantt, permission: 'project_tab' },
                         { id: 'blocks', label: 'Blocks', icon: BlocksIcon, permission: 'blocks_tab' },
                         { id: 'amenities', label: 'Amenities Prices', icon: NotepadText, permission: 'amenities_tab' },
-                        { id: 'group_owner', label: 'Group/Owner', icon: GroupIcon, permission: 'group_owner_tab' },
-                        { id: 'bulk_uploads_tab', label: 'Global Upload', icon: IconDatabase, permission: 'global_tab' },
-                        { id: 'backup', label: 'Backup', icon: IconRestore, permission: 'backup_tab' },
+                        // { id: 'group_owner', label: 'Group/Owner', icon: GroupIcon, permission: 'group_owner_tab' },
+                        // { id: 'bulk_uploads_tab', label: 'Global Upload', icon: IconDatabase, permission: 'global_tab' },
+                        // { id: 'backup', label: 'Backup', icon: IconRestore, permission: 'backup_tab' },
                         { id: 'lead_stages', label: 'Lead Stages', icon: IconChartFunnel, permission: null }, // Assuming no specific permission or always visible
                         { id: 'templates', label: 'Templates', icon: IconTemplate, permission: null }
                     ].map((tab) => {
@@ -76,7 +76,7 @@ function Settingswrapper() {
                             <button
                                 key={tab.id}
                                 onClick={() => tabChange(tab.id)}
-                                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 whitespace-nowrap border-b-2
+                                className={`flex items-center gap-2 px-4 py-3 text-sm font-medium transition-all duration-200 whitespace-nowrap border-b-2 cursor-pointer
                                     ${isActive
                                         ? 'border-[#0083bf] text-[#0083bf]'
                                         : 'border-transparent text-neutral-500 hover:text-neutral-900 hover:bg-neutral-50 rounded-t-lg'
