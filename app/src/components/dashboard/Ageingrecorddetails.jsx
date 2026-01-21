@@ -10,6 +10,7 @@ import { toast } from 'react-toastify';
 const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
+  const [localRecord, setLocalRecord] = useState(null);
 
   // Form states for update
   const [loanStatus, setLoanStatus] = useState(false);
@@ -24,21 +25,35 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
   const [agentNumberError, setAgentNumberError] = useState('');
   const [loanAmountError, setLoanAmountError] = useState('');
 
+  // Sync localRecord with recordData when drawer opens
+  useEffect(() => {
+    if (open && recordData) {
+      setLocalRecord(recordData);
+    }
+  }, [open, recordData]);
+
+  // Reset localRecord when drawer closes
+  useEffect(() => {
+    if (!open) {
+      setLocalRecord(null);
+    }
+  }, [open]);
+
   // Reset form when modal opens
   useEffect(() => {
-    if (updateModalOpen && recordData) {
-      setLoanStatus(recordData?.loan_Status || false);
-      setBankName(recordData?.bank_name || '');
-      setAgentName(recordData?.agent_name || '');
-      setAgentNumber(recordData?.agent_number || '');
-      setLoanAmount(recordData?.loan_amount || '');
+    if (updateModalOpen && localRecord) {
+      setLoanStatus(localRecord?.loan_Status || false);
+      setBankName(localRecord?.bank_name || '');
+      setAgentName(localRecord?.agent_name || '');
+      setAgentNumber(localRecord?.agent_number || '');
+      setLoanAmount(localRecord?.loan_amount || '');
       // Clear errors
       setBankNameError('');
       setAgentNameError('');
       setAgentNumberError('');
       setLoanAmountError('');
     }
-  }, [updateModalOpen, recordData]);
+  }, [updateModalOpen, localRecord]);
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
@@ -94,7 +109,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
   };
 
   const handleUpdateLoanStatus = async () => {
-    if (!recordData?.id) {
+    if (!localRecord?.id) {
       toast.error('Record ID is missing');
       return;
     }
@@ -107,7 +122,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
     setIsLoading(true);
     try {
       const response = await Ageingrecordapi.post('update-loan-status', {
-        id: recordData.id,
+        id: localRecord.id,
         loan_Status: loanStatus,
         bank_name: bankName.trim(),
         agent_name: agentName.trim(),
@@ -117,8 +132,21 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
 
       if (response.data.status === 'success') {
         toast.success('Loan status updated successfully');
+
+        // Update local record with new values to display in drawer
+        setLocalRecord(prev => ({
+          ...prev,
+          loan_Status: loanStatus,
+          bank_name: bankName.trim(),
+          agent_name: agentName.trim(),
+          agent_number: agentNumber.trim(),
+          loan_amount: loanAmount ? parseFloat(loanAmount) : null,
+        }));
+
+        // Close only the modal, keep drawer open
         setUpdateModalOpen(false);
-        if (onRefresh) onRefresh();
+
+        // Don't call onRefresh() here as it closes the drawer
       } else {
         toast.error(response.data.message || 'Failed to update loan status');
       }
@@ -165,7 +193,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
               <div>
                 <h2 className="text-lg font-semibold text-gray-800">Ageing Record Details</h2>
                 <p className="text-sm text-gray-500">
-                  {recordData?.customer?.full_name || 'Customer Details'}
+                  {localRecord?.customer?.full_name || 'Customer Details'}
                 </p>
               </div>
               <button
@@ -183,16 +211,16 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
               <div className="px-6 py-4 bg-amber-50 border-b border-amber-100">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 rounded-full bg-amber-200 text-amber-700 flex items-center justify-center text-lg font-bold">
-                    {recordData?.customer?.first_name?.[0]}{recordData?.customer?.last_name?.[0] || ''}
+                    {localRecord?.customer?.first_name?.[0]}{localRecord?.customer?.last_name?.[0] || ''}
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900">
-                      {recordData?.customer?.first_name} {recordData?.customer?.last_name}
+                      {localRecord?.customer?.first_name} {localRecord?.customer?.last_name}
                     </h3>
                     <p className="text-sm text-gray-600">
-                      +{recordData?.customer?.phone_code} {recordData?.customer?.phone_number}
+                      +{localRecord?.customer?.phone_code} {localRecord?.customer?.phone_number}
                     </p>
-                    <p className="text-xs text-gray-500">{recordData?.customer?.email}</p>
+                    <p className="text-xs text-gray-500">{localRecord?.customer?.email}</p>
                   </div>
                 </div>
               </div>
@@ -203,19 +231,19 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">Flat No</p>
-                    <p className="font-semibold text-gray-900">{recordData?.flat?.flat_no || '-'}</p>
+                    <p className="font-semibold text-gray-900">{localRecord?.flat?.flat_no || '-'}</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">Floor</p>
-                    <p className="font-semibold text-gray-900">{recordData?.flat?.floor_no || '-'}</p>
+                    <p className="font-semibold text-gray-900">{localRecord?.flat?.floor_no || '-'}</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">Block</p>
-                    <p className="font-semibold text-gray-900">{recordData?.flat?.block_name || '-'}</p>
+                    <p className="font-semibold text-gray-900">{localRecord?.flat?.block_name || '-'}</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">Project</p>
-                    <p className="font-semibold text-gray-900">{recordData?.project?.project_name || '-'}</p>
+                    <p className="font-semibold text-gray-900">{localRecord?.project?.project_name || '-'}</p>
                   </div>
                 </div>
               </div>
@@ -226,15 +254,15 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
                 <div className="grid grid-cols-2 gap-4">
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">Booking Date</p>
-                    <p className="font-semibold text-gray-900">{formatDate(recordData?.booking_date)}</p>
+                    <p className="font-semibold text-gray-900">{formatDate(localRecord?.booking_date)}</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3">
                     <p className="text-xs text-gray-500 mb-1">Ageing Days</p>
-                    <p className="font-semibold text-gray-900">{recordData?.ageing_days ?? '-'} days</p>
+                    <p className="font-semibold text-gray-900">{localRecord?.ageing_days ?? '-'} days</p>
                   </div>
                   <div className="bg-gray-50 rounded-lg p-3 col-span-2">
                     <p className="text-xs text-gray-500 mb-1">Total Amount</p>
-                    <p className="font-semibold text-gray-900 text-lg">{formatAmount(recordData?.total_amount)}</p>
+                    <p className="font-semibold text-gray-900 text-lg">{formatAmount(localRecord?.total_amount)}</p>
                   </div>
                 </div>
               </div>
@@ -255,20 +283,20 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between py-2">
                     <span className="text-sm text-gray-600">Loan Status</span>
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${recordData?.loan_time_days
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${localRecord?.loan_time_days
                       ? 'bg-red-50 text-red-700 border border-red-100'
-                      : recordData?.loan_Status
+                      : localRecord?.loan_Status
                         ? 'bg-green-50 text-green-700 border border-green-100'
                         : 'bg-orange-50 text-orange-700 border border-orange-100'
                       }`}>
-                      {recordData?.loan_time_days ? 'Loan Delayed' : recordData?.loan_Status ? 'Approved' : 'Pending'}
+                      {localRecord?.loan_time_days ? 'Loan Delayed' : localRecord?.loan_Status ? 'Approved' : 'Pending'}
                     </span>
                   </div>
 
-                  <DetailRow label="Bank Name" value={recordData?.bank_name} icon={IconBuildingBank} />
-                  <DetailRow label="Agent Name" value={recordData?.agent_name} icon={IconUser} />
-                  <DetailRow label="Agent Number" value={recordData?.agent_number} icon={IconPhone} />
-                  <DetailRow label="Loan Amount" value={formatAmount(recordData?.loan_amount)} icon={IconCash} />
+                  <DetailRow label="Bank Name" value={localRecord?.bank_name} icon={IconBuildingBank} />
+                  <DetailRow label="Agent Name" value={localRecord?.agent_name} icon={IconUser} />
+                  <DetailRow label="Agent Number" value={localRecord?.agent_number} icon={IconPhone} />
+                  <DetailRow label="Loan Amount" value={formatAmount(localRecord?.loan_amount)} icon={IconCash} />
                 </div>
               </div>
 
@@ -277,11 +305,11 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
                 <div className="grid grid-cols-2 gap-4 text-xs text-gray-500">
                   <div>
                     <p className="mb-0.5">Created At</p>
-                    <p className="text-gray-700">{formatDate(recordData?.created_at)}</p>
+                    <p className="text-gray-700">{formatDate(localRecord?.created_at)}</p>
                   </div>
                   <div>
                     <p className="mb-0.5">Updated At</p>
-                    <p className="text-gray-700">{formatDate(recordData?.updated_at)}</p>
+                    <p className="text-gray-700">{formatDate(localRecord?.updated_at)}</p>
                   </div>
                 </div>
               </div>
