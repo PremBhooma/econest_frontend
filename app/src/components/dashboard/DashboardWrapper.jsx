@@ -13,6 +13,7 @@ import Paymentchart from './Paymentchart';
 import Customerschart from './Customerschart';
 import Dashboardapi from '../api/Dashboardapi';
 import AssignProject from '../shared/AssignProject';
+import Ageingrecord from './Ageingrecord';
 
 ChartJS.register(CategoryScale,
   LinearScale,
@@ -400,6 +401,8 @@ function DashboardWrapper() {
             </div>
           ))}
         </div>
+
+        <Ageingrecord />
 
         {/* Divide Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
