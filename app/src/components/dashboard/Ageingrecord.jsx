@@ -142,12 +142,18 @@ const Ageingrecord = () => {
                     {record.total_amount}
                   </td>
                   <td className="px-6 py-3.5">
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.loan_Status
-                      ? 'bg-green-50 text-green-700 border border-green-100'
-                      : 'bg-orange-50 text-orange-700 border border-orange-100'
-                      }`}>
-                      {record.loan_Status === true ? 'Approved' : 'Pending'}
-                    </span>
+                    {record.loan_time_days === true ? (
+                      <span className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider bg-red-50 text-red-700 border border-red-100">
+                        Loan Delayed
+                      </span>
+                    ) : (
+                      <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.loan_Status
+                        ? 'bg-green-50 text-green-700 border border-green-100'
+                        : 'bg-orange-50 text-orange-700 border border-orange-100'
+                        }`}>
+                        {record.loan_Status === true ? 'Approved' : 'Pending'}
+                      </span>
+                    )}
                   </td>
                   <td className="px-6 py-3.5 text-right">
                     <button
