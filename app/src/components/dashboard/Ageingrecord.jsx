@@ -76,6 +76,8 @@ const Ageingrecord = () => {
     );
   }
 
+  console.log("records", records);
+
   return (
     <>
       <div className="bg-white rounded-xl border border-neutral-200 shadow-sm overflow-hidden">

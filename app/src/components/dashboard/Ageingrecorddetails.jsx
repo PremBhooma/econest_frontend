@@ -18,6 +18,12 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
   const [agentNumber, setAgentNumber] = useState('');
   const [loanAmount, setLoanAmount] = useState('');
 
+  // Error states
+  const [bankNameError, setBankNameError] = useState('');
+  const [agentNameError, setAgentNameError] = useState('');
+  const [agentNumberError, setAgentNumberError] = useState('');
+  const [loanAmountError, setLoanAmountError] = useState('');
+
   // Reset form when modal opens
   useEffect(() => {
     if (updateModalOpen && recordData) {
@@ -26,6 +32,11 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
       setAgentName(recordData?.agent_name || '');
       setAgentNumber(recordData?.agent_number || '');
       setLoanAmount(recordData?.loan_amount || '');
+      // Clear errors
+      setBankNameError('');
+      setAgentNameError('');
+      setAgentNumberError('');
+      setLoanAmountError('');
     }
   }, [updateModalOpen, recordData]);
 
@@ -43,9 +54,53 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
     return `₹${Number(amount).toLocaleString('en-IN')}`;
   };
 
+  const validateForm = () => {
+    let isValid = true;
+
+    // Reset errors
+    setBankNameError('');
+    setAgentNameError('');
+    setAgentNumberError('');
+    setLoanAmountError('');
+
+    // Bank name validation
+    if (!bankName.trim()) {
+      setBankNameError('Bank name is required');
+      isValid = false;
+    }
+
+    // Agent name validation
+    if (!agentName.trim()) {
+      setAgentNameError('Agent name is required');
+      isValid = false;
+    }
+
+    // Agent number validation - must be exactly 10 digits
+    if (!agentNumber.trim()) {
+      setAgentNumberError('Agent number is required');
+      isValid = false;
+    } else if (!/^\d{10}$/.test(agentNumber.trim())) {
+      setAgentNumberError('Phone number must be exactly 10 digits');
+      isValid = false;
+    }
+
+    // Loan amount validation
+    if (!loanAmount || parseFloat(loanAmount) <= 0) {
+      setLoanAmountError('Loan amount must be greater than 0');
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const handleUpdateLoanStatus = async () => {
     if (!recordData?.id) {
       toast.error('Record ID is missing');
+      return;
+    }
+
+    // Validate form
+    if (!validateForm()) {
       return;
     }
 
@@ -54,9 +109,9 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
       const response = await Ageingrecordapi.post('update-loan-status', {
         id: recordData.id,
         loan_Status: loanStatus,
-        bank_name: bankName,
-        agent_name: agentName,
-        agent_number: agentNumber,
+        bank_name: bankName.trim(),
+        agent_name: agentName.trim(),
+        agent_number: agentNumber.trim(),
         loan_amount: loanAmount ? parseFloat(loanAmount) : null,
       });
 
@@ -275,47 +330,67 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
 
             {/* Bank Name */}
             <div>
-              <Label className="text-sm font-medium text-gray-700">Bank Name</Label>
+              <Label className="text-sm font-medium text-gray-700">Bank Name <span className="text-red-500">*</span></Label>
               <Input
                 value={bankName}
-                onChange={(e) => setBankName(e.target.value)}
+                onChange={(e) => {
+                  setBankName(e.target.value);
+                  if (bankNameError) setBankNameError('');
+                }}
                 placeholder="Enter bank name"
-                className="mt-1 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${bankNameError ? 'border-red-400' : 'border-gray-300'}`}
               />
+              {bankNameError && <p className="text-red-500 text-xs mt-1">{bankNameError}</p>}
             </div>
 
             {/* Agent Name */}
             <div>
-              <Label className="text-sm font-medium text-gray-700">Agent Name</Label>
+              <Label className="text-sm font-medium text-gray-700">Agent Name <span className="text-red-500">*</span></Label>
               <Input
                 value={agentName}
-                onChange={(e) => setAgentName(e.target.value)}
+                onChange={(e) => {
+                  setAgentName(e.target.value);
+                  if (agentNameError) setAgentNameError('');
+                }}
                 placeholder="Enter agent name"
-                className="mt-1 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${agentNameError ? 'border-red-400' : 'border-gray-300'}`}
               />
+              {agentNameError && <p className="text-red-500 text-xs mt-1">{agentNameError}</p>}
             </div>
 
             {/* Agent Number */}
             <div>
-              <Label className="text-sm font-medium text-gray-700">Agent Number</Label>
+              <Label className="text-sm font-medium text-gray-700">Agent Number <span className="text-red-500">*</span></Label>
               <Input
                 value={agentNumber}
-                onChange={(e) => setAgentNumber(e.target.value)}
-                placeholder="Enter agent phone number"
-                className="mt-1 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                onChange={(e) => {
+                  // Only allow digits and max 10 characters
+                  const value = e.target.value.replace(/\D/g, '').slice(0, 10);
+                  setAgentNumber(value);
+                  if (agentNumberError) setAgentNumberError('');
+                }}
+                placeholder="Enter 10-digit phone number"
+                maxLength={10}
+                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${agentNumberError ? 'border-red-400' : 'border-gray-300'}`}
               />
+              {agentNumberError && <p className="text-red-500 text-xs mt-1">{agentNumberError}</p>}
             </div>
 
             {/* Loan Amount */}
             <div>
-              <Label className="text-sm font-medium text-gray-700">Loan Amount</Label>
+              <Label className="text-sm font-medium text-gray-700">Loan Amount <span className="text-red-500">*</span></Label>
               <Input
                 type="number"
                 value={loanAmount}
-                onChange={(e) => setLoanAmount(e.target.value)}
+                onChange={(e) => {
+                  setLoanAmount(e.target.value);
+                  if (loanAmountError) setLoanAmountError('');
+                }}
                 placeholder="Enter loan amount"
-                className="mt-1 bg-white border border-gray-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent"
+                min="0"
+                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${loanAmountError ? 'border-red-400' : 'border-gray-300'}`}
               />
+              {loanAmountError && <p className="text-red-500 text-xs mt-1">{loanAmountError}</p>}
             </div>
           </div>
 
