@@ -14,8 +14,8 @@ const Ageingrecord = () => {
     fetchAgeingRecords();
   }, []);
 
-  const fetchAgeingRecords = async () => {
-    setIsLoading(true);
+  const fetchAgeingRecords = async (showLoader = true) => {
+    if (showLoader) setIsLoading(true);
     setError('');
     try {
       const response = await Ageingrecordapi.get('get-ageing-records?limit=10');
@@ -164,9 +164,9 @@ const Ageingrecord = () => {
                         </span>
                       ) : (
                         <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.loan_Status === 'Approved' ? 'bg-green-50 text-green-700 border border-green-100' :
-                            record.loan_Status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
-                              record.loan_Status === 'Applied' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
-                                'bg-orange-50 text-orange-700 border border-orange-100' // Not Applied
+                          record.loan_Status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
+                            record.loan_Status === 'Applied' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
+                              'bg-orange-50 text-orange-700 border border-orange-100' // Not Applied
                           }`}>
                           {record.loan_Status}
                         </span>
@@ -198,6 +198,7 @@ const Ageingrecord = () => {
         onOpenChange={handleDrawerClose}
         recordData={selectedRecord}
         onRefresh={handleRefresh}
+        onRecordUpdate={() => fetchAgeingRecords(false)}
       />
     </>
   );

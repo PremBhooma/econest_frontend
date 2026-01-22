@@ -7,7 +7,7 @@ import { Modal } from '@nayeshdaggula/tailify';
 import Ageingrecordapi from '../api/Ageingrecordapi';
 import { toast } from 'react-toastify';
 
-const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
+const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onRecordUpdate }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [localRecord, setLocalRecord] = useState(null);
@@ -148,7 +148,10 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
         // Close only the modal, keep drawer open
         setUpdateModalOpen(false);
 
-        // Don't call onRefresh() here as it closes the drawer
+        // Call parent update to refresh list silently
+        if (onRecordUpdate) {
+          onRecordUpdate();
+        }
       } else {
         toast.error(response.data.message || 'Failed to update loan status');
       }
