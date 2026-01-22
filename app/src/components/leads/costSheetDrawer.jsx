@@ -591,7 +591,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                 <div className="space-y-4">
 
                                     <Datepicker
-                                        label="Application Date"
+                                        label="Booking Date"
                                         value={applicationDate}
                                         onChange={updateApplicationDate}
                                         error={applicationDateError}
