@@ -1,8 +1,327 @@
-import React from 'react'
+import React, { useCallback, useEffect, useState, useRef } from 'react';
+import { Modal, Pagination, Select } from "@nayeshdaggula/tailify";
+import { IconSearch, IconEye, IconX } from "@tabler/icons-react";
+import { Link, NavLink } from "react-router-dom";
+import Ageingrecordapi from '../../components/api/Ageingrecordapi';
+import Errorpanel from '../../components/shared/Errorpanel';
+import { useEmployeeDetails } from '../../components/zustand/useEmployeeDetails';
+import Ageingrecorddetails from '../../components/dashboard/Ageingrecorddetails';
+
+// Note: formatDate and formatAmount are likely not exported from Ageingrecord.jsx, so I'll reimplement them here or import strictly if possible. 
+// For safety, I'll reimplement simple formatters locally.
+
+const formatDateLocally = (dateString) => {
+  if (!dateString) return '-';
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-GB', {
+    day: '2-digit',
+    month: 'short',
+    year: 'numeric'
+  });
+};
+
+const formatAmountLocally = (amount) => {
+  if (!amount && amount !== 0) return '-';
+  return new Intl.NumberFormat('en-IN', {
+    style: 'currency',
+    currency: 'INR',
+    maximumFractionDigits: 0
+  }).format(amount);
+};
 
 function Ageing() {
+  const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
+  const employeeId = employeeInfo?.id || null;
+  const permissions = useEmployeeDetails((state) => state.permissions);
+
+  const [errorMessage, setErrorMessage] = useState("");
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [records, setRecords] = useState([]);
+  const [page, setPage] = useState(1);
+  const [limit, setLimit] = useState("10");
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalRecords, setTotalRecords] = useState(0);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortby, setSortby] = useState("created_at");
+  const [sortbyType, setSortbyType] = useState("desc");
+
+  // Drawer state
+  const [detailsOpen, setDetailsOpen] = useState(false);
+  const [selectedRecord, setSelectedRecord] = useState(null);
+
+  const fetchRecords = async (newPage, newLimit, newSearchQuery, newSortby, newSortbyType) => {
+    setIsLoading(true);
+    try {
+      const params = {
+        page: newPage,
+        limit: newLimit,
+        searchQuery: newSearchQuery,
+        sortby: newSortby,
+        sortbyType: newSortbyType
+      };
+
+      const response = await Ageingrecordapi.get('get-ageing-records', { params });
+
+      if (response.data.status === 'success') {
+        setRecords(response.data.records || []);
+        setTotalPages(response.data.totalPages || 0);
+        setTotalRecords(response.data.totalRecords || 0);
+      } else {
+        setErrorMessage({ message: response.data.message || "Failed to fetch records" });
+      }
+    } catch (error) {
+      console.error("Error fetching ageing records:", error);
+      setErrorMessage({ message: error.message || "Internal server error" });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchRecords(page, limit, searchQuery, sortby, sortbyType);
+  }, [page, limit, searchQuery, sortby, sortbyType]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+  };
+
+  const updateLimit = (newLimit) => {
+    setLimit(newLimit);
+    setPage(1); // Reset to first page
+  };
+
+  const updateSearchQuery = (e) => {
+    setSearchQuery(e.target.value);
+    setPage(1); // Reset to first page on search
+  };
+
+  const handleRefresh = () => {
+    fetchRecords(page, limit, searchQuery, sortby, sortbyType);
+  };
+
+  const openDetails = (record) => {
+    setSelectedRecord(record);
+    setDetailsOpen(true);
+  };
+
+  const closeDetails = () => {
+    setDetailsOpen(false);
+    setSelectedRecord(null);
+  };
+
   return (
-    <div className="min-h-screen  bg-gray-100 dark:bg-neutral-900">
+    <div className="flex flex-col gap-4">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <p className="text-[22px] font-semibold">Ageing Records</p>
+        {/* Add export buttons here if needed later */}
+      </div>
+
+      {/* Filters Panel */}
+      <div className="flex flex-col gap-4 bg-white p-4 rounded-md border border-neutral-200">
+        <div className="flex justify-between items-center">
+          {/* Search */}
+          <div>
+            <div className="border border-[#ebecef] rounded-md relative w-64">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="focus:outline-none text-[14px] pl-8 py-1.5 w-full rounded-md"
+                onChange={updateSearchQuery}
+                value={searchQuery}
+              />
+              <div className="absolute left-2 top-2 px-0">
+                <IconSearch size={16} color="#9ca3af" />
+              </div>
+            </div>
+          </div>
+
+          {/* Limit Selector */}
+          <div className="w-[70px]">
+            <Select
+              data={[
+                { value: "10", label: "10" },
+                { value: "20", label: "20" },
+                { value: "50", label: "50" },
+                { value: "100", label: "100" },
+              ]}
+              placeholder="10"
+              value={limit}
+              onChange={updateLimit}
+              selectWrapperClass="focus:ring-0 !focus:border-[#fff] focus:outline-none !py-[7px] !bg-white !rounded-sm !shadow-none !border !border-[#ebecef]"
+              className="!m-0 !p-0 !border-0"
+              dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
+            />
+          </div>
+        </div>
+
+        {/* Table */}
+        <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg z-0 min-h-[400px]">
+          <table className="w-full text-left text-sm">
+            <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+              <tr>
+                <th className="px-4 py-3 w-[16%]">Customer</th>
+                <th className="px-4 py-3 w-[18%]">Flat Details</th>
+                <th className="px-4 py-3 w-[12%]">Booking Date</th>
+                <th className="px-4 py-3 w-[6%]">Ageing</th>
+                <th className="px-4 py-3 w-[14%]">Total Payment</th>
+                <th className="px-4 py-3 w-[12%]">Loan Status</th>
+                <th className="px-4 py-3 w-[14%]">Reg. Status</th>
+                <th className="px-4 py-3 w-[6%] text-center">Action</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-neutral-100 bg-white">
+              {isLoading ? (
+                <tr>
+                  <td colSpan="8" className="text-center py-10 text-gray-400">Loading...</td>
+                </tr>
+              ) : records.length > 0 ? (
+                records.map((record) => (
+                  <tr key={record.id} className="hover:bg-neutral-50 transition-colors">
+                    {/* Customer */}
+                    {/* <td className="px-4 py-3">
+                      <div className="flex flex-col">
+                        <span className="font-medium text-neutral-900 truncate" title={record.customer?.full_name}>
+                          {record.customer?.full_name || 'Unknown'}
+                        </span>
+                        <span className="text-xs text-neutral-500">
+                          {record.customer?.phone_code} {record.customer?.phone_number}
+                        </span>
+                      </div>
+                    </td> */}
+
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold flex-shrink-0">
+                          {record.customer?.first_name?.[0]}{record.customer?.last_name?.[0] || ''}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-900 text-xs truncate">
+                            {record.customer?.first_name} {record.customer?.last_name}
+                          </p>
+                          <p className="text-[11px] text-neutral-500 truncate">
+                            +{record.customer?.phone_code} {record.customer?.phone_number}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Flat Details */}
+                    {/* <td className="px-4 py-3">
+                      <div className="flex flex-col max-w-[180px]">
+                        <p className="font-medium text-neutral-900 text-xs truncate" title={record.project?.project_name}>
+                          {record.project?.project_name || '-'}
+                        </p>
+                        <p className="text-[11px] text-neutral-500 truncate">
+                          {record.flat?.block_name || 'N/A'} • Floor {record.flat?.floor_no || '-'} • {record.flat?.flat_no || 'N/A'}
+                        </p>
+                      </div>
+                    </td> */}
+
+                    <td className="px-4 py-3">
+                      <div className="flex items-center gap-2">
+                        <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold border border-purple-100 flex-shrink-0">
+                          {record.flat?.flat_no || '-'}
+                        </div>
+                        <div className="min-w-0">
+                          <p className="font-medium text-neutral-900 text-xs truncate">
+                            {record.project?.project_name || '-'}
+                          </p>
+                          <p className="text-[11px] text-neutral-500 truncate">
+                            {record.flat?.block_name || 'N/A'} • Floor {record.flat?.floor_no || '-'}
+                          </p>
+                        </div>
+                      </div>
+                    </td>
+
+                    {/* Booking Date */}
+                    <td className="px-4 py-3 text-neutral-500">
+                      {formatDateLocally(record.booking_date)}
+                    </td>
+
+                    {/* Ageing Days */}
+                    <td className="px-4 py-3">
+                      <span className={`font-medium ${(record.ageing_days || 0) > 60 ? 'text-red-600' :
+                        (record.ageing_days || 0) > 30 ? 'text-orange-600' :
+                          'text-neutral-700'
+                        }`}>
+                        {record.ageing_days || 0}
+                      </span>
+                    </td>
+
+                    {/* Total Amount */}
+                    <td className="px-4 py-3 font-medium text-neutral-900">
+                      {formatAmountLocally(record.total_amount)}
+                    </td>
+
+                    {/* Loan Status */}
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.loan_time_days ? 'bg-red-50 text-red-700 border border-red-100' :
+                        record.loan_Status === 'Approved' ? 'bg-green-50 text-green-700 border border-green-100' :
+                          record.loan_Status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
+                            record.loan_Status === 'Applied' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
+                              'bg-orange-50 text-orange-700 border border-orange-100'
+                        }`}>
+                        {record.loan_time_days ? 'Loan Delayed' : record.loan_Status || 'Not Applied'}
+                      </span>
+                    </td>
+
+                    {/* Registration Status */}
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.registration_status === 'Registered' ? 'bg-green-50 text-green-700 border border-green-100' :
+                        'bg-orange-50 text-orange-700 border border-orange-100'
+                        }`}>
+                        {record.registration_status || 'Not Registered'}
+                      </span>
+                    </td>
+
+                    {/* Action */}
+                    <td className="px-4 py-3 text-center">
+                      <button
+                        onClick={() => openDetails(record)}
+                        className="p-1.5 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                      >
+                        <IconEye size={18} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="8" className="text-center py-10 text-gray-500">No records found</td>
+                </tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+
+        {/* Pagination */}
+        <div className="flex justify-center border-t border-neutral-100 pt-4">
+          <Pagination
+            total={totalPages}
+            initialPage={page}
+            onChange={handlePageChange}
+          />
+        </div>
+      </div>
+
+      {/* Details Drawer */}
+      <Ageingrecorddetails
+        open={detailsOpen}
+        onOpenChange={setDetailsOpen}
+        recordData={selectedRecord}
+        onRefresh={handleRefresh}
+        onRecordUpdate={() => {
+          handleRefresh();
+          // Keep drawer open or close? Typically keep open or update local state.
+          // Ageingrecorddetails handles internal updates, but we need to refresh list.
+        }}
+      />
+
+      {errorMessage && (
+        <Errorpanel errorMessages={errorMessage} setErrorMessages={setErrorMessage} />
+      )}
     </div>
   )
 }

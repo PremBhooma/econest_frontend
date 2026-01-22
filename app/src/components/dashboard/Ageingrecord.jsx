@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { IconEye, IconClock } from '@tabler/icons-react';
 import Ageingrecordapi from '../api/Ageingrecordapi';
 import Ageingrecorddetails from './Ageingrecorddetails';
+import { Link } from 'react-router';
 
 const Ageingrecord = () => {
   const [records, setRecords] = useState([]);
@@ -84,7 +85,9 @@ const Ageingrecord = () => {
         <div className="px-6 py-4 border-b border-neutral-100 flex items-center justify-between bg-neutral-50/50">
           <h4 className="text-base font-semibold text-neutral-900 flex items-center gap-2">
             <IconClock className="text-amber-600" size={18} />
-            Ageing Records
+            <Link to="/ageing-records" className="hover:text-amber-600 transition-colors">
+              Ageing Records
+            </Link>
           </h4>
           <span className="text-xs font-medium bg-amber-50 text-amber-700 px-2.5 py-1 rounded-full">
             {records.length} Records
