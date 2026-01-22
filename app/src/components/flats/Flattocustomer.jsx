@@ -473,6 +473,11 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
         setGrandTotalError('')
     }
 
+    const [customNote, setCustomNote] = useState('')
+    const updateCustomNote = (e) => {
+        setCustomNote(e.target.value)
+    }
+
     async function getAmenitiesData(flatType) {
         try {
             setIsLoadingEffect(true);
@@ -785,6 +790,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                 corner_per_sq_ft: selectedFlat?.corner === true ? parseFloat(corner) : null,
                 total_corner: parseFloat(cornerXPerSft),
                 grand_total: parseFloat(grandTotal),
+                custom_note: customNote || null,
                 employeeId: employeeId,
                 manjeeraConnectionCharge: parseFloat(manjeeraConnectionCharge),
             }, {
@@ -950,6 +956,17 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         </div>
                                     </div>
                                 )}
+                            </div>
+
+                            <div className="space-y-2 md:col-span-2">
+                                <Label>Custom Note</Label>
+                                <textarea
+                                    value={customNote}
+                                    onChange={updateCustomNote}
+                                    placeholder="Enter any additional requirements need for this flat..."
+                                    rows={3}
+                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:border-black resize-none text-sm"
+                                />
                             </div>
                         </div>
 
@@ -1170,6 +1187,8 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                         className="text-lg font-bold bg-green-50 border-green-200 text-green-700 h-14 border border-gray-300 rounded-[4px] focus:outline-none focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 focus:border-gray-300 focus:border-black"
                                     />
                                 </div>
+
+
                             </div>
                         </div>
                     </div>
