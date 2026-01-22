@@ -591,7 +591,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                 <div className="space-y-4">
 
                                     <Datepicker
-                                        label="Booking Date"
+                                        label="Enquirey Date"
                                         value={applicationDate}
                                         onChange={updateApplicationDate}
                                         error={applicationDateError}
@@ -712,7 +712,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                         {amenitiesError && <p className="text-red-500 text-xs mt-1">{amenitiesError}</p>}
                                     </div>
 
-                                    <div>
+                                    {/* <div>
                                         <Label>Status</Label>
                                         <Select value={status} onValueChange={(value) => {
                                             setStatus(value);
@@ -727,7 +727,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
                                             </SelectContent>
                                         </Select>
                                         {statusError && <p className="text-red-500 text-xs mt-1">{statusError}</p>}
-                                    </div>
+                                    </div> */}
 
                                     <div>
                                         <Label>Description</Label>

@@ -90,13 +90,13 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
 
                 <div className="grid grid-cols-12 border-b border-black">
                     <div className="col-span-6 border-r border-black p-1 pl-2">Orientation</div>
-                    <div className="col-span-6 p-1 text-center font-bold text-red-600">{selectedFlat.facing} Facing</div>
+                    <div className="col-span-6 p-1 text-center font-bold text-red-600">{selectedFlat.facing} Facing {isCorner ? "+ Corner" : ""}</div>
                 </div>
 
-                <div className="grid grid-cols-12 border-b border-black">
+                {/* <div className="grid grid-cols-12 border-b border-black">
                     <div className="col-span-6 border-r border-black p-1 pl-2">Status</div>
                     <div className="col-span-6 p-1 text-center font-bold">{status}</div>
-                </div>
+                </div> */}
 
                 {/* Notes / Description from Form if available */}
                 {description && (
