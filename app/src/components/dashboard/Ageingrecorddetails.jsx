@@ -344,9 +344,19 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
         onClose={() => setUpdateModalOpen(false)}
         size="md"
         zIndex={9999}
+        withCloseButton={false}
+
       >
         <div className="p-3">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">Update Loan Details</h3>
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-lg font-semibold text-gray-900">Update Loan Details</h3>
+            <button
+              onClick={() => setUpdateModalOpen(false)}
+              className="p-1 hover:bg-gray-100 rounded-full transition-colors cursor-pointer"
+            >
+              <IconX size={20} className="text-gray-500" />
+            </button>
+          </div>
 
           <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
             {/* Loan Status Toggle */}
