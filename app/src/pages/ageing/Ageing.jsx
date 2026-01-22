@@ -123,7 +123,7 @@ function Ageing() {
         <div className="flex justify-between items-center">
           {/* Search */}
           <div>
-            <div className="border border-[#ebecef] rounded-md relative">
+            <div className="rounded-md relative">
               <input
                 type="text"
                 placeholder="Search..."
