@@ -18,7 +18,7 @@ const Ageingrecord = () => {
     if (showLoader) setIsLoading(true);
     setError('');
     try {
-      const response = await Ageingrecordapi.get('get-ageing-records?limit=10');
+      const response = await Ageingrecordapi.get('get-dashboard-ageing-records');
       if (response.data.status === 'success') {
         setRecords(response.data.records || []);
       } else {

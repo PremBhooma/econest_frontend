@@ -26,6 +26,7 @@ import Addlead from './pages/leads/Addlead'
 import Viewlead from './pages/leads/Viewlead'
 import Editlead from './pages/leads/Editlead'
 import Backup from './pages/backup/Backup'
+import Ageing from './pages/ageing/Ageing'
 
 import { useEmployeeDetails } from './components/zustand/useEmployeeDetails'
 import Convertleadtocustomer from './pages/leads/Convertleadtocustomer'
@@ -52,6 +53,7 @@ function Approuter() {
       <Route path="/" element={<PublicRoute element={<Login />} />} />
       <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
       <Route path="/employees" element={<ProtectedRoute element={<Employee />} />} />
+      <Route path="/ageing-records" element={<ProtectedRoute element={<Ageing />} />} />
       <Route path="/roles" element={<ProtectedRoute element={<Rolesandpermission />} />} />
       <Route path="/customers" element={<ProtectedRoute element={<Customer />} />} />
       <Route path="/settings" element={<ProtectedRoute element={<Setting />} />} />
