@@ -103,13 +103,12 @@ const Ageingrecord = () => {
               <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
                 <tr>
                   <th className="px-4 py-3 w-[16%]">Customer</th>
-                  <th className="px-4 py-3 w-[13%]">Flat Details</th>
-                  <th className="px-4 py-3 w-[14%]">Project</th>
+                  <th className="px-4 py-3 w-[18%]">Flat Details</th>
                   <th className="px-4 py-3 w-[12%]">Booking Date</th>
                   <th className="px-4 py-3 w-[6%]">Ageing</th>
                   <th className="px-4 py-3 w-[14%]">Total Payment</th>
                   <th className="px-4 py-3 w-[12%]">Loan Status</th>
-                  <th className="px-4 py-3 w-[12%]">Reg. Status</th>
+                  <th className="px-4 py-3 w-[14%]">Reg. Status</th>
                   <th className="px-4 py-3 w-[6%] text-center">Action</th>
                 </tr>
               </thead>
@@ -138,17 +137,15 @@ const Ageingrecord = () => {
                         </div>
                         <div className="min-w-0">
                           <p className="font-medium text-neutral-900 text-xs truncate">
-                            {record.flat?.block_name || 'N/A'}
+                            {record.project?.project_name || '-'}
                           </p>
-                          <p className="text-[11px] text-neutral-500">
-                            Floor {record.flat?.floor_no || '-'}
+                          <p className="text-[11px] text-neutral-500 truncate">
+                            {record.flat?.block_name || 'N/A'} • Floor {record.flat?.floor_no || '-'}
                           </p>
                         </div>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-neutral-700 text-xs">
-                      <span className="line-clamp-2">{record.project?.project_name || '-'}</span>
-                    </td>
+
                     <td className="px-4 py-3 text-neutral-500 text-xs whitespace-nowrap">
                       {formatDate(record.booking_date)}
                     </td>
