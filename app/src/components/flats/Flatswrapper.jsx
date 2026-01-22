@@ -555,7 +555,7 @@ function Flatswrapper() {
                 <IconSearch size={16} color="#ebecef" />
               </div>
             </div>
-            <div className="w-[85%] flex justify-end items-center gap-2">
+            <div className="w-[80%] flex justify-end items-center gap-2">
               {isFilterApplied && (
                 <div onClick={clearFilters} className={`flex items-center gap-2 cursor-pointer px-2 !py-[7px] !rounded-sm !border !border-[#ebecef] ${isFilterApplied ? '!bg-red-400 !text-white hover:!bg-red-500' : '!bg-white hover:!bg-gray-50'} !font-normal !text-[14px] !text-[#6b7178]`}>
                   <Funnel className="!w-4 !h-4" /> <p>Clear Filters</p>
