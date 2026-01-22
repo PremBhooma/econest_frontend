@@ -161,14 +161,14 @@ function Ageing() {
           <table className="w-full table-fixed text-left border-collapse">
             <thead className="bg-gray-50 border-b border-neutral-200">
               <tr>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">Customer</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">Flat Details</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">Booking Date</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[90px]">Ageing</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px]">Total Payment</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[130px]">Loan Status</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[150px]">Reg. Status</th>
-                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[80px] text-center sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">Action</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[160px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">Customer</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[160px]">Flat Details</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[130px]">Booking Date</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[90px]">Ageing</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[100px]">Total Payment</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[120px]">Loan Status</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[150px]">Reg. Status</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[60px] text-center sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">Action</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-neutral-200 bg-white">
@@ -180,7 +180,7 @@ function Ageing() {
                 records.map((record) => (
                   <tr key={record.id} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
                     {/* Customer */}
-                    <td className="px-4 py-3 whitespace-normal break-words sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
+                    <td className="px-3 py-2 whitespace-normal break-words sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold flex-shrink-0">
                           {record.customer?.first_name?.[0]}{record.customer?.last_name?.[0] || ''}
@@ -197,7 +197,7 @@ function Ageing() {
                     </td>
 
                     {/* Flat Details */}
-                    <td className="px-4 py-3 whitespace-normal break-words">
+                    <td className="px-3 py-2 whitespace-normal break-words">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold border border-purple-100 flex-shrink-0">
                           {record.flat?.flat_no || '-'}
@@ -214,12 +214,12 @@ function Ageing() {
                     </td>
 
                     {/* Booking Date */}
-                    <td className="px-4 py-3 text-neutral-500 text-xs font-medium leading-[18px]">
+                    <td className="px-3 py-2 text-neutral-500 text-xs font-medium leading-[18px]">
                       {formatDateLocally(record.booking_date)}
                     </td>
 
                     {/* Ageing Days */}
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-2">
                       <span className={`text-xs font-bold leading-[18px] ${(record.ageing_days || 0) > 60 ? 'text-red-600' :
                         (record.ageing_days || 0) > 30 ? 'text-orange-600' :
                           'text-neutral-700'
@@ -229,12 +229,12 @@ function Ageing() {
                     </td>
 
                     {/* Total Amount */}
-                    <td className="px-4 py-3 font-semibold text-neutral-900 text-xs leading-[18px]">
+                    <td className="px-3 py-2 font-semibold text-neutral-900 text-xs leading-[18px]">
                       {formatAmountLocally(record.total_amount)}
                     </td>
 
                     {/* Loan Status */}
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-2">
                       <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.loan_time_days ? 'bg-red-50 text-red-700 border border-red-100' :
                         record.loan_Status === 'Approved' ? 'bg-green-50 text-green-700 border border-green-100' :
                           record.loan_Status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
@@ -246,7 +246,7 @@ function Ageing() {
                     </td>
 
                     {/* Registration Status */}
-                    <td className="px-4 py-3">
+                    <td className="px-3 py-2">
                       <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.registration_status === 'Registered' ? 'bg-green-50 text-green-700 border border-green-100' :
                         'bg-orange-50 text-orange-700 border border-orange-100'
                         }`}>
@@ -255,7 +255,7 @@ function Ageing() {
                     </td>
 
                     {/* Action */}
-                    <td className="px-4 py-3 text-center sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
+                    <td className="px-3 py-2 text-center sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
                       <button
                         onClick={() => openDetails(record)}
                         className="p-1.5 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
