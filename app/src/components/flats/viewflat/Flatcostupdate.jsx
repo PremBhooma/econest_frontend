@@ -214,6 +214,12 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
         setGrandTotal(value)
         setGrandTotalError('')
     }
+
+    const [customNote, setCustomNote] = useState('')
+    const updateCustomNote = (e) => {
+        setCustomNote(e.target.value)
+    }
+
     const [projectRates, setProjectRates] = useState({
         floor_rise: 0,
         east_facing: 0,
@@ -522,6 +528,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
             setCornerXPerSft(flatDetails?.corner === true ? (customerFlatDetails?.total_corner ?? effectiveTotalCorner) : '');
 
             setGrandTotal(customerFlatDetails?.grand_total || '');
+            setCustomNote(customerFlatDetails?.custom_note || '');
         }
     }, [customerFlatDetails, flatDetails, projectRates]);
 
@@ -684,6 +691,7 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                 corner_per_sq_ft: flatDetails?.corner === true ? parseFloat(corner) : null,
                 total_corner: parseFloat(cornerXPerSft),
                 grand_total: parseFloat(grandTotal),
+                custom_note: customNote || null,
                 employeeId: employeeId
             }, {
                 headers: {
@@ -989,6 +997,16 @@ function Flatcostupdate({ closeFlatCostUpdate, flatNo, refreshUserDetails, custo
                             labelClassName="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 cursor-not-allowed"
                         />
+                        <div className="col-span-3">
+                            <label className="text-sm font-medium text-gray-600 mb-1 block">Custom Note</label>
+                            <textarea
+                                value={customNote}
+                                onChange={updateCustomNote}
+                                placeholder="Enter any additional requirements need for this flat..."
+                                rows={3}
+                                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 resize-none text-sm"
+                            />
+                        </div>
                     </div>
                 </div>
 

@@ -256,8 +256,16 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
                 <p className="text-sm text-gray-600">Corpus Fund (₹)</p>
                 <p className='text-sm font-semibold text-gray-900'> {formatPrice(customerFlatDetails?.corpusfund)}</p>
               </div>
-
             </div>
+
+            {customerFlatDetails?.custom_note && (
+              <div className="w-full grid grid-cols-3 gap-4">
+                <div className="flex flex-col gap-y-1">
+                  <p className="text-sm text-gray-600">Custom Note</p>
+                  <p className='text-sm font-semibold text-gray-900'> {customerFlatDetails?.custom_note}</p>
+                </div>
+              </div>
+            )}
           </>
         )}
       </div >
