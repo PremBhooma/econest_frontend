@@ -119,26 +119,26 @@ function Ageing() {
       </div>
 
       {/* Filters Panel */}
-      <div className="flex flex-col gap-4 bg-white p-4 rounded-md border border-neutral-200">
+      <div className="flex flex-col gap-4 bg-white p-4 rounded-md">
         <div className="flex justify-between items-center">
           {/* Search */}
           <div>
-            <div className="border border-[#ebecef] rounded-md relative w-64">
+            <div className="border border-[#ebecef] rounded-md relative">
               <input
                 type="text"
                 placeholder="Search..."
-                className="focus:outline-none text-[14px] pl-8 py-1.5 w-full rounded-md"
+                className="focus:outline-none text-[14px] pl-6 py-1.5"
                 onChange={updateSearchQuery}
                 value={searchQuery}
               />
-              <div className="absolute left-2 top-2 px-0">
-                <IconSearch size={16} color="#9ca3af" />
+              <div className="absolute left-0 top-2 px-1">
+                <IconSearch size={16} color="#ebecef" />
               </div>
             </div>
           </div>
 
           {/* Limit Selector */}
-          <div className="w-[70px]">
+          <div className="w-[50px]">
             <Select
               data={[
                 { value: "10", label: "10" },
@@ -158,46 +158,35 @@ function Ageing() {
 
         {/* Table */}
         <div className="w-full relative overflow-x-auto border border-neutral-200 rounded-lg z-0 min-h-[400px]">
-          <table className="w-full text-left text-sm">
-            <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
+          <table className="w-full table-fixed text-left border-collapse">
+            <thead className="bg-gray-50 border-b border-neutral-200">
               <tr>
-                <th className="px-4 py-3 w-[16%]">Customer</th>
-                <th className="px-4 py-3 w-[18%]">Flat Details</th>
-                <th className="px-4 py-3 w-[12%]">Booking Date</th>
-                <th className="px-4 py-3 w-[6%]">Ageing</th>
-                <th className="px-4 py-3 w-[14%]">Total Payment</th>
-                <th className="px-4 py-3 w-[12%]">Loan Status</th>
-                <th className="px-4 py-3 w-[14%]">Reg. Status</th>
-                <th className="px-4 py-3 w-[6%] text-center">Action</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[160px] sticky left-0 z-20 bg-gray-50 border-r border-neutral-200">Customer</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">Flat Details</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">Booking Date</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[90px]">Ageing</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[120px]">Total Payment</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[130px]">Loan Status</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[150px]">Reg. Status</th>
+                <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[80px] text-center sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">Action</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-neutral-100 bg-white">
+            <tbody className="divide-y divide-neutral-200 bg-white">
               {isLoading ? (
                 <tr>
                   <td colSpan="8" className="text-center py-10 text-gray-400">Loading...</td>
                 </tr>
               ) : records.length > 0 ? (
                 records.map((record) => (
-                  <tr key={record.id} className="hover:bg-neutral-50 transition-colors">
+                  <tr key={record.id} className="hover:bg-neutral-50 transition-colors duration-150 align-top group">
                     {/* Customer */}
-                    {/* <td className="px-4 py-3">
-                      <div className="flex flex-col">
-                        <span className="font-medium text-neutral-900 truncate" title={record.customer?.full_name}>
-                          {record.customer?.full_name || 'Unknown'}
-                        </span>
-                        <span className="text-xs text-neutral-500">
-                          {record.customer?.phone_code} {record.customer?.phone_number}
-                        </span>
-                      </div>
-                    </td> */}
-
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-normal break-words sticky left-0 z-10 bg-white group-hover:bg-neutral-50 border-r border-neutral-200">
                       <div className="flex items-center gap-2">
                         <div className="w-8 h-8 rounded-full bg-amber-100 text-amber-600 flex items-center justify-center text-xs font-bold flex-shrink-0">
                           {record.customer?.first_name?.[0]}{record.customer?.last_name?.[0] || ''}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-neutral-900 text-xs truncate">
+                          <p className="font-semibold text-neutral-900 text-xs leading-[18px] truncate">
                             {record.customer?.first_name} {record.customer?.last_name}
                           </p>
                           <p className="text-[11px] text-neutral-500 truncate">
@@ -208,24 +197,13 @@ function Ageing() {
                     </td>
 
                     {/* Flat Details */}
-                    {/* <td className="px-4 py-3">
-                      <div className="flex flex-col max-w-[180px]">
-                        <p className="font-medium text-neutral-900 text-xs truncate" title={record.project?.project_name}>
-                          {record.project?.project_name || '-'}
-                        </p>
-                        <p className="text-[11px] text-neutral-500 truncate">
-                          {record.flat?.block_name || 'N/A'} • Floor {record.flat?.floor_no || '-'} • {record.flat?.flat_no || 'N/A'}
-                        </p>
-                      </div>
-                    </td> */}
-
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 whitespace-normal break-words">
                       <div className="flex items-center gap-2">
                         <div className="w-7 h-7 rounded-lg bg-purple-50 text-purple-600 flex items-center justify-center text-xs font-bold border border-purple-100 flex-shrink-0">
                           {record.flat?.flat_no || '-'}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-neutral-900 text-xs truncate">
+                          <p className="font-semibold text-neutral-900 text-xs leading-[18px] truncate">
                             {record.project?.project_name || '-'}
                           </p>
                           <p className="text-[11px] text-neutral-500 truncate">
@@ -236,13 +214,13 @@ function Ageing() {
                     </td>
 
                     {/* Booking Date */}
-                    <td className="px-4 py-3 text-neutral-500">
+                    <td className="px-4 py-3 text-neutral-500 text-xs font-medium leading-[18px]">
                       {formatDateLocally(record.booking_date)}
                     </td>
 
                     {/* Ageing Days */}
                     <td className="px-4 py-3">
-                      <span className={`font-medium ${(record.ageing_days || 0) > 60 ? 'text-red-600' :
+                      <span className={`text-xs font-bold leading-[18px] ${(record.ageing_days || 0) > 60 ? 'text-red-600' :
                         (record.ageing_days || 0) > 30 ? 'text-orange-600' :
                           'text-neutral-700'
                         }`}>
@@ -251,7 +229,7 @@ function Ageing() {
                     </td>
 
                     {/* Total Amount */}
-                    <td className="px-4 py-3 font-medium text-neutral-900">
+                    <td className="px-4 py-3 font-semibold text-neutral-900 text-xs leading-[18px]">
                       {formatAmountLocally(record.total_amount)}
                     </td>
 
@@ -277,7 +255,7 @@ function Ageing() {
                     </td>
 
                     {/* Action */}
-                    <td className="px-4 py-3 text-center">
+                    <td className="px-4 py-3 text-center sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-l border-neutral-200">
                       <button
                         onClick={() => openDetails(record)}
                         className="p-1.5 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
@@ -289,7 +267,7 @@ function Ageing() {
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" className="text-center py-10 text-gray-500">No records found</td>
+                  <td colSpan="8" className="text-center py-10 text-gray-500 sticky left-0 right-0">No records found</td>
                 </tr>
               )}
             </tbody>
@@ -297,13 +275,17 @@ function Ageing() {
         </div>
 
         {/* Pagination */}
-        <div className="flex justify-center border-t border-neutral-100 pt-4">
-          <Pagination
-            total={totalPages}
-            initialPage={page}
-            onChange={handlePageChange}
-          />
-        </div>
+        {records?.length > 0 && (
+          <div className="flex flex-row-reverse">
+            <Pagination
+              totalpages={totalPages}
+              value={page}
+              siblings={1}
+              onChange={handlePageChange}
+              color="#0083bf"
+            />
+          </div>
+        )}
       </div>
 
       {/* Details Drawer */}
