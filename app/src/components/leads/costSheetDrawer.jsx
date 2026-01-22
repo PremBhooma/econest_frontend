@@ -422,6 +422,20 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
     const componentRef = React.useRef();
     const handlePrint = useReactToPrint({
         contentRef: componentRef,
+        pageStyle: `
+            @page {
+                size: A4;
+                margin: 0;
+            }
+            @media print {
+                html, body {
+                    margin: 0 !important;
+                    padding: 0 !important;
+                    -webkit-print-color-adjust: exact !important;
+                    print-color-adjust: exact !important;
+                }
+            }
+        `,
     });
 
     const handleGenerate = () => {

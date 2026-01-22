@@ -57,11 +57,19 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
     const basePrice = (Number(saleableAreaSqFt) * discountedRate) + totalFloorRiseCost + totalCornerCost + totalEastFacingCost + amenitiesCost;
 
     return (
-        <div ref={ref} className="p-8 bg-white text-black text-sm font-sans print:p-0">
+        <div ref={ref} className="p-8 bg-white text-black text-sm font-sans print:p-[10mm]">
             <style type="text/css" media="print">
                 {`
-            @page { size: A4; margin: 10mm; }
-            body { -webkit-print-color-adjust: exact; }
+            @page { 
+                size: A4; 
+                margin: 0;
+            }
+            body, html { 
+                margin: 0 !important;
+                padding: 0 !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
             `}
             </style>
             <div className="border-2 border-black">
