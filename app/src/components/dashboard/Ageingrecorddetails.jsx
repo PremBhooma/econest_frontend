@@ -13,7 +13,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
   const [localRecord, setLocalRecord] = useState(null);
 
   // Form states for update
-  const [loanStatus, setLoanStatus] = useState(false);
+  const [loanStatus, setLoanStatus] = useState("NotApplied");
   const [bankName, setBankName] = useState('');
   const [agentName, setAgentName] = useState('');
   const [agentNumber, setAgentNumber] = useState('');
@@ -42,7 +42,9 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
   // Reset form when modal opens
   useEffect(() => {
     if (updateModalOpen && localRecord) {
-      setLoanStatus(localRecord?.loan_Status || false);
+      // Map "Not Applied" (display) to "NotApplied" (enum)
+      const currentStatus = localRecord?.loan_Status === "Not Applied" ? "NotApplied" : (localRecord?.loan_Status || "NotApplied");
+      setLoanStatus(currentStatus);
       setBankName(localRecord?.bank_name || '');
       setAgentName(localRecord?.agent_name || '');
       setAgentNumber(localRecord?.agent_number || '');
@@ -136,7 +138,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
         // Update local record with new values to display in drawer
         setLocalRecord(prev => ({
           ...prev,
-          loan_Status: loanStatus,
+          loan_Status: loanStatus === "NotApplied" ? "Not Applied" : loanStatus,
           bank_name: bankName.trim(),
           agent_name: agentName.trim(),
           agent_number: agentNumber.trim(),
@@ -283,13 +285,13 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
                 <div className="space-y-1">
                   <div className="flex items-center justify-between py-2">
                     <span className="text-sm text-gray-600">Loan Status</span>
-                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${localRecord?.loan_time_days
-                      ? 'bg-red-50 text-red-700 border border-red-100'
-                      : localRecord?.loan_Status
-                        ? 'bg-green-50 text-green-700 border border-green-100'
-                        : 'bg-orange-50 text-orange-700 border border-orange-100'
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${localRecord?.loan_time_days ? 'bg-red-50 text-red-700 border border-red-100' :
+                      localRecord?.loan_Status === 'Approved' ? 'bg-green-50 text-green-700 border border-green-100' :
+                        localRecord?.loan_Status === 'Rejected' ? 'bg-red-50 text-red-700 border border-red-100' :
+                          localRecord?.loan_Status === 'Applied' ? 'bg-blue-50 text-blue-700 border border-blue-100' :
+                            'bg-orange-50 text-orange-700 border border-orange-100'
                       }`}>
-                      {localRecord?.loan_time_days ? 'Loan Delayed' : localRecord?.loan_Status ? 'Approved' : 'Pending'}
+                      {localRecord?.loan_time_days ? 'Loan Delayed' : localRecord?.loan_Status || 'Not Applied'}
                     </span>
                   </div>
 
@@ -328,31 +330,27 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh }) => {
         <div className="p-3">
           <h3 className="text-lg font-semibold text-gray-900 mb-4">Update Loan Details</h3>
 
-          <div className="space-y-4">
+          <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
             {/* Loan Status Toggle */}
             <div>
               <Label className="text-sm font-medium text-gray-700">Loan Status</Label>
-              <div className="mt-2 flex items-center gap-4">
-                <button
-                  type="button"
-                  onClick={() => setLoanStatus(false)}
-                  className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer ${!loanStatus
-                    ? 'bg-orange-100 text-orange-700 border-2 border-orange-300'
-                    : 'bg-gray-100 text-gray-600 border-2 border-transparent hover:bg-gray-200'
-                    }`}
-                >
-                  Pending
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setLoanStatus(true)}
-                  className={`flex-1 py-2.5 px-4 rounded-lg text-sm font-medium transition-colors cursor-pointer ${loanStatus
-                    ? 'bg-green-100 text-green-700 border-2 border-green-300'
-                    : 'bg-gray-100 text-gray-600 border-2 border-transparent hover:bg-gray-200'
-                    }`}
-                >
-                  Approved
-                </button>
+              <div className="mt-2 grid grid-cols-2 gap-3">
+                {['NotApplied', 'Applied', 'Approved', 'Rejected'].map((status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setLoanStatus(status)}
+                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors cursor-pointer border-2 ${loanStatus === status
+                      ? status === 'Approved' ? 'bg-green-100 text-green-700 border-green-300'
+                        : status === 'Rejected' ? 'bg-red-100 text-red-700 border-red-300'
+                          : status === 'Applied' ? 'bg-blue-100 text-blue-700 border-blue-300'
+                            : 'bg-orange-100 text-orange-700 border-orange-300'
+                      : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100'
+                      }`}
+                  >
+                    {status === 'NotApplied' ? 'Not Applied' : status}
+                  </button>
+                ))}
               </div>
             </div>
 

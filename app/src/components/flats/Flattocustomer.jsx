@@ -960,7 +960,7 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                                 <div className="space-y-2">
                                     <Datepicker
-                                        label="Application Date"
+                                        label="Booking Date"
                                         value={applicationDate}
                                         error={applicationDateError}
                                         onChange={updateApplicationDate}
