@@ -102,14 +102,15 @@ const Ageingrecord = () => {
             <table className="w-full text-left text-sm">
               <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
                 <tr>
-                  <th className="px-4 py-3 w-[18%]">Customer</th>
-                  <th className="px-4 py-3 w-[14%]">Flat Details</th>
+                  <th className="px-4 py-3 w-[16%]">Customer</th>
+                  <th className="px-4 py-3 w-[13%]">Flat Details</th>
                   <th className="px-4 py-3 w-[14%]">Project</th>
                   <th className="px-4 py-3 w-[12%]">Booking Date</th>
-                  <th className="px-4 py-3 w-[7%]">Ageing</th>
-                  <th className="px-4 py-3 w-[13%]">Total Payment</th>
-                  <th className="px-4 py-3 w-[14%]">Loan Status</th>
-                  <th className="px-4 py-3 w-[8%] text-center">Action</th>
+                  <th className="px-4 py-3 w-[6%]">Ageing</th>
+                  <th className="px-4 py-3 w-[14%]">Total Payment</th>
+                  <th className="px-4 py-3 w-[12%]">Loan Status</th>
+                  <th className="px-4 py-3 w-[12%]">Reg. Status</th>
+                  <th className="px-4 py-3 w-[6%] text-center">Action</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
@@ -171,6 +172,13 @@ const Ageingrecord = () => {
                           {record.loan_Status}
                         </span>
                       )}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${record.registration_status === 'Registered' ? 'bg-green-50 text-green-700 border border-green-100' :
+                        'bg-orange-50 text-orange-700 border border-orange-100'
+                        }`}>
+                        {record.registration_status}
+                      </span>
                     </td>
                     <td className="px-4 py-3 text-center">
                       <button

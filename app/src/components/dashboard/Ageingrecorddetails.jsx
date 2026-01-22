@@ -14,6 +14,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
 
   // Form states for update
   const [loanStatus, setLoanStatus] = useState("NotApplied");
+  const [registrationStatus, setRegistrationStatus] = useState("NotRegistered");
   const [bankName, setBankName] = useState('');
   const [agentName, setAgentName] = useState('');
   const [agentNumber, setAgentNumber] = useState('');
@@ -45,6 +46,9 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
       // Map "Not Applied" (display) to "NotApplied" (enum)
       const currentStatus = localRecord?.loan_Status === "Not Applied" ? "NotApplied" : (localRecord?.loan_Status || "NotApplied");
       setLoanStatus(currentStatus);
+
+      const currentRegStatus = localRecord?.registration_status === "Not Registered" ? "NotRegistered" : (localRecord?.registration_status || "NotRegistered");
+      setRegistrationStatus(currentRegStatus);
       setBankName(localRecord?.bank_name || '');
       setAgentName(localRecord?.agent_name || '');
       setAgentNumber(localRecord?.agent_number || '');
@@ -126,6 +130,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
       const response = await Ageingrecordapi.post('update-loan-status', {
         id: localRecord.id,
         loan_Status: loanStatus,
+        registration_status: registrationStatus,
         bank_name: bankName.trim(),
         agent_name: agentName.trim(),
         agent_number: agentNumber.trim(),
@@ -139,6 +144,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
         setLocalRecord(prev => ({
           ...prev,
           loan_Status: loanStatus === "NotApplied" ? "Not Applied" : loanStatus,
+          registration_status: registrationStatus === "NotRegistered" ? "Not Registered" : registrationStatus,
           bank_name: bankName.trim(),
           agent_name: agentName.trim(),
           agent_number: agentNumber.trim(),
@@ -298,6 +304,15 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
                     </span>
                   </div>
 
+                  <div className="flex items-center justify-between py-2">
+                    <span className="text-sm text-gray-600">Reg. Status</span>
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${localRecord?.registration_status === 'Registered' ? 'bg-green-50 text-green-700 border border-green-100' :
+                      'bg-orange-50 text-orange-700 border border-orange-100'
+                      }`}>
+                      {localRecord?.registration_status || 'Not Registered'}
+                    </span>
+                  </div>
+
                   <DetailRow label="Bank Name" value={localRecord?.bank_name} icon={IconBuildingBank} />
                   <DetailRow label="Agent Name" value={localRecord?.agent_name} icon={IconUser} />
                   <DetailRow label="Agent Number" value={localRecord?.agent_number} icon={IconPhone} />
@@ -321,7 +336,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
             </div>
           </div>
         </div>
-      </div>
+      </div >
 
       {/* Update Modal */}
       <Modal
@@ -352,6 +367,27 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
                       }`}
                   >
                     {status === 'NotApplied' ? 'Not Applied' : status}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Registration Status Toggle */}
+            <div>
+              <Label className="text-sm font-medium text-gray-700">Registration Status</Label>
+              <div className="mt-2 grid grid-cols-2 gap-3">
+                {['NotRegistered', 'Registered'].map((status) => (
+                  <button
+                    key={status}
+                    type="button"
+                    onClick={() => setRegistrationStatus(status)}
+                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors cursor-pointer border-2 ${registrationStatus === status
+                      ? status === 'Registered' ? 'bg-green-100 text-green-700 border-green-300'
+                        : 'bg-orange-100 text-orange-700 border-orange-300'
+                      : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100'
+                      }`}
+                  >
+                    {status === 'NotRegistered' ? 'Not Registered' : status}
                   </button>
                 ))}
               </div>
@@ -451,7 +487,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
             </Button>
           </div>
         </div>
-      </Modal>
+      </Modal >
     </>
   );
 };
