@@ -447,10 +447,10 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
             setRatePerSqFtError("Rate Per sq.ft is required");
             return;
         }
-        if (!status) {
-            setStatusError('Status is required');
-            return;
-        }
+        // if (!status) {
+        //     setStatusError('Status is required');
+        //     return;
+        // }
         if (!grandTotal) {
             setGrandTotalError('Grand total calculation failed');
             return;
@@ -480,7 +480,7 @@ const CostSheetDrawer = ({ open, onOpenChange, leadData, refreshLeadDetails }) =
         documentationFee,
         corpusFund,
         grandTotal,
-        status,
+        // status,
         description
     };
 
