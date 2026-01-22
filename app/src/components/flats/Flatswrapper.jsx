@@ -543,15 +543,15 @@ function Flatswrapper() {
 
         <div className="flex flex-col gap-4 bg-white p-4 rounded-md z-0">
           <div className="flex w-full m-auto items-center">
-            <div className="w-[15%] border border-[#ebecef] rounded-md z-0">
+            <div className="w-[20%] z-0">
               <input
                 type="text"
                 placeholder="Search Flats..."
-                className="focus:outline-none text-[14px] pl-6 py-1.5"
+                className="focus:outline-none text-[14px] pl-6 py-2 rounded-md"
                 onChange={updateSearchQuery}
                 value={searchQuery}
               />
-              <div className="absolute left-0 top-2 px-1">
+              <div className="absolute left-0 top-3 px-1">
                 <IconSearch size={16} color="#ebecef" />
               </div>
             </div>

@@ -552,15 +552,15 @@ function Leadwrapper() {
         <div className="flex flex-col gap-4 bg-white p-4 rounded-md">
           <div className="flex justify-between items-center">
             <div>
-              <div className="border border-[#ebecef] rounded-md relative">
+              <div className="rounded-md relative">
                 <input
                   type="text"
                   placeholder="Search leads..."
-                  className="focus:outline-none text-[14px] pl-6 py-1.5"
+                  className="focus:outline-none text-[14px] pl-6 py-2 rounded-md"
                   onChange={updateSearchQuery}
                   value={searchQuery}
                 />
-                <div className="absolute left-0 top-2 px-1">
+                <div className="absolute left-0 top-3 px-1">
                   <IconSearch size={16} color="#ebecef" />
                 </div>
               </div>
@@ -573,7 +573,7 @@ function Leadwrapper() {
               )}
               {
                 allSubordinates.length > 0 &&
-                <div className="w-[180px]">
+                <div className="w-[165px]">
                   <Select
                     data={allSubordinates}
                     placeholder="Select subordinate..."
@@ -586,7 +586,7 @@ function Leadwrapper() {
                   />
                 </div>
               }
-              <div className="w-[180px]">
+              <div className="w-[140px]">
                 <Select
                   data={[
                     { value: "all", label: "All" },
@@ -601,7 +601,7 @@ function Leadwrapper() {
                   dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto focus:ring-0 focus:border-[#0083bf] focus:outline-none"
                 />
               </div>
-              <div className="w-[180px]">
+              <div className="w-[160px]">
                 <Select
                   data={leadStages}
                   value={selectedLeadStage}
