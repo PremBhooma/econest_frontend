@@ -106,14 +106,6 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
                     <div className="col-span-6 p-1 text-center font-bold">{status}</div>
                 </div> */}
 
-                {/* Notes / Description from Form if available */}
-                {description && (
-                    <div className="grid grid-cols-12 border-b border-black">
-                        <div className="col-span-6 border-r border-black p-1 pl-2">Note / Description</div>
-                        <div className="col-span-6 p-1 text-center pl-2 font-bold text-red-600">{description}</div>
-                    </div>
-                )}
-
                 {/* Column Headers */}
                 <div className="grid grid-cols-12 border-b border-black font-bold">
                     <div className="col-span-6 border-r border-black p-1 pl-2">Description</div>
@@ -263,6 +255,15 @@ export const CostSheetPrint = React.forwardRef(({ data, leadData, selectedFlat }
                     <div className="col-span-6 p-1 text-right pr-2 text-red-600 font-bold">{formatCurrency((Number(grandTotal) + (Number(discount) * Number(saleableAreaSqFt) * 1.05)) - Number(grandTotal))}</div>
                 </div>
 
+            </div>
+
+            {/* Notes Section - Outside main box for manual writing */}
+            <div className="mt-4 border-2 border-black p-3">
+                <div className="font-bold text-sm mb-2">Notes / Remarks:</div>
+                {description && (
+                    <div className="text-sm mb-2 text-red-600">{description}</div>
+                )}
+                <div className="border-t border-gray-400 pt-2 min-h-[60px]"></div>
             </div>
         </div>
     );
