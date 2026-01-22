@@ -358,6 +358,11 @@ function Assignflattocustomer({ closeAssignFlatToCustomer, customerUuid }) {
         setGrandTotalError('')
     }
 
+    const [customNote, setCustomNote] = useState('')
+    const updateCustomNote = (e) => {
+        setCustomNote(e.target.value)
+    }
+
     const [manjeeraConnectionCharge, setManjeeraConnectionCharge] = useState('50000')
     const [manjeeraConnectionChargeError, setManjeeraConnectionChargeError] = useState('')
 
@@ -728,6 +733,7 @@ function Assignflattocustomer({ closeAssignFlatToCustomer, customerUuid }) {
                 corner_per_sq_ft: selectedFlat?.corner === true ? parseFloat(corner) : null,
                 total_corner: parseFloat(cornerXPerSft),
                 grand_total: parseFloat(grandTotal),
+                custom_note: customNote || null,
                 manjeeraConnectionCharge: parseFloat(manjeeraConnectionCharge),
                 employeeId: employeeId
             }, {
@@ -840,6 +846,17 @@ function Assignflattocustomer({ closeAssignFlatToCustomer, customerUuid }) {
                                     </div>
                                 )}
                             </div>
+
+                            <div className="space-y-2 md:col-span-2">
+                                <Label>Custom Note</Label>
+                                <textarea
+                                    value={customNote}
+                                    onChange={updateCustomNote}
+                                    placeholder="Enter any additional requirements need for this flat..."
+                                    rows={3}
+                                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-[4px] focus:outline-none focus:border-black resize-none text-sm"
+                                />
+                            </div>
                         </div>
 
                         {/* Right Side: Cost Sheet Form */}
@@ -849,7 +866,7 @@ function Assignflattocustomer({ closeAssignFlatToCustomer, customerUuid }) {
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-5">
                                 <div className="space-y-2">
                                     <Datepicker
-                                        label="Application Date"
+                                        label="Booking Date"
                                         value={applicationDate}
                                         error={applicationDateError}
                                         onChange={updateApplicationDate}
