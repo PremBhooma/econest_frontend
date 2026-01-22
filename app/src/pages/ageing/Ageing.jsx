@@ -167,7 +167,7 @@ function Ageing() {
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[90px]">Ageing</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[100px]">Total Payment</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[120px]">Loan Status</th>
-                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[150px]">Reg. Status</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[145px]">Reg. Status</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[60px] text-center sticky right-0 z-20 bg-gray-50 border-l border-neutral-200">Action</th>
               </tr>
             </thead>
