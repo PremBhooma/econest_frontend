@@ -609,59 +609,59 @@ function Allpaymentslist({ flat_id, customerId }) {
                                 </th>
                             )} */}
                             {visibleColumns.transactionId && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Transaction Id
                                 </th>
                             )}
                             {visibleColumns.flat && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[120px]">
                                     Flat
                                 </th>
                             )}
                             {visibleColumns.block && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[120px]">
                                     Block
                                 </th>
                             )}
                             {visibleColumns.customer && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Customer
                                 </th>
                             )}
                             {visibleColumns.amount && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[140px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[140px]">
                                     Amount
                                 </th>
                             )}
                             {visibleColumns.date && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Date of Payment
                                 </th>
                             )}
                             {visibleColumns.paymentType && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Payment Type
                                 </th>
                             )}
                             {visibleColumns.paymentTowards && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Payment Towards
                                 </th>
                             )}
                             {visibleColumns.paymentMethod && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Payment Method
                                 </th>
                             )}
                             {visibleColumns.bank && (
-                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[160px]">
+                                <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[160px]">
                                     Bank
                                 </th>
                             )}
                             {permissions?.payments_page?.some(p =>
                                 ["view_payment", "edit_payment", "delete_payment"].includes(p)
                             ) && (
-                                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[16px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
+                                    <th scope="col" className="px-4 py-3 text-[#2B2B2B] text-[13px] font-[500] leading-[18px] w-[120px] sticky right-0 z-20 bg-white border-l border-[#ebecef]">
                                         Actions
                                     </th>
                                 )}

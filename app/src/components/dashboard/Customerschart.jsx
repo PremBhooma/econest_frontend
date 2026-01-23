@@ -56,6 +56,14 @@ const getChartOptions = (maxValue = 10) => ({
   },
 });
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '../ui/select';
+
 const Customerschart = () => {
   const currentYear = new Date().getFullYear();
   const [selectedYear, setSelectedYear] = useState(currentYear);
@@ -113,19 +121,25 @@ const Customerschart = () => {
 
   return (
     <div className="p-5 rounded-xl bg-white shadow-sm border border-neutral-200 h-full">
-      <div className="w-full grid grid-cols-2 mb-6">
+      <div className="w-full grid grid-cols-2 mb-6 items-center">
         <h2 className="col-span-1 text-lg font-semibold text-neutral-900">New Customers</h2>
-        <select
-          className="border rounded p-2 col-span-1"
-          value={selectedYear}
-          onChange={(e) => setSelectedYear(Number(e.target.value))}
-        >
-          {years.map((year) => (
-            <option key={year} value={year}>
-              {year}
-            </option>
-          ))}
-        </select>
+        <div className="col-span-1">
+          <Select
+            value={String(selectedYear)}
+            onValueChange={(value) => setSelectedYear(Number(value))}
+          >
+            <SelectTrigger className="w-full focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0">
+              <SelectValue placeholder="Select Year" />
+            </SelectTrigger>
+            <SelectContent className="border border-neutral-200">
+              {years.map((year) => (
+                <SelectItem key={year} value={String(year)}>
+                  {year}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+        </div>
       </div>
 
       {isLoading && <p>Loading chart...</p>}
