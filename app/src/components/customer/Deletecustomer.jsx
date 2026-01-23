@@ -81,6 +81,9 @@ function Deletecustomer({ refreshCustomerData, closeDeleteModal, singleCustomerI
               <strong>Payment</strong> records for this customer will be deleted.
             </li>
             <li>
+              If <strong>Ageing Record</strong> is available for this customer will be deleted.
+            </li>
+            <li>
               Any flats assigned to this customer will be unassigned and marked as <strong>Unsold</strong>.
             </li>
             {/* <li>

@@ -82,6 +82,9 @@ function Deleteflat({ refreshGetAllFlats, closeDeleteModal, singleFlatUuid, empl
               <strong>Payment</strong> records for this flat will be deleted.
             </li>
             <li>
+              If <strong>Ageing Record</strong> is available for this flat will be deleted.
+            </li>
+            <li>
               Any customer assigned to this flat will be <strong>unassigned</strong>.
             </li>
           </ul>
