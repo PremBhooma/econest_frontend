@@ -1110,11 +1110,15 @@ const Addnewlead = () => {
 
             <div className="flex flex-col gap-1.5">
               <Label className="text-neutral-700 font-medium">Bedroom Preference</Label>
-              <Input
-                placeholder="e.g., 2BHK, 3BHK"
-                value={bedroom}
-                onChange={updateBedroom}
-              />
+              <Select value={bedroom} onValueChange={(val) => setBedroom(val)}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Bedroom" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="2 BHK">2 BHK</SelectItem>
+                  <SelectItem value="3 BHK">3 BHK</SelectItem>
+                </SelectContent>
+              </Select>
             </div>
 
             <div className="flex flex-col gap-1.5">
