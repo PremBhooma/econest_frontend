@@ -29,6 +29,7 @@ function Leadview() {
   const [costSheetDrawer, setCostSheetDrawer] = useState(false);
 
   const availableTabs = [
+    { key: "overview", label: "Overview" },
     permissions?.leads_page?.includes("lead_documents") && { key: "documents", label: "Documents" },
     permissions?.leads_page?.includes("lead_notes") && { key: "notes", label: "Notes" },
     { key: "activity", label: "Activity" }
@@ -369,7 +370,9 @@ function Leadview() {
               </div>
 
               <div className="flex-1 p-6 bg-white rounded-md shadow-md">
-                {/* {activeTab === "lead-info" && <Leadinfo leadData={leadData} />} */}
+                {activeTab === "overview" && (
+                  <Leadinfo leadData={leadData} />
+                )}
 
                 {activeTab === "documents" && permissions?.leads_page?.includes("lead_documents") && (
                   <Leadsdocumentswrapper />

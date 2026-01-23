@@ -1,4 +1,4 @@
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import Settingsapi from "../api/Settingsapi";
 import Generalapi from "@/components/api/Generalapi";
 import Leadapi from "@/components/api/Leadapi";
@@ -6,15 +6,24 @@ import Employeeapi from "../api/Employeeapi";
 
 import Errorpanel from "@/components/shared/Errorpanel";
 import { IconArrowLeft } from "@tabler/icons-react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast } from "react-toastify";
 import { Link, useParams, useNavigate } from "react-router-dom";
 import {
-  Textinput,
-  Select,
   Loadingoverlay,
   Datepicker,
 } from "@nayeshdaggula/tailify";
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Button } from "@/components/ui/button";
+import { Textarea } from "@/components/ui/textarea";
 
 function Editleadwrapper() {
   const navigate = useNavigate();
@@ -171,6 +180,12 @@ function Editleadwrapper() {
   const [maritalStatus, setMaritalStatus] = useState("");
   const [maritalStatusError, setMaritalStatusError] = useState("");
   const updateMaritalStatus = (value) => {
+    // Prevent changing to "Single" if spouse name exists
+    if (value === "Single" && spouseName.trim() !== "") {
+      setMaritalStatusError("Cannot set to Single when spouse name exists");
+      return;
+    }
+
     setMaritalStatus(value);
     setMaritalStatusError("");
   };
@@ -284,6 +299,28 @@ function Editleadwrapper() {
     setIfOwnedProjectName(e.target.value);
     setIfOwnedProjectNameError("");
   };
+
+  // New Lead Schema Fields
+  const [leadStatus, setLeadStatus] = useState("");
+  const updateLeadStatus = (value) => setLeadStatus(value);
+
+  const [minBudget, setMinBudget] = useState("");
+  const updateMinBudget = (e) => setMinBudget(e.target.value);
+
+  const [maxBudget, setMaxBudget] = useState("");
+  const updateMaxBudget = (e) => setMaxBudget(e.target.value);
+
+  const [bedroom, setBedroom] = useState("");
+  const updateBedroom = (e) => setBedroom(e.target.value);
+
+  const [purpose, setPurpose] = useState("");
+  const updatePurpose = (value) => setPurpose(value);
+
+  const [funding, setFunding] = useState("");
+  const updateFunding = (value) => setFunding(value);
+
+  const [leadAge, setLeadAge] = useState("");
+  const updateLeadAge = (e) => setLeadAge(e.target.value);
 
   const [stateData, setStateData] = useState([]);
   const [correspondenceCityData, setCorrespondenceCityData] = useState([]);
@@ -700,6 +737,14 @@ function Editleadwrapper() {
           setOrganizationAddress(data?.data?.address_of_current_organization || "");
           setWorkExperience(data?.data?.no_of_years_work_experience || "");
           setAnnualIncome(data?.data?.current_annual_income || "");
+          // New Lead Fields
+          setLeadStatus(data?.data?.lead_status || "");
+          setMinBudget(data?.data?.min_budget !== null ? String(data?.data?.min_budget) : "");
+          setMaxBudget(data?.data?.max_budget !== null ? String(data?.data?.max_budget) : "");
+          setBedroom(data?.data?.bedroom || "");
+          setPurpose(data?.data?.purpose || "");
+          setFunding(data?.data?.funding || "");
+          setLeadAge(data?.data?.lead_age !== null ? String(data?.data?.lead_age) : "");
         }
         setIsLoadingEffect(false);
         return false;
@@ -865,6 +910,14 @@ function Editleadwrapper() {
       address_of_current_organization: organizationAddress,
       no_of_years_work_experience: parseFloat(workExperience),
       current_annual_income: parseFloat(annualIncome),
+      // New Lead Fields
+      lead_status: leadStatus || null,
+      min_budget: minBudget ? parseFloat(minBudget) : null,
+      max_budget: maxBudget ? parseFloat(maxBudget) : null,
+      bedroom: bedroom || null,
+      purpose: purpose || null,
+      funding: funding || null,
+      lead_age: leadAge ? parseInt(leadAge) : null,
     }, {
       headers: {
         "Content-Type": "application/json",
@@ -923,697 +976,610 @@ function Editleadwrapper() {
   return (
     <div className="flex flex-col gap-3 w-full">
       <div className="flex justify-between items-center">
-        <h1 className="text-[24px] font-semibold">Update Lead</h1>
-        <Link
-          to={"/leads"}
-          className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-1 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200"
-        >
+        <h1 className="text-[20px] font-semibold">Update Lead</h1>
+        <Link to={"/leads"} className="text-[#0083bf] px-3 gap-1 flex items-center justify-center p-2 rounded-sm border border-[#0083bf] bg-white transition-colors duration-200">
           <IconArrowLeft className="mt-0.5" size={18} color="#0083bf" />
           Back
         </Link>
       </div>
-      <div className="flex flex-col gap-4 border border-[#ebecef] rounded-xl bg-white p-8">
-        <div className="grid grid-cols-3 gap-4">
 
-          <div className="w-[100%]">
-            <Select
-              label="Prefix"
-              data={[
-                { value: "Mr", label: "Mr" },
-                { value: "Mrs", label: "Mrs" },
-                { value: "Miss", label: "Miss" },
-                { value: "Mx", label: "Mx" },
-              ]}
-              withAsterisk
-              searchable
-              error={prefixError}
-              value={prefixes}
-              onChange={updatePrefix}
-              labelClass="mb-[6px] font-medium font-sans text-[#000] text-sm"
-              inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-              dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
-              selectWrapperClass="!shadow-none"
-            />
+      <div className="flex flex-col gap-8 bg-white rounded-xl border border-gray-200 p-6 md:p-8 shadow-sm relative">
+        {isLoadingEffect && (
+          <div className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 backdrop-blur-[1px] rounded-xl">
+            <Loadingoverlay visible={true} />
           </div>
+        )}
 
-          <Textinput
-            placeholder="Enter Full Name"
-            label="Full Name"
-            withAsterisk
-            value={fullName}
-            error={fullNameError}
-            onChange={updateFullName}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-
-          <Textinput
-            placeholder="Enter Email Address"
-            label="Email Address"
-            withAsterisk
-            value={email}
-            error={emailError}
-            onChange={updateEmail}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          {/* <Textinput
-            placeholder="Enter Alternate Email Address"
-            label="Alternate Email Address"
-            value={email2}
-            error={emailError2}
-            onChange={updateEmail2}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          /> */}
-          <div className="w-full">
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Phone Number <span className="text-red-500">*</span>
-            </label>
-            <div className="flex flex-row gap-x-4 w-full">
-              <div className="w-20">
-                <Select
-                  data={countryCodes}
-                  placeholder="Code"
-                  searchable
-                  value={phoneCode}
-                  // error={phoneCodeError}
-                  onChange={updatePhoneCode}
-                  selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-                  className="w-full"
-                  dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-                />
-              </div>
-              <div className="flex-1">
-                <Textinput
-                  placeholder="Enter Phone Number"
-                  type="text"
-                  value={phoneNumber}
-                  // error={phoneNumberError}
-                  onChange={updatePhoneNumber}
-                  inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                />
-              </div>
+        {/* Lead Basic Info */}
+        <div className="flex flex-col gap-4">
+          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Lead Basic Info</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Prefix <span className="text-red-500">*</span></Label>
+              <Select value={prefixes} onValueChange={updatePrefix}>
+                <SelectTrigger className={prefixError ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select Prefix" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Mr">Mr</SelectItem>
+                  <SelectItem value="Mrs">Mrs</SelectItem>
+                  <SelectItem value="Miss">Miss</SelectItem>
+                  <SelectItem value="Mx">Mx</SelectItem>
+                </SelectContent>
+              </Select>
+              {prefixError && <p className="text-red-500 text-xs">{prefixError}</p>}
             </div>
-            {phoneCodeError !== "" && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
-                {phoneCodeError}
-              </p>
-            )}
-            {phoneNumberError !== "" && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
-                {phoneNumberError}
-              </p>
-            )}
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Full Name <span className="text-red-500">*</span></Label>
+              <Input
+                placeholder="Enter Full Name"
+                value={fullName}
+                onChange={updateFullName}
+                className={fullNameError ? "border-red-500" : ""}
+              />
+              {fullNameError && <p className="text-red-500 text-xs">{fullNameError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Email Address <span className="text-red-500">*</span></Label>
+              <Input
+                type="email"
+                placeholder="Enter Email Address"
+                value={email}
+                onChange={updateEmail}
+                className={emailError ? "border-red-500" : ""}
+              />
+              {emailError && <p className="text-red-500 text-xs">{emailError}</p>}
+            </div>
+            {/* <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Alternate Email Address</Label>
+              <Input
+                type="email"
+                placeholder="Enter Alternate Email Address"
+                value={email2}
+                onChange={updateEmail2}
+                className={emailError2 ? "border-red-500" : ""}
+              />
+              {emailError2 && <p className="text-red-500 text-xs">{emailError2}</p>}
+            </div> */}
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Phone Number <span className="text-red-500">*</span></Label>
+              <div className="flex gap-2">
+                <div className="w-[100px]">
+                  <Select value={phoneCode} onValueChange={updatePhoneCode}>
+                    <SelectTrigger className={phoneCodeError ? "border-red-500" : ""}>
+                      <SelectValue placeholder="Code" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countryCodes.map((c) => (
+                        <SelectItem key={c.value} value={String(c.value)}>+{c.value}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex-1">
+                  <Input
+                    placeholder="Enter Phone Number"
+                    value={phoneNumber}
+                    onChange={updatePhoneNumber}
+                    className={phoneNumberError ? "border-red-500" : ""}
+                  />
+                </div>
+              </div>
+              {(phoneCodeError || phoneNumberError) && (
+                <p className="text-red-500 text-xs">{phoneCodeError || phoneNumberError}</p>
+              )}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Assign to Employee</Label>
+              <Select value={employee} onValueChange={updateEmployee}>
+                <SelectTrigger className={employeeError ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select Employee" />
+                </SelectTrigger>
+                <SelectContent>
+                  {employeeData.map((e) => (
+                    <SelectItem key={e.value} value={String(e.value)}>{e.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              {employeeError && <p className="text-red-500 text-xs">{employeeError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Source of Lead <span className="text-red-500">*</span></Label>
+              <Select value={sourseOfLead} onValueChange={updateSourseOfLead}>
+                <SelectTrigger className={sourseOfLeadError ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select Source" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Instagram">Instagram</SelectItem>
+                  <SelectItem value="Facebook">Facebook</SelectItem>
+                  <SelectItem value="Referral">Referral</SelectItem>
+                  <SelectItem value="Friend">Friend</SelectItem>
+                  <SelectItem value="Already own flat">Already own flat</SelectItem>
+                  <SelectItem value="Others">Others</SelectItem>
+                </SelectContent>
+              </Select>
+              {sourseOfLeadError && <p className="text-red-500 text-xs">{sourseOfLeadError}</p>}
+            </div>
+
+            {/* <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Gender</Label>
+              <Select value={gender} onValueChange={updateGender}>
+                <SelectTrigger className={genderError ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select Gender" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                  <SelectItem value="Others">Others</SelectItem>
+                </SelectContent>
+              </Select>
+              {genderError && <p className="text-red-500 text-xs">{genderError}</p>}
+            </div> */}
+
+            {/* <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Date of Birth</Label>
+              <Datepicker
+                value={dateOfBirth}
+                onChange={updateDateOfBirth}
+                inputClassName={`w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${dateOfBirthError ? "border-red-500" : "border-gray-200"}`}
+              />
+              {dateOfBirthError && <p className="text-red-500 text-xs">{dateOfBirthError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Father Name</Label>
+              <Input
+                placeholder="Enter Father Name"
+                value={fatherName}
+                onChange={updateFatherName}
+                className={fatherNameError ? "border-red-500" : ""}
+              />
+              {fatherNameError && <p className="text-red-500 text-xs">{fatherNameError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Marital Status</Label>
+              <Select value={maritalStatus} onValueChange={updateMaritalStatus}>
+                <SelectTrigger className={maritalStatusError ? "border-red-500" : ""}>
+                  <SelectValue placeholder="Select Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Single">Single</SelectItem>
+                  <SelectItem value="Married">Married</SelectItem>
+                </SelectContent>
+              </Select>
+              {maritalStatusError && <p className="text-red-500 text-xs">{maritalStatusError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Mother Tongue</Label>
+              <Input
+                placeholder="Enter Mother Tongue"
+                value={motherTongue}
+                onChange={updateMotherTongue}
+                className={motherTongueError ? "border-red-500" : ""}
+              />
+              {motherTongueError && <p className="text-red-500 text-xs">{motherTongueError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Pan Card No</Label>
+              <Input
+                placeholder="Enter Pan Card No"
+                value={panCardNo}
+                onChange={updatePanCardNo}
+                className={panCardNoError ? "border-red-500" : ""}
+              />
+              {panCardNoError && <p className="text-red-500 text-xs">{panCardNoError}</p>}
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Aadhar Card No</Label>
+              <Input
+                placeholder="Enter Aadhar Card No"
+                value={aadharCardNo}
+                onChange={updateAadharCardNo}
+                className={aadharCardNoError ? "border-red-500" : ""}
+              />
+              {aadharCardNoError && <p className="text-red-500 text-xs">{aadharCardNoError}</p>}
+            </div> */}
           </div>
 
-          {/* <Select
-            data={employeeData}
-            placeholder="Employee"
-            label="Assign to Employee"
-            searchable
-            value={employee}
-            error={employeeError}
-            onChange={updateEmployee}
-            selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-            className="w-full"
-            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-          /> */}
-
-          <Select
-            label="Sourse of lead"
-            data={[
-              { value: "Instagram", label: "Instagram" },
-              { value: "Facebook", label: "Facebook" },
-              { value: "Referral", label: "Referral" },
-              { value: "Friend", label: "Friend" },
-              { value: "Already own flat", label: "Already own flat" },
-              { value: "Others", label: "Others" },
-
-            ]}
-            searchable
-            withAsterisk
-            error={sourseOfLeadError}
-            value={sourseOfLead}
-            onChange={updateSourseOfLead}
-            labelClass="font-medium font-sans text-[#000] text-sm"
-            inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-            dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
-            selectWrapperClass="!shadow-none"
-          />
-
-          <Select
-            label="Country"
-            placeholder="Select Country"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropDownClass="overflow-y-hidden"
-            selectWrapperClass="bg-white"
-            searchable={true}
-            data={[{ label: "India", value: "101" }]}
-            // data={countryNames}
-            value={correspondenceCountry}
-            onChange={updateCorrespondenceCountry}
-            error={correspondenceCountryError}
-          />
-
-          <Select
-            label="State"
-            placeholder="Select State"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropDownClass="overflow-y-hidden"
-            selectWrapperClass="bg-white"
-            searchable={true}
-            data={stateData}
-            value={correspondenceState}
-            onChange={updateCorrespondenceState}
-            error={correspondenceStateError}
-          />
-
-          {correspondenceState && (
-            <Select
-              label="City"
-              placeholder="Select City"
-              labelClass="text-sm font-medium text-gray-600 mb-1"
-              dropDownClass="overflow-y-hidden"
-              selectWrapperClass="bg-white"
-              searchable={true}
-              data={correspondenceCityData}
-              value={correspondenceCity}
-              onChange={updateCorrespondenceCity}
-              error={correspondenceCityError}
-            />
-          )}
-          {correspondenceCity && (
-            <Textinput
-              label="Address"
-              placeholder="Enter your Address"
-              labelClassName="text-sm font-medium text-gray-600 !mb-1"
-              inputClassName="shadow-sm !bg-white"
-              value={correspondenceAddress}
-              onChange={updateCorrespondenceAddress}
-              error={correspondenceAddressError}
-            />
-          )}
-          {correspondenceAddress && (
-            <Textinput
-              label="Pin Code"
-              labelClassName="text-sm font-medium text-gray-600 !mb-1"
-              inputClassName="shadow-sm bg-white"
-              placeholder="Enter your pincode"
-              value={correspondencePincode}
-              onChange={updateCorrespondencePincode}
-              error={correspondencePincodeError}
-            />
-          )}
-
-          {/* <div className="w-full">
-            <label className="block text-sm font-medium text-gray-600 mb-1">
-              Landline Number
-            </label>
-            <div className="flex flex-row gap-x-4 w-full">
-              <div className="w-20">
-                <Select
-                  data={countryCodes}
-                  placeholder="Code"
-                  searchable
-                  value={landlineCountryCode}
-                  // error={landlineCountryCodeError}
-                  onChange={updateLandlineCountryCode}
-                  selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-                  className="w-full"
-                  dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
+          {/* {maritalStatus === "Married" && (
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 p-4 bg-gray-50 rounded-md border border-gray-100">
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Spouse Prefix</Label>
+                <Select value={spousePrefix} onValueChange={updateSpousePrefix}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Prefix" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Mr">Mr</SelectItem>
+                    <SelectItem value="Mrs">Mrs</SelectItem>
+                    <SelectItem value="Miss">Miss</SelectItem>
+                    <SelectItem value="Mx">Mx</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Spouse Name</Label>
+                <Input
+                  placeholder="Enter Spouse Name"
+                  value={spouseName}
+                  onChange={updateSpouseName}
                 />
               </div>
-              <div className="w-30">
-                <Textinput
-                  placeholder="Enter City Code"
-                  value={landlineCityCode}
-                  // error={landlineCityCodeError}
-                  onChange={updateLandlineCityCode}
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Spouse DOB</Label>
+                <Datepicker
+                  value={spouseDob}
+                  onChange={updateSpouseDob}
+                  inputClassName="w-full px-3 py-2 border border-gray-200 rounded-md"
+                />
+              </div>
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Number of Children</Label>
+                <Input
                   type="number"
-                  inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                  placeholder="0"
+                  value={numberOfChildren}
+                  onChange={updateNumberOfChildren}
                 />
               </div>
-              <div className="flex-1">
-                <Textinput
-                  placeholder="Enter Phone Number"
-                  type="text"
-                  value={landlineNumber}
-                  // error={landlineNumberError}
-                  onChange={updateLandlineNumber}
-                  inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Wedding Anniversary</Label>
+                <Datepicker
+                  value={weddingAniversary}
+                  onChange={updateWeddingAniversary}
+                  inputClassName="w-full px-3 py-2 border border-gray-200 rounded-md"
                 />
               </div>
             </div>
-            {landlineCountryCodeError !== "" && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
-                {landlineCountryCodeError}
-              </p>
-            )}
-            {landlineCityCodeError !== "" && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
-                {landlineCityCodeError}
-              </p>
-            )}
-            {landlineNumberError !== "" && (
-              <p className="mt-1 text-xs text-red-600 font-medium">
-                {landlineNumberError}
-              </p>
-            )}
-          </div>
-          <div className="w-[100%]">
-            <Select
-              label="Gender"
-              data={[
-                { value: "Male", label: "Male" },
-                { value: "Female", label: "Female" },
-                { value: "Other", label: "Other" },
-              ]}
-              searchable
-              withAsterisk
-              error={genderError}
-              value={gender}
-              onChange={updateGender}
-              labelClass="mb-[6px] font-medium font-sans text-[#000] text-sm"
-              inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-              dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
-              selectWrapperClass="!shadow-none"
-            />
-          </div>
-          <Datepicker
-            label="Date of Birth"
-            withAsterisk
-            value={dateOfBirth}
-            error={dateOfBirthError}
-            onChange={updateDateOfBirth}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Textinput
-            placeholder="Enter Father Name"
-            label="Father Name"
-            value={fatherName}
-            error={fatherNameError}
-            onChange={updateFatherName}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Select
-            data={[
-              { label: "Single", value: "Single" },
-              { label: "Married", value: "Married" },
-            ]}
-            label="Marital Status"
-            value={maritalStatus}
-            error={maritalStatusError}
-            onChange={updateMaritalStatus}
-            selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-          />
-          {maritalStatus === "Married" && (
-            <>
-              <div className="w-[100%]">
-                <Select
-                  label="Spouse Prefix"
-                  data={[
-                    { value: "Mr", label: "Mr" },
-                    { value: "Mrs", label: "Mrs" },
-                    { value: "Miss", label: "Miss" },
-                    { value: "Mx", label: "Mx" },
-                  ]}
-                  searchable
-                  error={spousePrefixError}
-                  value={spousePrefix}
-                  onChange={updateSpousePrefix}
-                  labelClass="mb-[6px] font-medium font-sans text-[#000] text-sm"
-                  inputClassName="focus:ring-0 focus:border-[#0083bf] focus:outline-none"
-                  dropdownClassName="option min-h-[100px] max-h-[200px] z-50 overflow-y-auto"
-                  selectWrapperClass="!shadow-none"
-                />
-              </div>
-              <Textinput
-                placeholder="Enter Spouse Name"
-                label="Spouse Name"
-                value={spouseName}
-                error={spouseNameError}
-                onChange={updateSpouseName}
-                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-              />
-              <Datepicker
-                label="Spouse DOB"
-                value={spouseDob}
-                error={spouseDobError}
-                onChange={updateSpouseDob}
-                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-              />
-              <Textinput
-                placeholder="Enter No of Children"
-                label="Number of Children"
-                value={numberOfChildren}
-                error={numberOfChildrenError}
-                onChange={updateNumberOfChildren}
-                type="number"
-                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-              />
-              <Datepicker
-                label="Wedding Aniversary"
-                value={weddingAniversary}
-                error={weddingAniversaryError}
-                onChange={updateWeddingAniversary}
-                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-              />
-            </>
-          )}
-          <Textinput
-            placeholder="Enter Pan Card No"
-            label="Pan Card No (e.g., XXXXX1234X)"
-            value={panCardNo}
-            error={panCardNoError}
-            onChange={updatePanCardNo}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Textinput
-            placeholder="Enter Aadhar Card No"
-            label="Aadhar Card No (e.g., XXXX XXXX XXXX)"
-            value={aadharCardNo}
-            error={aadharCardNoError}
-            onChange={updateAadharCardNo}
-            type="number"
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Select
-            data={countryNames}
-            label="Country of Citizenship"
-            searchable
-            value={countryOfCitizenship}
-            error={countryOfCitizenshipError}
-            onChange={updateCountryOfCitizenship}
-            selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-          />
-          <Select
-            data={countryNames}
-            label="Country of Residence"
-            searchable
-            value={countryOfResidence}
-            error={countryOfResidenceError}
-            onChange={updateCountryOfResidence}
-            selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-          />
-          <Textinput
-            placeholder="Enter Mother Tongue"
-            label="Mother Tongue"
-            value={motherTongue}
-            error={motherTongueError}
-            onChange={updateMotherTongue}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Textinput
-            placeholder="Enter Name of Power of Attorney"
-            label="Name of Power of Attorney (POA) Holder"
-            value={nameOfPoa}
-            error={nameOfPoaError}
-            onChange={updateNameOfPoa}
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Select
-            data={[
-              { label: "Resident", value: "Resident" },
-              { label: "NRI", value: "NRI" },
-            ]}
-            label="If POA Holder is Indian, specify status"
-            value={holderPoa}
-            error={holderPoaError}
-            onChange={updateHolderPoa}
-            selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-          />
-          <Textinput
-            placeholder="Enter Number of Years of Residing at Correspondence Address"
-            label="Number of years residing at correspondence address"
-            value={noOfYearsCorrespondenceAddress}
-            error={noOfYearsCorrespondenceAddressError}
-            onChange={updateNoOfYearsCorrespondenceAddress}
-            type="number"
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Textinput
-            placeholder="Enter Number of Years of Residing at City"
-            label="Number of years residing at city"
-            value={noOfYearsCity}
-            error={noOfYearsCityError}
-            onChange={updateNoOfYearsCity}
-            type="number"
-            labelClassName="text-sm font-medium text-gray-600 mb-1"
-            inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-          />
-          <Select
-            data={[
-              { label: "Yes", value: "true" },
-              { label: "No", value: "false" },
-            ]}
-            label="Have you ever owned a Abode home / property?"
-            value={haveYouOwnedAbode}
-            error={haveYouOwnedAbodeError}
-            onChange={updateHaveYouOwnedAbode}
-            selectWrapperClass="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400 !shadow-none"
-            labelClass="text-sm font-medium text-gray-600 mb-1"
-            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-          />
-          {haveYouOwnedAbode === "true" && (
-            <Textinput
-              placeholder="Enter Project Name"
-              label="If Yes, Project Name"
-              value={ifOwnedProjectName}
-              error={ifOwnedProjectNameError}
-              onChange={updateIfOwnedProjectName}
-              labelClassName="text-sm font-medium text-gray-600 mb-1"
-              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-            />
           )} */}
         </div>
-        {/* <hr className="border border-[#ebecef]" />
-        <div className="flex flex-col gap-3">
-          <p className="font-semibold text-[16px] text-gray-700">
-            Professional Details
-          </p>
-          <div className="grid grid-cols-3 gap-4">
-            <Textinput
-              placeholder="Enter Current Designation"
-              label="Current Designation"
-              value={currentDesignation}
-              error={currentDesignationError}
-              onChange={updateCurrentDesignation}
-              labelClassName="text-sm font-medium text-gray-600 mb-1"
-              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-            />
-            <Textinput
-              placeholder="Enter Current Organization"
-              label="Current Organization"
-              value={currentOrganization}
-              error={currentOrganizationError}
-              onChange={updateCurrentOrganization}
-              labelClassName="text-sm font-medium text-gray-600 mb-1"
-              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-            />
-            <Textinput
-              placeholder="Enter Organization Address"
-              label="Organization Address"
-              value={organizationAddress}
-              error={organizationAddressError}
-              onChange={updateOrganizationAddress}
-              labelClassName="text-sm font-medium text-gray-600 mb-1"
-              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-            />
-            <Textinput
-              placeholder="Enter Work Experience"
-              label="Work Experience"
-              type="number"
-              value={workExperience}
-              error={workExperienceError}
-              onChange={updateWorkExperience}
-              labelClassName="text-sm font-medium text-gray-600 mb-1"
-              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-            />
-            <Textinput
-              placeholder="Enter Annual Income"
-              label="Annual Income"
-              type="number"
-              value={annualIncome}
-              error={annualIncomeError}
-              onChange={updateAnnualIncome}
-              labelClassName="text-sm font-medium text-gray-600 mb-1"
-              inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-            />
-          </div>
-        </div>
-        <hr className="border border-[#ebecef]" />
-        <div className="grid grid-cols-1 md:grid-cols-1 gap-3">
-          <div className="flex flex-col gap-2">
-            <p className="font-semibold text-[16px] text-gray-700">
-              Address of Correspondence
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <Select
-                label="Country"
-                placeholder="Select Country"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="!shadow-none"
-                searchable={true}
-                data={[{ label: "India", value: "101" }]}
-                value={correspondenceCountry}
-                onChange={updateCorrespondenceCountry}
-                error={correspondenceCountryError}
-              />
-              <Select
-                label="State"
-                placeholder="Select State"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="!shadow-none"
-                searchable={true}
-                data={stateData}
-                value={correspondenceState}
-                onChange={updateCorrespondenceState}
-                error={correspondenceStateError}
-              />
-              <Select
-                label="City"
-                placeholder="Select City"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="!shadow-none"
-                searchable={true}
-                data={correspondenceCityData}
-                value={correspondenceCity}
-                onChange={updateCorrespondenceCity}
-                error={correspondenceCityError}
-              />
-              <Textinput
-                label="Address"
-                placeholder="Enter your Address"
-                labelClassName="text-sm font-medium text-gray-600 !mb-1"
-                // inputClassName="shadow-sm !bg-white"
-                value={correspondenceAddress}
-                onChange={updateCorrespondenceAddress}
-                error={correspondenceAddressError}
-              />
-              <Textinput
-                label="Pin Code"
-                labelClassName="text-sm font-medium text-gray-600 !mb-1"
-                // inputClassName="shadow-sm bg-white"
-                placeholder="Enter your pincode"
-                value={correspondencePincode}
-                onChange={updateCorrespondencePincode}
-                error={correspondencePincodeError}
+        {/* Lead Preferences */}
+        <div className="flex flex-col gap-4 pt-4 border-t">
+          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Lead Preferences</h3>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Lead Status</Label>
+              <Select value={leadStatus} onValueChange={updateLeadStatus}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Warm">Warm</SelectItem>
+                  <SelectItem value="Cold">Cold</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Bedroom Preference</Label>
+              <Input
+                placeholder="e.g., 2BHK, 3BHK"
+                value={bedroom}
+                onChange={updateBedroom}
               />
             </div>
-            <div className="mt-2 flex items-center gap-2">
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Minimum Budget</Label>
+              <Input
+                type="number"
+                placeholder="Enter min budget"
+                value={minBudget}
+                onChange={updateMinBudget}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Maximum Budget</Label>
+              <Input
+                type="number"
+                placeholder="Enter max budget"
+                value={maxBudget}
+                onChange={updateMaxBudget}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Purpose</Label>
+              <Select value={purpose} onValueChange={updatePurpose}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Purpose" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Enduse">End Use</SelectItem>
+                  <SelectItem value="Investment">Investment</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Funding</Label>
+              <Select value={funding} onValueChange={updateFunding}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Funding Type" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Homeloan">Home Loan</SelectItem>
+                  <SelectItem value="Bankloan">Bank Loan</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Lead Age (Days)</Label>
+              <Input
+                type="number"
+                placeholder="Enter lead age in days"
+                value={leadAge}
+                onChange={updateLeadAge}
+              />
+            </div>
+
+            {/* <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Country of Citizenship</Label>
+              <Select value={countryOfCitizenship} onValueChange={updateCountryOfCitizenship}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countryNames.map((c) => (
+                    <SelectItem key={c.value} value={String(c.value)}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Country of Residence</Label>
+              <Select value={countryOfResidence} onValueChange={updateCountryOfResidence}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Country" />
+                </SelectTrigger>
+                <SelectContent>
+                  {countryNames.map((c) => (
+                    <SelectItem key={c.value} value={String(c.value)}>{c.label}</SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">POA Holder Status</Label>
+              <Select value={holderPoa} onValueChange={updateHolderPoa}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="Resident">Resident</SelectItem>
+                  <SelectItem value="NRI">NRI</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Name of POA Holder</Label>
+              <Input
+                placeholder="Enter POA Holder Name"
+                value={nameOfPoa}
+                onChange={updateNameOfPoa}
+              />
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <Label className="text-neutral-700 font-medium">Have you owned Abode home?</Label>
+              <Select value={haveYouOwnedAbode} onValueChange={updateHaveYouOwnedAbode}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select Option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="true">Yes</SelectItem>
+                  <SelectItem value="false">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div> */}
+
+            {haveYouOwnedAbode === "true" && (
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Project Name</Label>
+                <Input
+                  placeholder="Enter Project Name"
+                  value={ifOwnedProjectName}
+                  onChange={updateIfOwnedProjectName}
+                />
+              </div>
+            )}
+          </div>
+        </div>
+
+
+        {/* Lead Address */}
+        <div className="flex flex-col gap-4 pt-4 border-t">
+          <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Lead Address</h3>
+
+          <div className="flex flex-col gap-6">
+            {/* Correspondence Address */}
+            <div className="flex flex-col gap-4">
+              <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Correspondence Address</h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <Label className="text-neutral-700 font-medium">Country</Label>
+                  <Select value={correspondenceCountry} onValueChange={updateCorrespondenceCountry}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select Country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="101">India</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="text-neutral-700 font-medium">State</Label>
+                  <Select value={correspondenceState} onValueChange={updateCorrespondenceState}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select State" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {stateData.map((s) => (
+                        <SelectItem key={s.value} value={String(s.value)}>{s.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="text-neutral-700 font-medium">City</Label>
+                  <Select value={correspondenceCity} onValueChange={updateCorrespondenceCity}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select City" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {correspondenceCityData.map((c) => (
+                        <SelectItem key={c.value} value={String(c.value)}>{c.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="flex flex-col gap-1.5 md:col-span-2">
+                  <Label className="text-neutral-700 font-medium">Address</Label>
+                  <Textarea
+                    placeholder="Enter correspondence address"
+                    value={correspondenceAddress}
+                    onChange={updateCorrespondenceAddress}
+                    className="min-h-[80px]"
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="text-neutral-700 font-medium">Pin Code</Label>
+                  <Input
+                    placeholder="Enter pin code"
+                    value={correspondencePincode}
+                    onChange={updateCorrespondencePincode}
+                  />
+                </div>
+                {/* <div className="flex flex-col gap-1.5">
+                  <Label className="text-neutral-700 font-medium">Years at Address</Label>
+                  <Input
+                    type="number"
+                    placeholder="Years at address"
+                    value={noOfYearsCorrespondenceAddress}
+                    onChange={updateNoOfYearsCorrespondenceAddress}
+                  />
+                </div>
+                <div className="flex flex-col gap-1.5">
+                  <Label className="text-neutral-700 font-medium">Years in City</Label>
+                  <Input
+                    type="number"
+                    placeholder="Years in city"
+                    value={noOfYearsCity}
+                    onChange={updateNoOfYearsCity}
+                  />
+                </div> */}
+              </div>
+            </div>
+
+            <div className="flex items-center gap-2 py-2">
               <input
                 type="checkbox"
-                id="sameAddress"
-                className="w-4 h-4"
+                id="isSameAddress"
                 checked={isSameAddress}
                 onChange={(e) => handleIsSameAddress(e.target.checked)}
+                className="w-4 h-4 text-blue-600 rounded border-gray-300 focus:ring-blue-500"
               />
-              <label htmlFor="sameAddress" className="text-sm text-gray-700">
-                Is your present address also your permanent address?
-              </label>
+              <Label htmlFor="isSameAddress" className="text-sm font-medium text-gray-700 cursor-pointer">
+                Permanent Address same as Correspondence Address
+              </Label>
             </div>
+
+            {/* Permanent Address */}
+            {!isSameAddress && (
+              <div className="flex flex-col gap-4">
+                <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Permanent Address</h4>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-neutral-700 font-medium">Country</Label>
+                    <Select value={permanentCountry} onValueChange={updatePermanentCountry}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select Country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="101">India</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-neutral-700 font-medium">State</Label>
+                    <Select value={permanentState} onValueChange={updatePermanentState}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select State" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {stateData.map((s) => (
+                          <SelectItem key={s.value} value={String(s.value)}>{s.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-neutral-700 font-medium">City</Label>
+                    <Select value={permanentCity} onValueChange={updatePermanentCity}>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select City" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {permanentCityData.map((c) => (
+                          <SelectItem key={c.value} value={String(c.value)}>{c.label}</SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="flex flex-col gap-1.5 md:col-span-2">
+                    <Label className="text-neutral-700 font-medium">Address</Label>
+                    <Textarea
+                      placeholder="Enter permanent address"
+                      value={permanentAddress}
+                      onChange={updatePermanentAddress}
+                      className="min-h-[80px]"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5">
+                    <Label className="text-neutral-700 font-medium">Pin Code</Label>
+                    <Input
+                      placeholder="Enter pin code"
+                      value={permanentPincode}
+                      onChange={updatePermanentPincode}
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
-          <div className="flex flex-col gap-2">
-            <p className="font-semibold text-[16px] text-gray-700">
-              Permanent Address
-            </p>
-            <div className="grid grid-cols-3 gap-2">
-              <Select
-                label="Country"
-                placeholder="Select Country"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="!shadow-none"
-                searchable={true}
-                data={[{ label: "India", value: "101" }]}
-                value={permanentCountry}
-                onChange={updatePermanentCountry}
-                error={permanentCountryError}
-              />
-              <Select
-                label="State"
-                placeholder="Select State"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="!shadow-none"
-                searchable={true}
-                data={stateData}
-                value={permanentState}
-                onChange={updatePermanentState}
-                error={permanentStateError}
-              />
-              <Select
-                label="City"
-                placeholder="Select City"
-                labelClass="text-sm font-medium text-gray-600 mb-1"
-                dropDownClass="overflow-y-hidden"
-                selectWrapperClass="!shadow-none"
-                searchable={true}
-                data={permanentCityData}
-                value={permanentCity}
-                onChange={updatePermanentCity}
-                error={permanentCityError}
-              />
-              <Textinput
-                label="Address"
-                placeholder="Enter your Address"
-                labelClassName="text-sm font-medium text-gray-600 !mb-1"
-                // inputClassName="shadow-sm !bg-white"
-                value={permanentAddress}
-                onChange={updatePermanentAddress}
-                error={permanentAddressError}
-              />
-              <Textinput
-                label="Pin Code"
-                labelClassName="text-sm font-medium text-gray-600 !mb-1"
-                // inputClassName="shadow-sm bg-white"
-                placeholder="Enter your pincode"
-                value={permanentPincode}
-                onChange={updatePermanentPincode}
-                error={permanentPincodeError}
-              />
-            </div>
-          </div>
-        </div> */}
-        <div className="flex justify-end mt-auto">
-          <Link
+        </div>
+
+        <div className="flex justify-end gap-3 pt-6 border-t">
+          <Button
+            variant="outline"
+            onClick={() => navigate("/leads")}
+            type="button"
+          >
+            Cancel
+          </Button>
+          <Button
             onClick={handleSubmit}
             disabled={isLoadingEffect}
-            className="px-4 py-2 text-[14px] font-semibold text-white bg-[#0083bf] rounded cursor-pointer"
+            className="bg-[#044093] hover:bg-[#033271] text-white px-8"
           >
-            Submit
-          </Link>
+            {isLoadingEffect ? "Updating..." : "Update Lead"}
+          </Button>
         </div>
       </div>
-
-      {isLoadingEffect && (
-        <div className="fixed inset-0 bg-[#2b2b2bcc]  flex justify-center items-center">
-          <Loadingoverlay visible={isLoadingEffect} overlayBg="" />
-        </div>
-      )}
 
       {errorMessage && (
         <Errorpanel
@@ -1621,8 +1587,6 @@ function Editleadwrapper() {
           setErrorMessages={setErrorMessage}
         />
       )}
-
-      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 }

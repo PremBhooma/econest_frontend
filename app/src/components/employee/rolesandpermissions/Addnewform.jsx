@@ -76,7 +76,7 @@ function Addnewform({ reloadGetroledata }) {
   };
 
   return (
-    <div className="flex flex-col gap-5 border border-neutral-200 rounded-xl bg-white p-5 shadow-sm">
+    <div className="flex flex-col gap-5 border border-neutral-200 rounded-md bg-white p-4">
       <div className="flex items-center gap-2">
         {/* Optional Icon if needed, but keeping it clean for now */}
         <p className="text-neutral-900 text-lg font-semibold">
@@ -92,10 +92,10 @@ function Addnewform({ reloadGetroledata }) {
           name="rolename"
           value={roleName}
           onChange={updateRoleName}
-          className={`w-full px-3 py-2.5 border rounded-lg text-sm transition-all duration-200 outline-none
+          className={`w-full px-3 py-2 border rounded-md text-sm transition-all duration-200 outline-none
             ${roleNameError
               ? "border-red-500 focus:ring-red-100 placeholder-red-300"
-              : "border-neutral-300 focus:border-[#0083bf] focus:ring-4 focus:ring-[#0083bf]/10 placeholder-neutral-400"
+              : "border-neutral-300 focus:border-[#0083bf] placeholder-neutral-400"
             }`}
         />
         {roleNameError && (
@@ -106,13 +106,13 @@ function Addnewform({ reloadGetroledata }) {
       <button
         onClick={submiteRoleName}
         disabled={isLoading}
-        className="cursor-pointer flex justify-center w-full items-center gap-2 px-4 py-2.5 rounded-lg bg-white border border-[#0083bf] text-[#0083bf] hover:bg-[#0083bf] hover:text-white shadow-sm transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed group"
+        className="cursor-pointer flex justify-center w-full items-center gap-2 px-4 py-2 rounded-md bg-white border border-[#0083bf] text-[#0083bf] hover:bg-[#0083bf] hover:text-white transition-all duration-200 disabled:opacity-70 disabled:cursor-not-allowed group"
       >
         <p className="text-sm font-semibold">{isLoading ? 'Adding...' : 'Submit'}</p>
       </button>
 
       {isLoading && (
-        <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px] rounded-xl z-10">
+        <div className="absolute inset-0 flex items-center justify-center bg-white/50 backdrop-blur-[1px] rounded-md z-10">
           <div className="w-6 h-6 border-2 border-[#0083bf] border-t-transparent rounded-full animate-spin"></div>
         </div>
       )}
