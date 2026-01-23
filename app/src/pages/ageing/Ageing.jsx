@@ -168,7 +168,9 @@ function Ageing() {
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[100px] border-b border-r border-neutral-200">Total Payment</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[120px] border-b border-r border-neutral-200">Loan Status</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[140px] border-b border-r border-neutral-200">Reg. Status</th>
-                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[75px] text-center sticky right-0 z-20 bg-gray-50 border-b border-l border-neutral-200">Action</th>
+                {permissions?.ageing_page?.includes("view_ageing_details") && (
+                  <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[75px] text-center sticky right-0 z-20 bg-gray-50 border-b border-l border-neutral-200">Action</th>
+                )}
               </tr>
             </thead>
             <tbody className="bg-white">
@@ -254,15 +256,18 @@ function Ageing() {
                       </span>
                     </td>
 
+
                     {/* Action */}
-                    <td className="px-3 py-2 text-center sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-b border-l border-neutral-200">
-                      <button
-                        onClick={() => openDetails(record)}
-                        className="p-1.5 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
-                      >
-                        <IconEye size={18} />
-                      </button>
-                    </td>
+                    {permissions?.ageing_page?.includes("view_ageing_details") && (
+                      <td className="px-3 py-2 text-center sticky right-0 z-10 bg-white group-hover:bg-neutral-50 border-b border-l border-neutral-200">
+                        <button
+                          onClick={() => openDetails(record)}
+                          className="p-1.5 text-neutral-500 hover:text-blue-600 hover:bg-blue-50 rounded-lg transition-colors cursor-pointer"
+                        >
+                          <IconEye size={18} />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))
               ) : (

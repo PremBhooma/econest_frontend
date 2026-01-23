@@ -160,6 +160,7 @@ function Sharedpermissionlist({
                 <div className="flex flex-wrap gap-4 mt-3">
                     {[
                         { value: "update_loan_details", label: "Update Loan Details" },
+                        { value: "view_ageing_details", label: "Ageing Details" }
                     ].map((item) => (
                         <label key={item.value} className="inline-flex items-center">
                             <input

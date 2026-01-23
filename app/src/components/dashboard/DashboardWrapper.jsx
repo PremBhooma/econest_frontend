@@ -401,9 +401,9 @@ function DashboardWrapper() {
             </div>
           ))}
         </div>
-
-        <Ageingrecord />
-
+        {permissions?.main_page?.includes("ageing_page") && (
+          <Ageingrecord />
+        )}
         {/* Divide Sections */}
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
 

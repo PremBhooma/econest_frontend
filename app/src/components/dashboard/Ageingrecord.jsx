@@ -3,8 +3,10 @@ import { IconEye, IconClock } from '@tabler/icons-react';
 import Ageingrecordapi from '../api/Ageingrecordapi';
 import Ageingrecorddetails from './Ageingrecorddetails';
 import { Link } from 'react-router';
+import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
 
 const Ageingrecord = () => {
+  const permissions = useEmployeeDetails((state) => state.permissions);
   const [records, setRecords] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
@@ -112,7 +114,9 @@ const Ageingrecord = () => {
                   <th className="px-4 py-3 w-[14%]">Total Payment</th>
                   <th className="px-4 py-3 w-[12%]">Loan Status</th>
                   <th className="px-4 py-3 w-[14%]">Reg. Status</th>
-                  <th className="px-4 py-3 w-[6%] text-center">Action</th>
+                  {permissions?.ageing_page?.includes("view_ageing_details") && (
+                    <th className="px-4 py-3 w-[6%] text-center">Action</th>
+                  )}
                 </tr>
               </thead>
               <tbody className="divide-y divide-neutral-100">
@@ -180,14 +184,16 @@ const Ageingrecord = () => {
                         {record.registration_status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-center">
-                      <button
-                        onClick={() => openRecordDetails(record)}
-                        className="p-1.5 cursor-pointer text-neutral-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-all"
-                      >
-                        <IconEye size={16} />
-                      </button>
-                    </td>
+                    {permissions?.ageing_page?.includes("view_ageing_details") && (
+                      <td className="px-4 py-3 text-center">
+                        <button
+                          onClick={() => openRecordDetails(record)}
+                          className="p-1.5 cursor-pointer text-neutral-400 hover:text-amber-600 hover:bg-amber-50 rounded-md transition-all"
+                        >
+                          <IconEye size={16} />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 ))}
               </tbody>

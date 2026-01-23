@@ -34,6 +34,7 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
       if (value.includes('ageing_page')) {
         const defaults = [
           'update_loan_details',
+          'view_ageing_details'
         ];
         setAgeingPage(prev => [...new Set([...prev, ...defaults])]);
       } else {

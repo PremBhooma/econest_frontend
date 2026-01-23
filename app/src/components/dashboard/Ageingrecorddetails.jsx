@@ -6,8 +6,10 @@ import { Button } from "@/components/ui/button";
 import { Modal } from '@nayeshdaggula/tailify';
 import Ageingrecordapi from '../api/Ageingrecordapi';
 import { toast } from 'react-toastify';
+import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
 
 const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onRecordUpdate }) => {
+  const permissions = useEmployeeDetails((state) => state.permissions);
   const [isLoading, setIsLoading] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [localRecord, setLocalRecord] = useState(null);
@@ -280,16 +282,18 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
 
               {/* Loan Status Section */}
               <div className="px-6 py-4 border-b border-gray-200">
-                <div className="flex items-center justify-between mb-3">
-                  <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Loan Details</h4>
-                  <button
-                    onClick={() => setUpdateModalOpen(true)}
-                    className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors cursor-pointer"
-                  >
-                    <IconEdit size={14} />
-                    Update
-                  </button>
-                </div>
+                {permissions?.ageing_page?.includes("update_loan_details") && (
+                  <div className="flex items-center justify-between mb-3">
+                    <h4 className="text-sm font-semibold text-gray-700 uppercase tracking-wider">Loan Details</h4>
+                    <button
+                      onClick={() => setUpdateModalOpen(true)}
+                      className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-amber-700 bg-amber-50 hover:bg-amber-100 rounded-lg transition-colors cursor-pointer"
+                    >
+                      <IconEdit size={14} />
+                      Update
+                    </button>
+                  </div>
+                )}
 
                 <div className="space-y-1">
                   <div className="flex items-center justify-between py-2">
