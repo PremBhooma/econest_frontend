@@ -441,7 +441,7 @@ function DashboardWrapper() {
                       <span className="text-sm font-semibold text-neutral-900 group-hover:text-blue-600 transition-colors truncate">
                         {lead.prefixes} {lead.full_name}
                       </span>
-                      <span className="text-xs text-neutral-500 truncate block max-w-[150px] sm:max-w-[200px]">
+                      <span className="text-xs text-neutral-500  block max-w-[150px] sm:max-w-[200px] break-all">
                         {lead.email}
                       </span>
                     </div>
