@@ -9,6 +9,7 @@ function Sharedpermissionlist({
     flatsPage, updateFlatsPage,
     leadsPage, updateLeadsPage,
     paymentsPage, updatePaymentsPage,
+    ageingPage, updateAgeingPage,
     groupOwnerDefaultPage, updateGroupOwnerDefaultPage,
 }) {
     // Handler functions for checkbox changes
@@ -37,6 +38,15 @@ function Sharedpermissionlist({
             ? [...customersPage, value]
             : customersPage.filter(item => item !== value);
         updateCustomersPage(newCustomersPage);
+    };
+
+    const handleAgeingPageChange = (e) => {
+        const value = e.target.value;
+        const isChecked = e.target.checked;
+        const newAgeingPage = isChecked
+            ? [...ageingPage, value]
+            : ageingPage.filter(item => item !== value);
+        updateAgeingPage(newAgeingPage);
     };
 
     const handleLeadsPageChange = (e) => {
@@ -92,6 +102,7 @@ function Sharedpermissionlist({
                 <div className="flex flex-wrap gap-4">
                     {[
                         { value: "employee_page", label: "Employees" },
+                        { value: "ageing_page", label: "Ageing" },
                         { value: "leads_page", label: "Leads" },
                         { value: "flats_page", label: "Flats" },
                         { value: "customers_page", label: "Customers" },
@@ -139,6 +150,31 @@ function Sharedpermissionlist({
                     ))}
                 </div>
             </div>
+
+            <hr className="my-4 border-gray-200" />
+
+
+            <div className="mb-6">
+                <p className='font-bold text-sm mb-2'>Ageing Page</p>
+                <hr className="my-2 border-gray-200" />
+                <div className="flex flex-wrap gap-4 mt-3">
+                    {[
+                        { value: "update_loan_details", label: "Update Loan Details" },
+                    ].map((item) => (
+                        <label key={item.value} className="inline-flex items-center">
+                            <input
+                                type="checkbox"
+                                className="form-checkbox h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                                value={item.value}
+                                checked={ageingPage?.includes(item.value)}
+                                onChange={handleAgeingPageChange}
+                            />
+                            <span className="ml-2 text-sm">{item.label}</span>
+                        </label>
+                    ))}
+                </div>
+            </div>
+
 
             <hr className="my-4 border-gray-200" />
 
@@ -228,8 +264,6 @@ function Sharedpermissionlist({
                 </div>
             </div>
             <hr className="my-4 border-gray-200" />
-
-
 
             {/* //Customers section */}
             <div className="mb-6">

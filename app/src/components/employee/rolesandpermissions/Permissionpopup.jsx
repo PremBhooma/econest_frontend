@@ -30,6 +30,17 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
       }
     }
 
+    if (value.includes('ageing_page') !== mainPages?.includes('ageing_page')) {
+      if (value.includes('ageing_page')) {
+        const defaults = [
+          'update_loan_details',
+        ];
+        setAgeingPage(prev => [...new Set([...prev, ...defaults])]);
+      } else {
+        setAgeingPage([]);
+      }
+    }
+
     if (value.includes('leads_page') !== mainPages?.includes('leads_page')) {
       if (value.includes('leads_page')) {
         const defaults = [
@@ -197,6 +208,16 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
     }
   };
 
+  const [ageingPage, setAgeingPage] = useState([]);
+  const updateAgeingPage = (value) => {
+    setAgeingPage(value);
+    if (value.length > 0 && !(mainPages || []).includes('ageing_page')) {
+      setMainPages([...(mainPages || []), 'ageing_page']);
+    } else if (value.length === 0 && (mainPages || []).includes('ageing_page')) {
+      setMainPages((mainPages || []).filter(page => page !== 'ageing_page'));
+    }
+  };
+
   const [leadsPage, setLeadsPage] = useState([]);
   const updateLeadsPage = (value) => {
     setLeadsPage(value);
@@ -272,6 +293,7 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
       paymentsPage: paymentsPage,
       settingsPage: settingsPage,
       groupOwnerDefaultPage: groupOwnerDefaultPage,
+      ageingPage: ageingPage,
       roleId: roleId
     }, {
       headers: {
@@ -319,6 +341,7 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
         let permissions = data.permissionsData;
         setMainPages(permissions?.main_page ? permissions?.main_page : []);
         setEmployeePage(permissions?.employee_page ? permissions?.employee_page : []);
+        setAgeingPage(permissions?.ageing_page ? permissions?.ageing_page : []);
         setPaymentsPage(permissions?.payments_page ? permissions?.payments_page : []);
         setLeadsPage(permissions?.leads_page ? permissions?.leads_page : []);
         setFlatsPage(permissions?.flats_page ? permissions?.flats_page : []);
@@ -389,6 +412,9 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
 
             paymentsPage={paymentsPage ? paymentsPage : []}
             updatePaymentsPage={updatePaymentsPage}
+
+            ageingPage={ageingPage ? ageingPage : []}
+            updateAgeingPage={updateAgeingPage}
 
             groupOwnerDefaultPage={groupOwnerDefaultPage ? groupOwnerDefaultPage : []}
             updateGroupOwnerDefaultPage={updateGroupOwnerDefaultPage}
