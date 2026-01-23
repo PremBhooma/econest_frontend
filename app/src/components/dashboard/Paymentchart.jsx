@@ -91,10 +91,10 @@ const Paymentchart = () => {
 
   return (
     <div className="p-5 rounded-xl bg-white shadow-sm border border-neutral-200 h-full">
-      <div className="flex items-center justify-between mb-6">
-        <h2 className="text-lg font-semibold text-neutral-900">Revenue</h2>
+      <div className="w-full grid grid-cols-2 mb-6">
+        <h2 className="col-span-1 text-lg font-semibold text-neutral-900">Revenue</h2>
         <select
-          className="border rounded p-2"
+          className="border rounded p-2 col-span-1"
           value={selectedYear}
           onChange={(e) => setSelectedYear(Number(e.target.value))}
         >
