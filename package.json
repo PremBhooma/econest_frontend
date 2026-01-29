@@ -4,6 +4,7 @@
   "description": "Econest CRM",
   "main": "index.js",
   "scripts": {
+    "build": "cd app && npm install && npm run build",
     "dev": "cross-env NODE_ENV=development concurrently \"npm run dev:vite\" \"npm run dev:electron\"",
     "dev:vite": "cd app && npx vite",
     "dev:electron": "wait-on http://localhost:5173 && electron .",
