@@ -308,6 +308,21 @@ const Addnewlead = () => {
   const [leadAge, setLeadAge] = useState("");
   const updateLeadAge = (e) => setLeadAge(e.target.value);
 
+  const [leadStageId, setLeadStageId] = useState("");
+  const [leadStagesData, setLeadStagesData] = useState([]);
+  const [selectedLeadStageName, setSelectedLeadStageName] = useState("");
+
+  const updateLeadStage = (value) => {
+    setLeadStageId(value);
+    const selectedStage = leadStagesData.find(stage => stage.id.toString() === value);
+    const stageName = selectedStage ? selectedStage.name : "";
+    setSelectedLeadStageName(stageName);
+
+    // clear lead status if stage is Not Interested (or just handled by visibility, but good to reset logic if needed)
+    // The requirement says: if Interested/New Lead show, if Not Interested hide.
+    // If hidden, we might want to clear it, but maybe not strictly required.
+  };
+
   const [stateData, setStateData] = useState([]);
   const [correspondenceCityData, setCorrespondenceCityData] = useState([]);
   const [permanentCityData, setPermanentCityData] = useState([]);
@@ -595,6 +610,20 @@ const Addnewlead = () => {
       });
   }
 
+
+  async function getLeadStages() {
+    try {
+      const response = await Settingsapi.get("/get-lead-stages", {
+        params: { limit: 100 }
+      });
+      if (response?.data?.status === "success") {
+        setLeadStagesData(response.data.data || []);
+      }
+    } catch (error) {
+      console.error("Error fetching lead stages:", error);
+    }
+  }
+
   useEffect(() => {
     if (correspondenceState) {
       getCities(correspondenceState)
@@ -631,6 +660,7 @@ const Addnewlead = () => {
     fetchCountryNames();
     getEmployees();
     getStates(101);
+    getLeadStages();
   }, []);
 
   const handleSubmit = async () => {
@@ -775,7 +805,9 @@ const Addnewlead = () => {
         bedroom: bedroom || null,
         purpose: purpose || null,
         funding: funding || null,
+
         lead_age: leadAge ? parseInt(leadAge) : null,
+        lead_stage_id: leadStageId || null,
       }, {
         headers: {
           "Content-Type": "application/json",
@@ -1096,17 +1128,33 @@ const Addnewlead = () => {
           <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Lead Preferences</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex flex-col gap-1.5">
-              <Label className="text-neutral-700 font-medium">Lead Status</Label>
-              <Select value={leadStatus} onValueChange={updateLeadStatus}>
+              <Label className="text-neutral-700 font-medium">Lead Stage</Label>
+              <Select value={leadStageId} onValueChange={updateLeadStage}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Status" />
+                  <SelectValue placeholder="Select Stage" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Warm">Warm</SelectItem>
-                  <SelectItem value="Cold">Cold</SelectItem>
+                  {leadStagesData.map((stage) => (
+                    <SelectItem key={stage.id} value={String(stage.id)}>{stage.name}</SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {["Interested", "New Lead"].includes(selectedLeadStageName) && (
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Lead Status</Label>
+                <Select value={leadStatus} onValueChange={updateLeadStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Warm">Warm</SelectItem>
+                    <SelectItem value="Cold">Cold</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="flex flex-col gap-1.5">
               <Label className="text-neutral-700 font-medium">Bedroom Preference</Label>

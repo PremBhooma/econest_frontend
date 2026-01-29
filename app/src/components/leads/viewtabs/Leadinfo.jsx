@@ -6,12 +6,14 @@ const Leadinfo = ({ leadData }) => {
             <div className="flex flex-col gap-3">
                 <h3 className="text-md font-semibold text-gray-900">Lead Preferences</h3>
                 <div className="w-full grid grid-cols-3 gap-4">
-                    <div className="flex flex-col gap-y-1">
-                        <p className="text-sm text-gray-600">Lead Status</p>
-                        <p className={`text-sm font-semibold break-all ${leadData?.lead_status === 'Warm' ? 'text-orange-500' : leadData?.lead_status === 'Cold' ? 'text-blue-500' : 'text-gray-900'}`}>
-                            {leadData?.lead_status || "---"}
-                        </p>
-                    </div>
+                    {["Interested", "New Lead"].includes(leadData?.lead_stage_name) && (
+                        <div className="flex flex-col gap-y-1">
+                            <p className="text-sm text-gray-600">Lead Status</p>
+                            <p className={`text-sm font-semibold break-all ${leadData?.lead_status === 'Warm' ? 'text-orange-500' : leadData?.lead_status === 'Cold' ? 'text-blue-500' : 'text-gray-900'}`}>
+                                {leadData?.lead_status || "---"}
+                            </p>
+                        </div>
+                    )}
                     <div className="flex flex-col gap-y-1">
                         <p className="text-sm text-gray-600">Budget Range</p>
                         <p className="text-sm text-gray-900 font-semibold break-all">

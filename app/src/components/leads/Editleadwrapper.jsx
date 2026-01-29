@@ -293,12 +293,45 @@ function Editleadwrapper() {
     setHaveYouOwnedAbodeError("");
   };
 
+
   const [ifOwnedProjectName, setIfOwnedProjectName] = useState("");
   const [ifOwnedProjectNameError, setIfOwnedProjectNameError] = useState("");
   const updateIfOwnedProjectName = (e) => {
     setIfOwnedProjectName(e.target.value);
     setIfOwnedProjectNameError("");
   };
+
+  // Lead Stage State
+  const [leadStageId, setLeadStageId] = useState("");
+  const [leadStagesData, setLeadStagesData] = useState([]);
+  const [selectedLeadStageName, setSelectedLeadStageName] = useState("");
+
+  const updateLeadStage = (value) => {
+    setLeadStageId(value);
+    const selectedStage = leadStagesData.find((stage) => String(stage.id) === String(value));
+    if (selectedStage) {
+      setSelectedLeadStageName(selectedStage.name);
+    }
+  };
+
+  async function getLeadStages() {
+    try {
+      const response = await Settingsapi.get("/get-lead-stages", {
+        params: { limit: 100 }
+      });
+      if (response?.data?.status === "success") {
+        const uniqueStages = Array.from(new Map((response.data.data || []).map(item => [item.id, item])).values());
+        setLeadStagesData(uniqueStages);
+      }
+    } catch (error) {
+      console.error("Error fetching lead stages:", error);
+    }
+  }
+
+  useEffect(() => {
+    getLeadStages();
+  }, []);
+
 
   // New Lead Schema Fields
   const [leadStatus, setLeadStatus] = useState("");
@@ -489,7 +522,8 @@ function Editleadwrapper() {
           setIsLoadingEffect(false);
           return;
         }
-        setStateData(data?.data || []);
+        const uniqueStates = Array.from(new Map((data?.data || []).map(item => [item.value, item])).values());
+        setStateData(uniqueStates);
         setIsLoadingEffect(false);
       })
       .catch((error) => {
@@ -535,7 +569,8 @@ function Editleadwrapper() {
           setIsLoadingEffect(false);
           return;
         }
-        setEmployeeData(data?.employees || []);
+        const uniqueEmployees = Array.from(new Map((data?.employees || []).map(item => [item.value, item])).values());
+        setEmployeeData(uniqueEmployees);
         setIsLoadingEffect(false);
       })
       .catch((error) => {
@@ -565,7 +600,8 @@ function Editleadwrapper() {
             setErrorMessage(res?.data?.message || "");
           }
 
-          setCorrespondenceCityData(res?.data?.data || []);
+          const uniqueCities = Array.from(new Map((res?.data?.data || []).map(item => [item.value, item])).values());
+          setCorrespondenceCityData(uniqueCities);
         })
         .catch((err) => setErrorMessage(err.message));
     } else {
@@ -580,7 +616,8 @@ function Editleadwrapper() {
           if (res?.data?.status === "error") {
             setErrorMessage(res?.data?.message || "");
           }
-          setPermanentCityData(res?.data?.data || []);
+          const uniqueCities = Array.from(new Map((res?.data?.data || []).map(item => [item.value, item])).values());
+          setPermanentCityData(uniqueCities);
         })
         .catch((err) => setErrorMessage(err.message));
     } else {
@@ -604,7 +641,8 @@ function Editleadwrapper() {
         setIsLoadingEffect(false);
         return false;
       }
-      setCountryCodes(data.countrydata || []);
+      const uniqueCountryCodes = Array.from(new Map((data.countrydata || []).map(item => [item.value, item])).values());
+      setCountryCodes(uniqueCountryCodes);
       setIsLoadingEffect(false);
       return true;
     } catch (error) {
@@ -632,7 +670,8 @@ function Editleadwrapper() {
         setIsLoadingEffect(false);
         return false;
       }
-      setCountryNames(data?.countryNames || []);
+      const uniqueCountryNames = Array.from(new Map((data?.countryNames || []).map(item => [item.value, item])).values());
+      setCountryNames(uniqueCountryNames);
       setIsLoadingEffect(false);
       return true;
     } catch (error) {
@@ -745,6 +784,22 @@ function Editleadwrapper() {
           setPurpose(data?.data?.purpose || "");
           setFunding(data?.data?.funding || "");
           setLeadAge(data?.data?.lead_age !== null ? String(data?.data?.lead_age) : "");
+
+          if (data?.data?.lead_stage_id) {
+            setLeadStageId(String(data?.data?.lead_stage_id));
+            // We need to set the name based on the ID, but leadStagesData might not be loaded yet or we need to find it from the list. 
+            // Better to rely on the effect that runs when leadStagesData changes or just find it if available.
+            // Alternatively, if the API returns the stage name, we can use that too.
+            // Assuming data.data.lead_stage_name exists from the joined query, similar to Leadview.
+            if (data?.data?.lead_stage_name) {
+              setSelectedLeadStageName(data?.data?.lead_stage_name);
+            } else {
+              // Fallback: try to find in loaded stages if available immediately (unlikely due to async)
+              // or let the user select it.
+              // Actually, we can update the name in an effect if needed, or just finding it when rendering if critical logic depends on it.
+              // The logic depends on selectedLeadStageName.
+            }
+          }
         }
         setIsLoadingEffect(false);
         return false;
@@ -769,7 +824,7 @@ function Editleadwrapper() {
       });
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     setIsLoadingEffect(true);
 
     if (prefixes === "") {
@@ -861,68 +916,69 @@ function Editleadwrapper() {
     //   }
     // }
 
-    Leadapi.post("edit-lead", {
-      leadUuid: leadUuid,
-      prefixes: prefixes,
-      full_name: fullName,
-      email: email,
-      email_2: email2,
-      phone_code: phoneCode,
-      phone_number: phoneNumber,
-      employee_id: employee,
-      sourse_of_lead: sourseOfLead,
-      gender: gender,
-      landline_country_code: landlineCountryCode,
-      landline_city_code: landlineCityCode,
-      landline_number: landlineNumber,
-      date_of_birth: dateOfBirth,
-      father_name: fatherName,
-      spouse_prefixes: spousePrefix,
-      spouse_name: spouseName,
-      marital_status: maritalStatus,
-      number_of_children: Number(numberOfChildren),
-      wedding_aniversary: weddingAniversary,
-      spouse_dob: spouseDob,
-      pan_card_no: panCardNo,
-      aadhar_card_no: aadharCardNo,
-      country_of_citizenship: countryOfCitizenship,
-      country_of_residence: countryOfResidence,
-      mother_tongue: motherTongue,
-      name_of_poa: nameOfPoa,
-      holder_poa: holderPoa,
-      no_of_years_correspondence_address: Number(noOfYearsCorrespondenceAddress),
-      no_of_years_city: Number(noOfYearsCity),
-      have_you_owned_abode: haveYouOwnedAbode,
-      if_owned_project_name: ifOwnedProjectName,
-      correspondence_country: correspondenceCountry,
-      correspondence_state: correspondenceState,
-      correspondence_city: correspondenceCity,
-      correspondence_address: correspondenceAddress,
-      correspondence_pincode: correspondencePincode,
-      permanent_country: permanentCountry,
-      permanent_state: permanentState,
-      permanent_city: permanentCity,
-      permanent_address: permanentAddress,
-      permanent_pincode: permanentPincode,
-      employeeId: employeeId,
-      current_designation: currentDesignation,
-      name_of_current_organization: currentOrganization,
-      address_of_current_organization: organizationAddress,
-      no_of_years_work_experience: parseFloat(workExperience),
-      current_annual_income: parseFloat(annualIncome),
-      // New Lead Fields
-      lead_status: leadStatus || null,
-      min_budget: minBudget ? parseFloat(minBudget) : null,
-      max_budget: maxBudget ? parseFloat(maxBudget) : null,
-      bedroom: bedroom || null,
-      purpose: purpose || null,
-      funding: funding || null,
-      lead_age: leadAge ? parseInt(leadAge) : null,
-    }, {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
+    const payload = new FormData();
+    payload.append("leadUuid", leadUuid);
+    payload.append("prefixes", prefixes);
+    payload.append("full_name", fullName);
+    payload.append("email", email);
+    payload.append("email_2", email2);
+    payload.append("phone_code", phoneCode);
+    payload.append("phone_number", phoneNumber);
+    payload.append("employee_id", employee);
+    payload.append("sourse_of_lead", sourseOfLead);
+    payload.append("gender", gender);
+    payload.append("landline_country_code", landlineCountryCode);
+    payload.append("landline_city_code", landlineCityCode);
+    payload.append("landline_number", landlineNumber);
+    payload.append("date_of_birth", dateOfBirth);
+    payload.append("father_name", fatherName);
+    payload.append("spouse_prefixes", spousePrefix);
+    payload.append("spouse_name", spouseName);
+    payload.append("marital_status", maritalStatus);
+    payload.append("number_of_children", String(numberOfChildren));
+    payload.append("wedding_aniversary", weddingAniversary);
+    payload.append("spouse_dob", spouseDob);
+    payload.append("pan_card_no", panCardNo);
+    payload.append("aadhar_card_no", aadharCardNo);
+    payload.append("country_of_citizenship", countryOfCitizenship);
+    payload.append("country_of_residence", countryOfResidence);
+    payload.append("mother_tongue", motherTongue);
+    payload.append("name_of_poa", nameOfPoa);
+    payload.append("holder_poa", holderPoa);
+    payload.append("no_of_years_correspondence_address", String(noOfYearsCorrespondenceAddress));
+    payload.append("no_of_years_city", String(noOfYearsCity));
+    payload.append("have_you_owned_abode", haveYouOwnedAbode);
+    payload.append("if_owned_project_name", ifOwnedProjectName);
+    payload.append("correspondence_country", correspondenceCountry);
+    payload.append("correspondence_state", correspondenceState);
+    payload.append("correspondence_city", correspondenceCity);
+    payload.append("correspondence_address", correspondenceAddress);
+    payload.append("correspondence_pincode", correspondencePincode);
+    payload.append("permanent_country", permanentCountry);
+    payload.append("permanent_state", permanentState);
+    payload.append("permanent_city", permanentCity);
+    payload.append("permanent_address", permanentAddress);
+    payload.append("permanent_pincode", permanentPincode);
+    payload.append("employeeId", employeeId);
+    payload.append("current_designation", currentDesignation);
+    payload.append("name_of_current_organization", currentOrganization);
+    payload.append("address_of_current_organization", organizationAddress);
+    payload.append("no_of_years_work_experience", String(parseFloat(workExperience)));
+    payload.append("current_annual_income", String(parseFloat(annualIncome)));
+    // New Lead Fields
+    payload.append("lead_status", leadStatus || "");
+    payload.append("min_budget", minBudget ? String(parseFloat(minBudget)) : "");
+    payload.append("max_budget", maxBudget ? String(parseFloat(maxBudget)) : "");
+    payload.append("bedroom", bedroom || "");
+    payload.append("purpose", purpose);
+    payload.append("funding", funding);
+    payload.append("lead_age", leadAge);
+
+    if (leadStageId) {
+      payload.append("lead_stage_id", leadStageId);
+    }
+
+    await Leadapi.post("/edit-lead", payload)
       .then((response) => {
         const data = response.data;
         if (data.status === "error") {
@@ -1247,17 +1303,35 @@ function Editleadwrapper() {
           <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Lead Preferences</h3>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div className="flex flex-col gap-1.5">
-              <Label className="text-neutral-700 font-medium">Lead Status</Label>
-              <Select value={leadStatus} onValueChange={updateLeadStatus}>
+              <Label className="text-neutral-700 font-medium">Lead Stage</Label>
+              <Select value={leadStageId} onValueChange={updateLeadStage}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Select Status" />
+                  <SelectValue placeholder="Select Stage" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="Warm">Warm</SelectItem>
-                  <SelectItem value="Cold">Cold</SelectItem>
+                  {leadStagesData.map((stage) => (
+                    <SelectItem key={stage.id} value={String(stage.id)}>
+                      {stage.name}
+                    </SelectItem>
+                  ))}
                 </SelectContent>
               </Select>
             </div>
+
+            {["Interested", "New Lead"].includes(selectedLeadStageName) && (
+              <div className="flex flex-col gap-1.5">
+                <Label className="text-neutral-700 font-medium">Lead Status</Label>
+                <Select value={leadStatus} onValueChange={updateLeadStatus}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select Status" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="Warm">Warm</SelectItem>
+                    <SelectItem value="Cold">Cold</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
 
             <div className="flex flex-col gap-1.5">
               <Label className="text-neutral-700 font-medium">Bedroom Preference</Label>
@@ -1572,13 +1646,14 @@ function Editleadwrapper() {
             variant="outline"
             onClick={() => navigate("/leads")}
             type="button"
+            className="cursor-pointer"
           >
             Cancel
           </Button>
           <Button
             onClick={handleSubmit}
             disabled={isLoadingEffect}
-            className="bg-[#044093] hover:bg-[#033271] text-white px-8"
+            className="bg-[#044093] hover:bg-[#033271] text-white px-8 cursor-pointer"
           >
             {isLoadingEffect ? "Updating..." : "Update Lead"}
           </Button>

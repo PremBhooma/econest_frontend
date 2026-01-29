@@ -92,8 +92,8 @@ function Flatswrapper() {
   const [visibleColumns, setVisibleColumns] = useState({
     reference: true,
     customer: true,
-    groupowner: true,
-    mortgage: true,
+    // groupowner: true,
+    // mortgage: true,
     project: true,
     flatNo: true,
     block: true,
@@ -682,29 +682,20 @@ function Flatswrapper() {
                       Ref ID
                     </th>
                   )}
-                  {visibleColumns.customer && (
-                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
-                      Customer
-                    </th>
-                  )}
+
                   {/* {visibleColumns.groupowner && (
                     <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
                       Group/Owner
                     </th>
                   )} */}
-                  {visibleColumns.mortgage && (
+                  {/* {visibleColumns.mortgage && (
                     <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Mortgage
                     </th>
-                  )}
+                  )} */}
                   {visibleColumns.project && (
                     <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[200px]">
                       Project
-                    </th>
-                  )}
-                  {visibleColumns.flatNo && (
-                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
-                      Flat No
                     </th>
                   )}
                   {visibleColumns.block && (
@@ -715,6 +706,16 @@ function Flatswrapper() {
                   {visibleColumns.floorNo && (
                     <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
                       Floor No
+                    </th>
+                  )}
+                  {visibleColumns.flatNo && (
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
+                      Flat No
+                    </th>
+                  )}
+                  {visibleColumns.customer && (
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
+                      Customer
                     </th>
                   )}
                   {visibleColumns.area && (
@@ -786,6 +787,52 @@ function Flatswrapper() {
                           }
                         </td>
                       )}
+
+                      {/* {visibleColumns.groupowner && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[220px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                            {flat?.group_owner?.name ? flat?.group_owner?.name : "---"}
+                          </p>
+                        </td>
+                      )} */}
+                      {/* {visibleColumns.mortgage && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                            {flat?.mortgage === true ? "Yes" : "No"}
+                          </p>
+                        </td>
+                      )} */}
+                      {visibleColumns.project && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal">
+                            {flat?.project_name || "-"}
+                          </p>
+                        </td>
+                      )}
+                      {visibleColumns.block && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                            {flat?.block?.block_name || "---"}
+                          </p>
+                        </td>
+                      )}
+                      {visibleColumns.floorNo && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                            {flat?.floor_no || "---"}
+                          </p>
+                        </td>
+                      )}
+                      {visibleColumns.flatNo && (
+                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
+                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
+                            <NavLink to={`/flats/view-flat/${flat?.uuid}`} className="hover:text-[#0083bf] hover:underline">
+                              {flat?.flat_no || "---"}
+                            </NavLink>
+                          </p>
+                        </td>
+                      )}
+
                       {visibleColumns.customer && (
                         <td className="px-4 py-3 whitespace-normal break-words w-[220px] relative">
                           {flat?.customer ? (
@@ -811,12 +858,12 @@ function Flatswrapper() {
                                 </p>
                               )}
 
-                              {pageFlatsCount > 5 && flat?.customer &&
+                              {/* {pageFlatsCount > 5 && flat?.customer &&
                                 flat?.customer !== "N/A" &&
                                 flat?.customer_details && (
                                   <div
                                     className="absolute z-[9999] invisible opacity-0 group-hover/customer:visible group-hover/customer:opacity-100 transition-all duration-200 delay-200
-                   flex flex-col gap-2 bg-white shadow-lg border border-neutral-200 p-4 rounded-xl w-60 max-w-xs break-words"
+                                    flex flex-col gap-2 bg-white shadow-lg border border-neutral-200 p-4 rounded-xl w-60 max-w-xs break-words"
                                     style={{
                                       top:
                                         index < 3 ? "calc(100% + 5px)" : "auto",
@@ -852,66 +899,82 @@ function Flatswrapper() {
                                       </div>
                                     </div>
 
+                                    {permissions?.customers_page?.includes("view_single_customer") && (
+                                      <div className="w-full">
+                                        <Link
+                                          to={`/customers/${flat?.customer_details?.uuid}`}
+                                          className="cursor-pointer text-xs text-gray-600 hover:text-white flex justify-center items-center relative px-4 py-1.5 rounded border border-[#0083bf] hover:bg-[#0083bf] transition-colors"
+                                        >
+                                          View Customer
+                                        </Link>
+                                      </div>
+                                    )}
+                                  </div>
+                                )} */}
+
+                              {permissions?.customers_page?.includes("view_single_customer") &&
+                                pageFlatsCount > 5 &&
+                                flat?.customer &&
+                                flat?.customer !== "N/A" &&
+                                flat?.customer_details && (
+                                  <div
+                                    className="absolute z-[9999] invisible opacity-0 
+                                    group-hover/customer:visible group-hover/customer:opacity-100 
+                                    transition-all duration-200 delay-200
+                                    flex flex-col gap-2 bg-white shadow-lg border border-neutral-200 
+                                    p-4 rounded-xl w-60 max-w-xs break-words"
+                                    style={{
+                                      top: index < 3 ? "calc(100% + 5px)" : "auto",
+                                      bottom: index >= 3 ? "calc(100% + 5px)" : "auto",
+                                      left: "0",
+                                    }}
+                                  >
+                                    <div className="flex items-center gap-3 w-full">
+                                      <img
+                                        crossOrigin="anonymous"
+                                        src={
+                                          flat?.customer_details?.profile_pic_url ||
+                                          "https://i.ytimg.com/vi/qZ34Ab72xpc/hq720.jpg"
+                                        }
+                                        alt="Profile"
+                                        className="w-12 h-12 rounded-full object-cover border border-gray-300"
+                                      />
+
+                                      <div className="flex flex-col break-words w-full">
+                                        <p className="text-sm font-semibold text-gray-700 capitalize">
+                                          {`${flat?.customer_details?.prefixes || ""} ${flat?.customer_details?.first_name}`}
+                                        </p>
+
+                                        <p className="text-xs text-gray-500">
+                                          {flat?.customer_details?.email}
+                                        </p>
+
+                                        <p className="text-xs text-gray-500">
+                                          +{flat?.customer_details?.phone_code}{" "}
+                                          {flat?.customer_details?.phone_number}
+                                        </p>
+                                      </div>
+                                    </div>
+
                                     <div className="w-full">
                                       <Link
                                         to={`/customers/${flat?.customer_details?.uuid}`}
-                                        className="cursor-pointer text-xs text-gray-600 hover:text-white flex justify-center items-center relative px-4 py-1.5 rounded border border-[#0083bf] hover:bg-[#0083bf] transition-colors"
+                                        className="cursor-pointer text-xs text-gray-600 hover:text-white 
+                                        flex justify-center items-center relative px-4 py-1.5 
+                                        rounded border border-[#0083bf] hover:bg-[#0083bf] transition-colors"
                                       >
                                         View Customer
                                       </Link>
                                     </div>
                                   </div>
                                 )}
+
                             </div>
                           ) : (
                             <p className="text-neutral-400 text-xs font-normal leading-[18px]">
                               ---
                             </p>
                           )}
-                        </td>
-                      )}
-                      {/* {visibleColumns.groupowner && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[220px]">
-                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                            {flat?.group_owner?.name ? flat?.group_owner?.name : "---"}
-                          </p>
-                        </td>
-                      )} */}
-                      {visibleColumns.mortgage && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                            {flat?.mortgage === true ? "Yes" : "No"}
-                          </p>
-                        </td>
-                      )}
-                      {visibleColumns.project && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[200px]">
-                          <p className="text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal">
-                            {flat?.project_name || "-"}
-                          </p>
-                        </td>
-                      )}
-                      {visibleColumns.flatNo && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                            <NavLink to={`/flats/view-flat/${flat?.uuid}`} className="hover:text-[#0083bf] hover:underline">
-                              {flat?.flat_no || "---"}
-                            </NavLink>
-                          </p>
-                        </td>
-                      )}
-                      {visibleColumns.block && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                            {flat?.block?.block_name || "---"}
-                          </p>
-                        </td>
-                      )}
-                      {visibleColumns.floorNo && (
-                        <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
-                          <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                            {flat?.floor_no || "---"}
-                          </p>
                         </td>
                       )}
                       {visibleColumns.area && (

@@ -99,6 +99,16 @@ function Editflat() {
     setUDLError("");
   };
 
+  const [projects, setProjects] = useState([]);
+  const [rawProjects, setRawProjects] = useState([]);
+  const [targetProjectId, setTargetProjectId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState("");
+  const [selectedProjectError, setSelectedProjectError] = useState("");
+  const handleProjectChange = (value) => {
+    setSelectedProject(value);
+    setSelectedProjectError("");
+  };
+
   const [groupOwners, setGroupOwners] = useState([]);
   const [groupOwnersError, setGroupOwnersError] = useState("");
   const [selectedOwner, setSelectedOwner] = useState("");
@@ -257,6 +267,7 @@ function Editflat() {
         setOriginalFloor(flat?.floor_no);
         setOriginalFacing(flat?.facing);
         setOriginalCorner(flat?.corner === true ? "true" : "false");
+        setTargetProjectId(flat?.project_id);
 
         setErrorMessage("");
         setIsLoadingEffect(false);
@@ -347,6 +358,30 @@ function Editflat() {
         setIsLoadingEffect(false);
         return false;
       });
+
+  };
+
+  const fetchProjects = async () => {
+    setIsLoadingEffect(true);
+    Projectapi.get("get-all-projects")
+      .then((response) => {
+        const data = response.data;
+        if (data.status === "error") {
+          console.error("Error fetching projects:", data.message);
+        } else {
+          const projectOptions = (data.data || []).map(p => ({
+            value: p.uuid,
+            label: p.project_name
+          }));
+          setProjects(projectOptions);
+          setRawProjects(data.data || []);
+        }
+        setIsLoadingEffect(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching projects:", error);
+        setIsLoadingEffect(false);
+      });
   };
 
   const handleSubmit = () => {
@@ -362,7 +397,15 @@ function Editflat() {
     proceedWithSubmit();
   };
 
+
+
   const proceedWithSubmit = () => {
+    if (!selectedProject) {
+      setIsLoadingEffect(false);
+      setSelectedProjectError("Select Project");
+      return false;
+    }
+
     setIsLoadingEffect(true);
 
     if (flatNo === "" || !flatNo) {
@@ -389,11 +432,11 @@ function Editflat() {
     //   return false;
     // }
 
-    if (mortgage === "" || !mortgage) {
-      setIsLoadingEffect(false);
-      setMortgageError("Enter Mortgage ?");
-      return false;
-    }
+    // if (mortgage === "" || !mortgage) {
+    //   setIsLoadingEffect(false);
+    //   setMortgageError("Enter Mortgage ?");
+    //   return false;
+    // }
 
     if (squareFeet === "" || !squareFeet) {
       setIsLoadingEffect(false);
@@ -401,23 +444,24 @@ function Editflat() {
       return false;
     }
 
-    if (googleMapLink && !googleMapLink.startsWith("https://")) {
-      setIsLoadingEffect(false);
-      setGoogleMapLinkError("Enter a valid Google Map link");
-      return false;
-    }
+    // if (googleMapLink && !googleMapLink.startsWith("https://")) {
+    //   setIsLoadingEffect(false);
+    //   setGoogleMapLinkError("Enter a valid Google Map link");
+    //   return false;
+    // }
 
-    const googleMapRegex = /^https:\/\/(www\.)?google\.[a-z.]+\/maps|^https:\/\/maps\.app\.goo\.gl\//;
+    // const googleMapRegex = /^https:\/\/(www\.)?google\.[a-z.]+\/maps|^https:\/\/maps\.app\.goo\.gl\//;
 
-    if (googleMapLink && !googleMapRegex.test(googleMapLink)) {
-      setIsLoadingEffect(false);
-      setGoogleMapLinkError("Enter a valid Google Map link");
-      return false;
-    }
+    // if (googleMapLink && !googleMapRegex.test(googleMapLink)) {
+    //   setIsLoadingEffect(false);
+    //   setGoogleMapLinkError("Enter a valid Google Map link");
+    //   return false;
+    // }
 
 
     const formData = {
       employee_id: employee_id,
+      project_uuid: selectedProject,
       uuid: uuid,
       flatNo: flatNo,
       block: block,
@@ -485,7 +529,17 @@ function Editflat() {
     fetchFlat(uuid);
     fetchblocks();
     fetchGroupOwners();
+    fetchProjects();
   }, [uuid]);
+
+  useEffect(() => {
+    if (targetProjectId && rawProjects.length > 0) {
+      const matchedProject = rawProjects.find(p => String(p.id) === String(targetProjectId));
+      if (matchedProject) {
+        setSelectedProject(matchedProject.uuid);
+      }
+    }
+  }, [targetProjectId, rawProjects]);
 
 
   return (
@@ -502,6 +556,19 @@ function Editflat() {
         <div className="relative bg-white p-6 rounded-[4px] border-[0.6px] border-[#979797]/40">
           <div className="space-y-4">
             <div className="grid grid-cols-3 gap-4">
+              <Select
+                data={projects}
+                placeholder="Select Project"
+                value={selectedProject}
+                label="Project"
+                error={selectedProjectError}
+                searchable
+                inputClassName="focus:ring-0 focus:border-[#E72D65] focus:outline-none !mt-0"
+                className="!m-0 !p-0 w-full"
+                dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
+                onChange={handleProjectChange}
+                selectWrapperClass="!shadow-none"
+              />
               <Textinput
                 label="Flat No"
                 value={flatNo}
@@ -546,7 +613,7 @@ function Editflat() {
                 onChange={updateBlock}
                 selectWrapperClass="!shadow-none"
               />
-              <Select
+              {/* <Select
                 data={groupOwners}
                 label="Group/Owner"
                 value={selectedOwner}
@@ -557,7 +624,7 @@ function Editflat() {
                 className="!m-0 !p-0 w-full"
                 dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
                 selectWrapperClass="!shadow-none"
-              />
+              /> */}
               <Select
                 data={[
                   { value: "true", label: "Yes" },
@@ -580,7 +647,7 @@ function Editflat() {
                 error={squareFeetError}
                 placeholder="Enter Square Feet"
               />
-              <Textinput
+              {/* <Textinput
                 label="UDL"
                 value={UDL}
                 onChange={updateUDL}
@@ -593,7 +660,7 @@ function Editflat() {
                 onChange={updateDeedNo}
                 error={deedNoError}
                 placeholder="Enter Deed No"
-              />
+              /> */}
               <Select
                 data={[
                   { value: "2 BHK", label: "2 BHK" },
@@ -609,7 +676,7 @@ function Editflat() {
                 onChange={updateFlatType}
                 selectWrapperClass="!shadow-none"
               />
-              <Textinput
+              {/* <Textinput
                 label="Bedrooms"
                 value={bedrooms}
                 onChange={updateBedrooms}
@@ -636,7 +703,7 @@ function Editflat() {
                 onChange={updateParkingSquareFeet}
                 error={parkingSquareFeetError}
                 placeholder="Enter Square Feet"
-              />
+              /> */}
               <Select
                 data={[
                   { value: "North", label: "North" },
@@ -717,7 +784,7 @@ function Editflat() {
                 dropdownClassName="option min-h-[100px] max-h-[200px] z-50 !px-0 overflow-y-auto"
                 selectWrapperClass="!shadow-none"
               /> */}
-              <Select
+              {/* <Select
                 data={[
                   { value: "Furnished", label: "Furnished" },
                   { value: "SemiFurnished", label: "SemiFurnished" },
@@ -749,7 +816,7 @@ function Editflat() {
                   error={descriptionError}
                   placeholder="Enter Description"
                 />
-              </div>
+              </div> */}
             </div>
             {isLoadingEffect ? (
               isLoadingEffect && (

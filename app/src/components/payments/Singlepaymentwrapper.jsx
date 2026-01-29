@@ -7,6 +7,7 @@ import photo from '../../../public/assets/photo.png'
 import { IconArrowLeft } from "@tabler/icons-react";
 import Errorpanel from "../shared/Errorpanel";
 import { Loadingoverlay } from "@nayeshdaggula/tailify";
+import { useEmployeeDetails } from "../zustand/useEmployeeDetails";
 
 const getFileInfo = (url) => {
     // Get file name from the URL
@@ -31,6 +32,7 @@ const getFileInfo = (url) => {
 function Singlepaymentwrapper() {
     const params = useParams();
     const payment_uid = params.payment_uid;
+    const permissions = useEmployeeDetails((state) => state.permissions);
 
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoadingEffect, setIsLoadingEffect] = useState(false);
@@ -125,17 +127,25 @@ function Singlepaymentwrapper() {
                         <div className="flex">
                             <span className="basis-[20%] text-gray-600">Flat Number</span>
                             <span className="basis-[80%] font-semibold text-gray-900">
-                                <NavLink to={`/flats/view-flat/${paymentDetails?.flat?.uuid}`}>
-                                    {paymentDetails?.flat?.flat_no || '---'}
-                                </NavLink>
+                                {permissions?.flats_page?.includes("view_flat") ? (
+                                    <NavLink to={`/flats/view-flat/${paymentDetails?.flat?.uuid}`}>
+                                        {paymentDetails?.flat?.flat_no || '---'}
+                                    </NavLink>
+                                ) : (
+                                    paymentDetails?.flat?.flat_no || '---'
+                                )}
                             </span>
                         </div>
                         <div className="flex">
                             <span className="basis-[20%] text-gray-600">Customer Name</span>
                             <span className="basis-[80%] font-semibold text-gray-900 capitalize">
-                                <NavLink to={`/customers/${paymentDetails?.customer?.uuid}`}>
-                                    {paymentDetails?.customer?.prefixes || ''} {paymentDetails?.customer?.first_name || '---'} {paymentDetails?.customer?.last_name}
-                                </NavLink>
+                                {permissions?.customers_page?.includes("view_single_customer") ? (
+                                    <NavLink to={`/customers/${paymentDetails?.customer?.uuid}`}>
+                                        {paymentDetails?.customer?.prefixes || ''} {paymentDetails?.customer?.first_name || '---'} {paymentDetails?.customer?.last_name}
+                                    </NavLink>
+                                ) : (
+                                    `${paymentDetails?.customer?.prefixes || ''} ${paymentDetails?.customer?.first_name || '---'} ${paymentDetails?.customer?.last_name || ''}`
+                                )}
                             </span>
                         </div>
                         <div className="flex">

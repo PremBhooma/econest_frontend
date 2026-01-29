@@ -11,9 +11,10 @@ import { Modal } from "@nayeshdaggula/tailify";
 import { IconChartFunnel, IconDatabase, IconRestore, IconTemplate } from "@tabler/icons-react";
 import { useProjectDetails } from "../zustand/useProjectDetails.jsx";
 import { useEmployeeDetails } from "../zustand/useEmployeeDetails.jsx";
-import { BlocksIcon, Building2, GroupIcon, NotepadText, SquareChartGantt } from "lucide-react";
 import Leadstageswrapper from "./leadstages/Leadstageswrapper.jsx";
 import Templates from "./templates/Templates.jsx"
+import Bankstab from "./banks/Bankstab.jsx";
+import { BlocksIcon, Building2, GroupIcon, NotepadText, SquareChartGantt, Landmark } from "lucide-react";
 
 function Settingswrapper() {
 
@@ -58,6 +59,7 @@ function Settingswrapper() {
                 <div className="flex justify-start items-center gap-2 overflow-x-auto pb-2 border-b border-neutral-200 w-full [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
                     {[
                         { id: 'company_info', label: 'Company Info', icon: Building2, permission: 'company_info_tab' },
+                        { id: 'banks', label: 'Banks', icon: Landmark, permission: 'project_tab' },
                         { id: 'project', label: 'Project', icon: SquareChartGantt, permission: 'project_tab' },
                         { id: 'blocks', label: 'Blocks', icon: BlocksIcon, permission: 'blocks_tab' },
                         { id: 'amenities', label: 'Amenities Prices', icon: NotepadText, permission: 'amenities_tab' },
@@ -94,6 +96,13 @@ function Settingswrapper() {
                     <>
                         {permissions?.settings_page?.includes("company_info_tab") && (
                             <Companyinfo />
+                        )}
+                    </>
+                }
+                {activeTaskTab === 'banks' &&
+                    <>
+                        {permissions?.settings_page?.includes("project_tab") && (
+                            <Bankstab />
                         )}
                     </>
                 }

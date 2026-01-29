@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom"; // If Next.js, use next/link
 import dayjs from "dayjs";
+import { useEmployeeDetails } from "../../zustand/useEmployeeDetails";
 import noImageStaticImage from "../../../../public/assets/no_image.png";
 
 function capitalize(str) {
@@ -9,6 +10,7 @@ function capitalize(str) {
 }
 
 function Customerflatinformation({ customerFlatDetails }) {
+  const permissions = useEmployeeDetails((state) => state.permissions);
   if (!customerFlatDetails) return null;
 
   const customer = customerFlatDetails.customer;
@@ -67,14 +69,18 @@ function Customerflatinformation({ customerFlatDetails }) {
 
           if (isLink && value) {
             if (linkType === "customer") {
-              content = (
-                <Link
-                  to={`/customers/${customer?.uuid}`}
-                  className="text-blue-500 hover:underline"
-                >
-                  {value}
-                </Link>
-              );
+              if (permissions?.customers_page?.includes("view_single_customer")) {
+                content = (
+                  <Link
+                    to={`/customers/${customer?.uuid}`}
+                    className="text-blue-500 hover:underline"
+                  >
+                    {value}
+                  </Link>
+                );
+              } else {
+                content = value;
+              }
             } else if (linkType === "email") {
               content = (
                 <a

@@ -923,10 +923,15 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
                                                 customer.map((item) => (
                                                     <div
                                                         key={item.value}
-                                                        className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                                                        className="px-3 py-2 hover:bg-gray-100 cursor-pointer text-sm flex items-center justify-between group"
                                                         onClick={() => handleSelectCustomer(item)}
                                                     >
-                                                        {item.label}
+                                                        <span>{item.label}</span>
+                                                        {item.isFlatBooked && (
+                                                            <span className="bg-red-50 text-red-600 px-2 py-0.5 rounded text-[10px] font-medium border border-red-100 uppercase tracking-wide">
+                                                                Flat Booked
+                                                            </span>
+                                                        )}
                                                     </div>
                                                 ))
                                             ) : (
@@ -939,18 +944,23 @@ function Flattocustomer({ closeFlatToCustomer, refreshGetAllFlats }) {
 
                                 {selectedCustomer && (
                                     <div className="space-y-4 pt-2">
-                                        <div className="flex justify-center">
+                                        <div className="flex justify-center flex-col items-center gap-2">
                                             <img
                                                 src={selectedCustomer?.profile_pic_url || noImageStaticImage}
                                                 alt="Profile"
                                                 className="w-24 h-24 rounded-full object-cover border-2 border-gray-100 shadow-sm"
                                             />
+                                            {selectedCustomer?.isFlatBooked && (
+                                                <span className="bg-red-50 text-red-600 px-2 py-0.5 rounded text-[10px] font-medium border border-red-100 uppercase tracking-wide">
+                                                    Flat Booked
+                                                </span>
+                                            )}
                                         </div>
                                         <div className="grid gap-2 text-sm bg-gray-50 p-3 rounded-md border border-gray-300">
                                             {infoItems.map(({ label, value }) => (
                                                 <div key={label} className="grid grid-cols-[100px_1fr] gap-2">
                                                     <span className="text-gray-500">{label}</span>
-                                                    <span className="font-medium text-gray-900 break-words">{value || '-'}</span>
+                                                    <span className="font-medium text-gray-900 break-all">{value || '-'}</span>
                                                 </div>
                                             ))}
                                         </div>

@@ -33,13 +33,24 @@ import Convertleadtocustomer from './pages/leads/Convertleadtocustomer'
 
 import MainLayout from './components/layout/MainLayout'
 
-const ProtectedRoute = ({ element }) => {
+const ProtectedRoute = ({ element, requiredPermission }) => {
   const isLogged = useEmployeeDetails(state => state?.isLogged);
-  return isLogged ? (
+  const permissions = useEmployeeDetails(state => state?.permissions);
+  const employeeInfo = useEmployeeDetails(state => state?.employeeInfo);
+
+  if (!isLogged) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (requiredPermission && !requiredPermission(permissions, employeeInfo)) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
+  return (
     <MainLayout>
       {element}
     </MainLayout>
-  ) : <Navigate to="/" replace />;
+  );
 }
 
 const PublicRoute = ({ element }) => {
@@ -52,33 +63,47 @@ function Approuter() {
     <Routes>
       <Route path="/" element={<PublicRoute element={<Login />} />} />
       <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-      <Route path="/employees" element={<ProtectedRoute element={<Employee />} />} />
-      <Route path="/ageing-records" element={<ProtectedRoute element={<Ageing />} />} />
-      <Route path="/roles" element={<ProtectedRoute element={<Rolesandpermission />} />} />
-      <Route path="/customers" element={<ProtectedRoute element={<Customer />} />} />
-      <Route path="/settings" element={<ProtectedRoute element={<Setting />} />} />
-      <Route path="/customers/addnew" element={<ProtectedRoute element={<Addcustomer />} />} />
-      <Route path="/customers/:customer_uuid" element={<ProtectedRoute element={<Customerview />} />} />
-      <Route path="/customers/onboarding" element={<ProtectedRoute element={<Onboarding />} />} />
-      <Route path="/flats" element={<ProtectedRoute element={<Flats />} />} />
-      <Route path="/single-employee-view/:userId" element={<ProtectedRoute element={<Singleemployee />} />} />
-      <Route path="/flats/add-flat" element={<ProtectedRoute element={<Addflatpage />} />} />
-      <Route path="/flats/edit-flat/:uuid" element={<ProtectedRoute element={<Editflatpage />} />} />
-      <Route path="/flats/view-flat/:uuid" element={<ProtectedRoute element={<Viewflatpage />} />} />
-      <Route path="/single-employee-view" element={<ProtectedRoute element={<Singleemployee />} />} />
-      <Route path="/customers/editcustomer/:single_customer_id" element={<ProtectedRoute element={<Editcustomer />} />} />
-      <Route path="/payments" element={<ProtectedRoute element={<Allpaymentspage />} />} />
-      <Route path="/payments/addnew" element={<ProtectedRoute element={<Addnewpaymentpage />} />} />
-      <Route path="/payments/edit/:payment_uid" element={<ProtectedRoute element={<Editpaymentpage />} />} />
-      <Route path="/singlepaymentview/:payment_uid" element={<ProtectedRoute element={<Paymentview />} />} />
-      <Route path="/payments/view-bulk-payments" element={<ProtectedRoute element={<Viewbulkpayments />} />} />
-      <Route path="/search" element={<ProtectedRoute element={<Searchpage />} />} />
 
-      <Route path="/leads" element={<ProtectedRoute element={<Lead />} />} />
-      <Route path="/lead/add-lead" element={<ProtectedRoute element={<Addlead />} />} />
-      <Route path="/lead/edit-lead/:single_lead_id" element={<ProtectedRoute element={<Editlead />} />} />
-      <Route path="/lead/:lead_uuid" element={<ProtectedRoute element={<Viewlead />} />} />
-      <Route path="/lead/convert-lead-to-customer/:lead_uuid" element={<ProtectedRoute element={<Convertleadtocustomer />} />} />
+      {/* Employee Module */}
+      <Route path="/employees" element={<ProtectedRoute element={<Employee />} requiredPermission={(p, i) => i?.role_name === "Super Admin" || p?.main_page?.includes("employee_page")} />} />
+      <Route path="/roles" element={<ProtectedRoute element={<Rolesandpermission />} requiredPermission={(p, i) => i?.role_name === "Super Admin" || p?.main_page?.includes("employee_page")} />} />
+      <Route path="/single-employee-view/:userId" element={<ProtectedRoute element={<Singleemployee />} requiredPermission={(p, i) => i?.role_name === "Super Admin" || p?.main_page?.includes("employee_page")} />} />
+      <Route path="/single-employee-view" element={<ProtectedRoute element={<Singleemployee />} requiredPermission={(p, i) => i?.role_name === "Super Admin" || p?.main_page?.includes("employee_page")} />} />
+
+      {/* Ageing Module */}
+      <Route path="/ageing-records" element={<ProtectedRoute element={<Ageing />} requiredPermission={(p) => p?.main_page?.includes("ageing_page")} />} />
+
+      {/* Customer Module */}
+      <Route path="/customers" element={<ProtectedRoute element={<Customer />} requiredPermission={(p) => p?.main_page?.includes("customers_page")} />} />
+      <Route path="/customers/addnew" element={<ProtectedRoute element={<Addcustomer />} requiredPermission={(p) => p?.main_page?.includes("customers_page")} />} />
+      <Route path="/customers/:customer_uuid" element={<ProtectedRoute element={<Customerview />} requiredPermission={(p) => p?.main_page?.includes("customers_page")} />} />
+      <Route path="/customers/onboarding" element={<ProtectedRoute element={<Onboarding />} requiredPermission={(p) => p?.main_page?.includes("customers_page")} />} />
+      <Route path="/customers/editcustomer/:single_customer_id" element={<ProtectedRoute element={<Editcustomer />} requiredPermission={(p) => p?.main_page?.includes("customers_page")} />} />
+
+      {/* Flats Module */}
+      <Route path="/flats" element={<ProtectedRoute element={<Flats />} requiredPermission={(p) => p?.main_page?.includes("flats_page")} />} />
+      <Route path="/flats/add-flat" element={<ProtectedRoute element={<Addflatpage />} requiredPermission={(p) => p?.main_page?.includes("flats_page")} />} />
+      <Route path="/flats/edit-flat/:uuid" element={<ProtectedRoute element={<Editflatpage />} requiredPermission={(p) => p?.main_page?.includes("flats_page")} />} />
+      <Route path="/flats/view-flat/:uuid" element={<ProtectedRoute element={<Viewflatpage />} requiredPermission={(p) => p?.main_page?.includes("flats_page")} />} />
+
+      {/* Payments Module */}
+      <Route path="/payments" element={<ProtectedRoute element={<Allpaymentspage />} requiredPermission={(p) => p?.main_page?.includes("payments_page")} />} />
+      <Route path="/payments/addnew" element={<ProtectedRoute element={<Addnewpaymentpage />} requiredPermission={(p) => p?.main_page?.includes("payments_page")} />} />
+      <Route path="/payments/edit/:payment_uid" element={<ProtectedRoute element={<Editpaymentpage />} requiredPermission={(p) => p?.main_page?.includes("payments_page")} />} />
+      <Route path="/singlepaymentview/:payment_uid" element={<ProtectedRoute element={<Paymentview />} requiredPermission={(p) => p?.main_page?.includes("payments_page")} />} />
+      <Route path="/payments/view-bulk-payments" element={<ProtectedRoute element={<Viewbulkpayments />} requiredPermission={(p) => p?.main_page?.includes("payments_page")} />} />
+
+      {/* Leads Module */}
+      <Route path="/leads" element={<ProtectedRoute element={<Lead />} requiredPermission={(p) => p?.main_page?.includes("leads_page")} />} />
+      <Route path="/lead/add-lead" element={<ProtectedRoute element={<Addlead />} requiredPermission={(p) => p?.main_page?.includes("leads_page")} />} />
+      <Route path="/lead/edit-lead/:single_lead_id" element={<ProtectedRoute element={<Editlead />} requiredPermission={(p) => p?.main_page?.includes("leads_page")} />} />
+      <Route path="/lead/:lead_uuid" element={<ProtectedRoute element={<Viewlead />} requiredPermission={(p) => p?.main_page?.includes("leads_page")} />} />
+      <Route path="/lead/convert-lead-to-customer/:lead_uuid" element={<ProtectedRoute element={<Convertleadtocustomer />} requiredPermission={(p) => p?.main_page?.includes("leads_page")} />} />
+
+      {/* Settings Module */}
+      <Route path="/settings" element={<ProtectedRoute element={<Setting />} requiredPermission={(p) => p?.main_page?.includes("settings_page")} />} />
+
+      <Route path="/search" element={<ProtectedRoute element={<Searchpage />} />} />
 
       {/* <Route path="/backup" element={<Backup />} /> */}
     </Routes>

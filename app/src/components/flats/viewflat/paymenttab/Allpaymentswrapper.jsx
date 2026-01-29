@@ -20,7 +20,7 @@ import 'react-modern-drawer/dist/index.css'
 import { PrinterIcon } from "lucide-react";
 
 
-function Allpaymentslist({ flat_id, customerId }) {
+function Allpaymentslist({ flat_id, customerId, project_id }) {
     const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
     const employeeId = employeeInfo?.id || null;
     const [totalPages, setTotalPages] = useState(0);
@@ -533,7 +533,7 @@ function Allpaymentslist({ flat_id, customerId }) {
                 </div>
 
                 <div className="flex justify-between items-center">
-                    <div className="border border-[#ebecef] rounded-sm relative !h-9">
+                    <div className="rounded-sm relative !h-9">
                         <input
                             type="text"
                             placeholder="Search payments..."
@@ -682,11 +682,11 @@ function Allpaymentslist({ flat_id, customerId }) {
                                         {visibleColumns.transactionId && (
                                             <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
                                                 {permissions?.payments_page?.includes("view_payment") ? (
-                                                    <NavLink to={`/singlepaymentview/${payment?.uuid}`}>
-                                                        <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
-                                                            {payment?.transaction_id}
-                                                        </p>
-                                                    </NavLink>
+                                                    // <NavLink to={`/singlepaymentview/${payment?.uuid}`}>
+                                                    <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
+                                                        {payment?.transaction_id}
+                                                    </p>
+                                                    // </NavLink>
                                                 ) : (
                                                     <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px]">
                                                         {payment?.transaction_id}
@@ -711,9 +711,9 @@ function Allpaymentslist({ flat_id, customerId }) {
                                         {visibleColumns.customer && (
                                             <td className="px-4 py-3 whitespace-normal break-words w-[160px]">
                                                 <p className="text-[#4b5563] text-[13px] not-italic font-normal leading-[18px] capitalize">
-                                                    <NavLink to={`/customers/${payment?.customer_uuid}`}>
-                                                        {payment.customer_prefixes || ""} {payment.customer_first_name || "----"} {payment.customer_last_name}
-                                                    </NavLink>
+                                                    {/* <NavLink to={`/customers/${payment?.customer_uuid}`}> */}
+                                                    {payment.customer_prefixes || ""} {payment.customer_first_name || "----"} {payment.customer_last_name}
+                                                    {/* </NavLink> */}
                                                 </p>
                                             </td>
                                         )}
@@ -862,6 +862,7 @@ function Allpaymentslist({ flat_id, customerId }) {
                         closeAddFlatPayment={closeAddFlatPayment}
                         refreshAllPayments={refreshAllPayments}
                         customerId={customerId}
+                        project_id={project_id}
                     />
                 )}
             </Drawer>

@@ -459,12 +459,12 @@ function Customerwrapper() {
                     </th>
                   )}
                   {visibleColumns.flatNo && (
-                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[220px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
                       Flats
                     </th>
                   )}
                   {visibleColumns.name && (
-                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[140px]">
+                    <th className="px-4 py-3 text-neutral-700 uppercase tracking-wider text-sm font-bold leading-[18px] w-[180px]">
                       Name
                     </th>
                   )}
@@ -552,16 +552,27 @@ function Customerwrapper() {
                                   (flat, flatIndex) => (
                                     <div key={flat.uuid || flatIndex} className="group relative inline-block">
                                       {pageCustomerCount < 5 ? (
-                                        <Link to={`/flats/view-flat/${flat?.uuid}`}>
+                                        permissions?.flats_page?.includes("view_flat") ? (
+                                          <Link to={`/flats/view-flat/${flat?.uuid}`}>
+                                            <p
+                                              className={`text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal cursor-pointer pr-2 hover:text-[#0083bf] ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
+                                                ? "border-r border-neutral-300"
+                                                : ""
+                                                }`}
+                                            >
+                                              {flat.flat_no}
+                                            </p>
+                                          </Link>
+                                        ) : (
                                           <p
-                                            className={`text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal cursor-pointer pr-2 hover:text-[#0083bf] ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
+                                            className={`text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal pr-2 ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
                                               ? "border-r border-neutral-300"
                                               : ""
                                               }`}
                                           >
                                             {flat.flat_no}
                                           </p>
-                                        </Link>
+                                        )
                                       ) : (
                                         <p
                                           className={`text-neutral-600 text-xs font-medium leading-[18px] capitalize break-words whitespace-normal pr-2 ${customer.flat_details.length > 1 && flatIndex !== customer.flat_details.length - 1
@@ -626,12 +637,14 @@ function Customerwrapper() {
                                               </div>
 
                                               <div className="w-full">
-                                                <Link
-                                                  to={`/flats/view-flat/${flat?.uuid}`}
-                                                  className="cursor-pointer text-xs text-[#0083bf] hover:text-white flex justify-center items-center relative px-4 py-1 rounded border border-[#0083bf] hover:bg-[#0083bf]"
-                                                >
-                                                  View Flat
-                                                </Link>
+                                                {permissions?.flats_page?.includes("view_flat") && (
+                                                  <Link
+                                                    to={`/flats/view-flat/${flat?.uuid}`}
+                                                    className="cursor-pointer text-xs text-[#0083bf] hover:text-white flex justify-center items-center relative px-4 py-1 rounded border border-[#0083bf] hover:bg-[#0083bf]"
+                                                  >
+                                                    View Flat
+                                                  </Link>
+                                                )}
                                               </div>
                                             </div>
                                           </div>
@@ -647,7 +660,8 @@ function Customerwrapper() {
                               </p>
                             )}
                           </td>
-                        )}
+                        )
+                        }
 
                         {visibleColumns.name && (
                           <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
@@ -760,7 +774,7 @@ function Customerwrapper() {
                             )}
                             {permissions?.customers_page?.includes("edit_customer") && (
                               <Link
-                                to={`/customers/edit-customer/${customer.customer_uid}`}
+                                to={`/customers/editcustomer/${customer.customer_uid}`}
                                 className="p-1 hover:bg-blue-50 rounded-md transition-colors text-neutral-500 hover:text-blue-600"
                               >
                                 <IconEdit size={18} />

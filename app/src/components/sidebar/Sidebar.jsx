@@ -9,7 +9,8 @@ import {
     IconSettings,
     IconUsersGroup,
     IconChevronDown,
-    IconX
+    IconX,
+    IconCurrencyRupee
 } from "@tabler/icons-react";
 
 const Sidebar = ({ isOpen, toggleSidebar }) => {
@@ -145,7 +146,7 @@ const Sidebar = ({ isOpen, toggleSidebar }) => {
 
                         {permissions?.main_page?.includes("payments_page") && (
                             <NavLink to="/payments" className={navItemClass}>
-                                <IconBuildingSkyscraper size={20} stroke={1.5} />
+                                <IconCurrencyRupee size={20} stroke={1.5} />
                                 <span>Payments</span>
                             </NavLink>
                         )}

@@ -613,7 +613,7 @@ function Allpaymentswrapper() {
                                         <td>${(payment?.customer_first_name || "") + " " + (payment?.customer_last_name || "")}</td>
                                     ` : ''}
                                     ${visibleColumns.amount ? `
-                                        <td>${payment?.amount || "----"}</td>
+                                        <td>${payment?.amount ? "₹ " + parseFloat(payment.amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "----"}</td>
                                     ` : ''}
                                     ${visibleColumns.date ? `
                                         <td>${payment?.payment_date ? dayjs(payment?.payment_date).format("DD/MM/YYYY") : "----"}</td>
@@ -977,9 +977,13 @@ function Allpaymentswrapper() {
                                                 {visibleColumns.flat && (
                                                     <td className="px-4 py-3 whitespace-normal break-words w-[120px]">
                                                         <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                                                            <NavLink to={`/flats/view-flat/${payment?.flat_uuid}`} className="hover:text-[#0083bf]">
-                                                                {payment?.flat_number || "----"}
-                                                            </NavLink>
+                                                            {permissions?.flats_page?.includes("view_flat") ? (
+                                                                <NavLink to={`/flats/view-flat/${payment?.flat_uuid}`} className="hover:text-[#0083bf]">
+                                                                    {payment?.flat_number || "----"}
+                                                                </NavLink>
+                                                            ) : (
+                                                                payment?.flat_number || "----"
+                                                            )}
                                                         </p>
                                                     </td>
                                                 )}
@@ -1000,7 +1004,7 @@ function Allpaymentswrapper() {
                                                 {visibleColumns.amount && (
                                                     <td className="px-4 py-3 whitespace-normal break-words w-[140px]">
                                                         <p className="text-neutral-600 text-xs font-medium leading-[18px]">
-                                                            {payment?.amount || "----"}
+                                                            {payment?.amount ? "₹ " + parseFloat(payment.amount).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "----"}
                                                         </p>
                                                     </td>
                                                 )}

@@ -249,7 +249,7 @@ function Viewcustomerwrapper() {
                 {[
                   { key: "other-info", label: "Other Info" },
                   { key: "flat-information", label: "Flats Info" },
-                  { key: "payments-information", label: "Payments Info" },
+                  // { key: "payments-information", label: "Payments Info" },
                   { key: "documents", label: "Documents" },
                   { key: "notes", label: "Notes" },
                   { key: "activity", label: "Activity" },

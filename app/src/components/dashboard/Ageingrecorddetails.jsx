@@ -7,12 +7,29 @@ import { Modal } from '@nayeshdaggula/tailify';
 import Ageingrecordapi from '../api/Ageingrecordapi';
 import { toast } from 'react-toastify';
 import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import Settingsapi from '../api/Settingsapi';
 
 const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onRecordUpdate }) => {
   const permissions = useEmployeeDetails((state) => state.permissions);
   const [isLoading, setIsLoading] = useState(false);
   const [updateModalOpen, setUpdateModalOpen] = useState(false);
   const [localRecord, setLocalRecord] = useState(null);
+  const [bankList, setBankList] = useState([]);
+
+  useEffect(() => {
+    const fetchBanks = async () => {
+      try {
+        const response = await Settingsapi.get('/get-all-banks-list?limit=1000');
+        if (response.data.status === 'success') {
+          setBankList(response.data.data.map(b => b.name));
+        }
+      } catch (e) {
+        console.error("Error fetching banks:", e);
+      }
+    };
+    fetchBanks();
+  }, []);
 
   // Form states for update
   const [loanStatus, setLoanStatus] = useState("NotApplied");
@@ -28,10 +45,30 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
   const [agentNumberError, setAgentNumberError] = useState('');
   const [loanAmountError, setLoanAmountError] = useState('');
 
-  // Sync localRecord with recordData when drawer opens
+  console.log("recordData___DD:", recordData)
+
+  // Fetch fresh record details
+  const fetchRecordDetails = async () => {
+    if (!recordData?.id) return;
+
+    try {
+      const response = await Ageingrecordapi.get(`get-single-ageing-record?id=${recordData.id}`);
+      if (response.data.status === 'success') {
+        setLocalRecord(response.data.record);
+      }
+    } catch (error) {
+      console.error('Error fetching single record:', error);
+      // Fallback to recordData if fetch fails initially, but we usually want fresh data
+    }
+  };
+
+  console.log("localRecord___DD:", localRecord)
+
+  // Sync localRecord with recordData when drawer opens AND fetch fresh data
   useEffect(() => {
     if (open && recordData) {
-      setLocalRecord(recordData);
+      setLocalRecord(recordData); // Show passed data immediately for perceived speed
+      fetchRecordDetails(); // Then fetch fresh data to update calculations/status
     }
   }, [open, recordData]);
 
@@ -54,7 +91,8 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
       setBankName(localRecord?.bank_name || '');
       setAgentName(localRecord?.agent_name || '');
       setAgentNumber(localRecord?.agent_number || '');
-      setLoanAmount(localRecord?.loan_amount || '');
+      // Format initial loan amount
+      setLoanAmount(localRecord?.loan_amount ? Number(localRecord?.loan_amount).toLocaleString('en-IN') : '');
       // Clear errors
       setBankNameError('');
       setAgentNameError('');
@@ -62,6 +100,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
       setLoanAmountError('');
     }
   }, [updateModalOpen, localRecord]);
+
 
   const formatDate = (dateString) => {
     if (!dateString) return '-';
@@ -136,22 +175,14 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
         bank_name: bankName.trim(),
         agent_name: agentName.trim(),
         agent_number: agentNumber.trim(),
-        loan_amount: loanAmount ? parseFloat(loanAmount) : null,
+        loan_amount: loanAmount ? parseFloat(loanAmount.toString().replace(/,/g, '')) : null,
       });
 
       if (response.data.status === 'success') {
         toast.success('Loan status updated successfully');
 
-        // Update local record with new values to display in drawer
-        setLocalRecord(prev => ({
-          ...prev,
-          loan_Status: loanStatus === "NotApplied" ? "Not Applied" : loanStatus,
-          registration_status: registrationStatus === "NotRegistered" ? "Not Registered" : registrationStatus,
-          bank_name: bankName.trim(),
-          agent_name: agentName.trim(),
-          agent_number: agentNumber.trim(),
-          loan_amount: loanAmount ? parseFloat(loanAmount) : null,
-        }));
+        // Fetch fresh details to update the drawer with latest server state
+        await fetchRecordDetails();
 
         // Close only the modal, keep drawer open
         setUpdateModalOpen(false);
@@ -362,7 +393,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
             </button>
           </div>
 
-          <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+          <div className="space-y-4 max-h-[65vh] overflow-y-auto pr-2">
             {/* Loan Status Toggle */}
             <div>
               <Label className="text-sm font-medium text-gray-700">Loan Status</Label>
@@ -372,7 +403,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
                     key={status}
                     type="button"
                     onClick={() => setLoanStatus(status)}
-                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors cursor-pointer border-2 ${loanStatus === status
+                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors cursor-pointer border-2 focus:outline-none focus:ring-0 ${loanStatus === status
                       ? status === 'Approved' ? 'bg-green-100 text-green-700 border-green-300'
                         : status === 'Rejected' ? 'bg-red-100 text-red-700 border-red-300'
                           : status === 'Applied' ? 'bg-blue-100 text-blue-700 border-blue-300'
@@ -395,7 +426,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
                     key={status}
                     type="button"
                     onClick={() => setRegistrationStatus(status)}
-                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors cursor-pointer border-2 ${registrationStatus === status
+                    className={`py-2 px-3 rounded-lg text-sm font-medium transition-colors cursor-pointer border-2 focus:outline-none focus:ring-0 ${registrationStatus === status
                       ? status === 'Registered' ? 'bg-green-100 text-green-700 border-green-300'
                         : 'bg-orange-100 text-orange-700 border-orange-300'
                       : 'bg-gray-50 text-gray-600 border-transparent hover:bg-gray-100'
@@ -410,15 +441,24 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
             {/* Bank Name */}
             <div>
               <Label className="text-sm font-medium text-gray-700">Bank Name <span className="text-red-500">*</span></Label>
-              <Input
+              <Select
                 value={bankName}
-                onChange={(e) => {
-                  setBankName(e.target.value);
+                onValueChange={(value) => {
+                  setBankName(value);
                   if (bankNameError) setBankNameError('');
                 }}
-                placeholder="Enter bank name"
-                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${bankNameError ? 'border-red-400' : 'border-gray-300'}`}
-              />
+              >
+                <SelectTrigger className={`mt-1 w-full bg-white border rounded-lg focus:outline-none focus:ring-0 ${bankNameError ? 'border-red-400' : 'border-gray-300'}`}>
+                  <SelectValue placeholder="Select bank name" />
+                </SelectTrigger>
+                <SelectContent className="max-h-[200px] border border-gray-200 z-[9999]">
+                  {bankList.map((bank) => (
+                    <SelectItem key={bank} value={bank}>
+                      {bank}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
               {bankNameError && <p className="text-red-500 text-xs mt-1">{bankNameError}</p>}
             </div>
 
@@ -432,7 +472,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
                   if (agentNameError) setAgentNameError('');
                 }}
                 placeholder="Enter agent name"
-                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${agentNameError ? 'border-red-400' : 'border-gray-300'}`}
+                className={`mt-1 bg-white border rounded-lg focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${agentNameError ? 'border-red-400' : 'border-gray-300'}`}
               />
               {agentNameError && <p className="text-red-500 text-xs mt-1">{agentNameError}</p>}
             </div>
@@ -450,7 +490,7 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
                 }}
                 placeholder="Enter 10-digit phone number"
                 maxLength={10}
-                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${agentNumberError ? 'border-red-400' : 'border-gray-300'}`}
+                className={`mt-1 bg-white border rounded-lg focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${agentNumberError ? 'border-red-400' : 'border-gray-300'}`}
               />
               {agentNumberError && <p className="text-red-500 text-xs mt-1">{agentNumberError}</p>}
             </div>
@@ -459,15 +499,28 @@ const Ageingrecorddetails = ({ open, onOpenChange, recordData, onRefresh, onReco
             <div>
               <Label className="text-sm font-medium text-gray-700">Loan Amount <span className="text-red-500">*</span></Label>
               <Input
-                type="number"
+                type="text"
                 value={loanAmount}
                 onChange={(e) => {
-                  setLoanAmount(e.target.value);
-                  if (loanAmountError) setLoanAmountError('');
+                  const value = e.target.value;
+                  const cleanValue = value.replace(/,/g, '');
+
+                  // Only allow numbers and one decimal point
+                  if (value === '' || /^\d*\.?\d*$/.test(cleanValue)) {
+                    if (cleanValue === '') {
+                      setLoanAmount('');
+                    } else {
+                      const parts = cleanValue.split('.');
+                      const integerPart = parts[0];
+                      const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+                      const formattedValue = integerPart ? Number(integerPart).toLocaleString('en-IN') : '';
+                      setLoanAmount(formattedValue + decimalPart);
+                    }
+                    if (loanAmountError) setLoanAmountError('');
+                  }
                 }}
                 placeholder="Enter loan amount"
-                min="0"
-                className={`mt-1 bg-white border rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-transparent ${loanAmountError ? 'border-red-400' : 'border-gray-300'}`}
+                className={`mt-1 bg-white border rounded-lg focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none ${loanAmountError ? 'border-red-400' : 'border-gray-300'}`}
               />
               {loanAmountError && <p className="text-red-500 text-xs mt-1">{loanAmountError}</p>}
             </div>

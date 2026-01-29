@@ -53,6 +53,12 @@ let store = (set, get) => ({
     })
   },
 
+  updatePermissions: (permission) => {
+    set({
+      permissions: permission
+    })
+  },
+
   resetEmployeeAuthdetails: () => {
     set({
       employeeInfo: null,

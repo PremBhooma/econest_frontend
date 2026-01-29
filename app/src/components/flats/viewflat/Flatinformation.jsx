@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import Flatcostupdate from "./Flatcostupdate";
+import { useEmployeeDetails } from '../../zustand/useEmployeeDetails';
 
 import Drawer from 'react-modern-drawer'
 import 'react-modern-drawer/dist/index.css'
 
 function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails, flatCostUpdate, openFlatCostUpdate, closeFlatCostUpdate }) {
   if (!flatDetails) return null;
+
+  const permissions = useEmployeeDetails(state => state.permissions);
 
   console.log("flatDetails", flatDetails);
 
@@ -91,14 +94,18 @@ function Flatinformation({ flatDetails, customerFlatDetails, refreshUserDetails,
 
             if (isLink && hasValue) {
               if (linkType === "customer") {
-                content = (
-                  <Link
-                    to={`/customers/${flatDetails?.customer?.uuid}`}
-                    className="text-blue-500 hover:underline"
-                  >
-                    {value}
-                  </Link>
-                );
+                if (permissions?.customers_page?.includes("view_single_customer")) {
+                  content = (
+                    <Link
+                      to={`/customers/${flatDetails?.customer?.uuid}`}
+                      className="text-blue-500 hover:underline"
+                    >
+                      {value}
+                    </Link>
+                  );
+                } else {
+                  content = value;
+                }
               } else if (linkType === "email") {
                 content = (
                   <a

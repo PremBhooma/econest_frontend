@@ -83,7 +83,7 @@ function Changepassword({ singleUserid }) {
     };
 
     return (
-        <div className="p-5 px-20 space-y-4 relative">
+        <div className="p-4 space-y-4 relative">
             <Passwordinput
                 label="New Password"
                 placeholder="Enter New Password"

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Settingsapi from '../api/Settingsapi';
 import dayjs from "dayjs";
 import Flatapi from '../api/Flatapi';
 import Paymentapi from '../api/Paymentapi';
@@ -10,7 +11,10 @@ import { toast, ToastContainer } from 'react-toastify';
 import { IconArrowLeft, IconX } from '@tabler/icons-react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
-import { Textinput, Loadingoverlay, Select, Datepicker, Textarea, Fileinput } from '@nayeshdaggula/tailify';
+import { Loadingoverlay, Datepicker, Fileinput } from '@nayeshdaggula/tailify';
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
 
 function capitalize(str) {
     if (!str) return '';
@@ -25,19 +29,54 @@ const getFileInfo = (url) => {
     return { fileName, fileType };
 };
 
+
+
 function Editpaymentwrapper() {
     const navigate = useNavigate();
     const { payment_uid } = useParams();
     const employeeInfo = useEmployeeDetails((state) => state.employeeInfo);
     const employeeId = employeeInfo?.id || null;
 
+    const [bankList, setBankList] = useState([]);
+
+    useEffect(() => {
+        const fetchBanks = async () => {
+            try {
+                const response = await Settingsapi.get('/get-all-banks-list?limit=1000');
+                if (response.data.status === 'success') {
+                    setBankList(response.data.data.map(b => b.name));
+                }
+            } catch (e) {
+                console.error("Error fetching banks:", e);
+            }
+        };
+        fetchBanks();
+    }, []);
+
     const [amount, setAmount] = useState('');
     const [amountError, setAmountError] = useState('');
     const updateAmount = (e) => {
         const value = e.target.value;
-        if (isNaN(value)) return;
-        setAmount(value);
+        const cleanValue = value.replace(/,/g, ''); // Remove existing commas
+
+        // Allow only numbers and a single decimal point
+        if (!/^\d*\.?\d*$/.test(cleanValue)) return;
+
         setAmountError('');
+
+        if (cleanValue === '') {
+            setAmount('');
+            return;
+        }
+
+        const parts = cleanValue.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+        // Format integer part using Indian locale
+        const formattedInteger = integerPart ? parseInt(integerPart).toLocaleString('en-IN') : '';
+
+        setAmount(formattedInteger + decimalPart);
     };
 
     const [paymentType, setPaymentType] = useState(null);
@@ -64,8 +103,8 @@ function Editpaymentwrapper() {
 
     const [bank, setBank] = useState('');
     const [bankError, setBankError] = useState('');
-    const updateBank = (e) => {
-        setBank(e.target.value);
+    const updateBank = (value) => {
+        setBank(value);
         setBankError('');
     };
 
@@ -229,7 +268,7 @@ function Editpaymentwrapper() {
 
             if (data.payment_details) {
                 const payment = data.payment_details;
-                setAmount(payment.amount ? payment.amount.toString() : '');
+                setAmount(payment.amount ? payment.amount.toLocaleString('en-IN') : '');
                 setPaymentType(payment.payment_type || null);
                 setPaymentTowards(payment?.payment_towards || null);
                 setPaymentMethod(payment.payment_method || null);
@@ -375,7 +414,7 @@ function Editpaymentwrapper() {
         };
 
         const formdata = new FormData();
-        formdata.append('amount', amount);
+        formdata.append('amount', amount.replace(/,/g, ''));
         formdata.append('payment_type', paymentType);
         formdata.append('payment_towards', paymentTowards);
         formdata.append('payment_method', paymentMethod);
@@ -439,152 +478,9 @@ function Editpaymentwrapper() {
                 </div>
             </div>
             <div className="relative flex flex-col gap-8 border border-[#ebecef] rounded-xl bg-white px-8 py-4 min-h-[65vh]">
-                <div className="w-full flex flex-row gap-4">
-                    {/* Payment Form Fields */}
-                    <div className="w-1/2">
-                        <div className='grid grid-cols-2 gap-2'>
-                            <Textinput
-                                placeholder="Enter Amount"
-                                label="Amount"
-                                error={amountError}
-                                value={amount}
-                                onChange={updateAmount}
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                            />
-                            <Select
-                                label="Payment Type"
-                                labelClass="text-sm font-medium text-gray-600 mb-1"
-                                placeholder="Select Payment Type"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                                className="w-full"
-                                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-                                selectWrapperClass="!shadow-none"
-                                error={paymentTypeError}
-                                value={paymentType}
-                                onChange={updatePaymentType}
-                                data={[
-                                    { value: 'Customer Pay', label: 'Customer Pay' },
-                                    { value: 'Loan Pay', label: 'Loan Pay' },
-                                ]}
-                            />
-                            <Select
-                                label="Payment Towards"
-                                labelClass="text-sm font-medium text-gray-600 mb-1"
-                                placeholder="Select Payment Towards"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                                className="w-full"
-                                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-                                selectWrapperClass="!shadow-none"
-                                error={paymentTowardsError}
-                                value={paymentTowards}
-                                onChange={updatePaymentTowards}
-                                data={[
-                                    { value: 'Flat', label: 'Flat' },
-                                    { value: 'GST', label: 'GST' },
-                                    { value: 'Corpus fund', label: 'Corpus fund' },
-                                    { value: 'Registration', label: 'Registration' },
-                                    { value: 'TDS', label: 'TDS' },
-                                    { value: 'Maintenance', label: 'Maintenance' },
-                                ]}
-                            />
-                            <Select
-                                label="Payment Method"
-                                labelClass="text-sm font-medium text-gray-600 mb-1"
-                                placeholder="Select Payment Method"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                                className="w-full"
-                                dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
-                                selectWrapperClass="!shadow-none"
-                                error={paymentMethodError}
-                                value={paymentMethod}
-                                onChange={updatePaymentMethod}
-                                data={[
-                                    { value: 'DD', label: 'DD' },
-                                    { value: 'UPI', label: 'UPI' },
-                                    { value: 'Bank Deposit', label: 'Bank Deposit' },
-                                    { value: 'Cheque', label: 'Cheque' },
-                                    { value: 'Online Transfer (IMPS, NFT)', label: 'Online Transfer (IMPS, NFT)' },
-                                ]}
-                            />
-                            {(paymentMethod === 'DD' || paymentMethod === 'Bank Deposit') && (
-                                <Textinput
-                                    placeholder="Enter bank name"
-                                    label="Bank"
-                                    error={bankError}
-                                    value={bank}
-                                    onChange={updateBank}
-                                    labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                    inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                                />
-                            )}
-                            <Datepicker
-                                label="Date of Payment"
-                                value={paymentDate}
-                                onChange={updatePaymentDate}
-                                error={paymentDateError}
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200"
-                            />
-                            <Textinput
-                                placeholder="Enter transaction id"
-                                label="Transaction Id"
-                                error={transactionIdError}
-                                value={transactionId}
-                                onChange={updateTransactionId}
-                                labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                            />
-                            {receiptUrl ? (
-                                <div className="relative">
-                                    <p className="text-sm font-semibold text-gray-600 mb-1">Receipt</p>
-                                    <div className="relative flex items-center gap-2 justify-center border border-amber-50 rounded-md p-3 bg-gray-50">
-                                        <img
-                                            src={receiptFileType === 'pdf' ? pdficon : photo}
-                                            className={receiptFileType === 'pdf' ? 'h-[50px] w-[50px]' : 'h-[40px] w-[40px]'}
-                                            alt="Receipt"
-                                        />
-                                        <a
-                                            href={receiptUrl}
-                                            target="_blank"
-                                            rel="noopener noreferrer"
-                                            className="text-blue-600 text-sm font-medium truncate max-w-[200px]"
-                                        >
-                                            {receiptFileName || 'View Receipt'}
-                                        </a>
-                                        <div className="absolute right-2 top-2" onClick={removeReceipt}>
-                                            <IconX size={18} color="red" className="cursor-pointer" />
-                                        </div>
-                                    </div>
-                                </div>
-                            ) : (
-                                <Fileinput
-                                    label="Receipt (optional)"
-                                    accept="image/*,application/pdf"
-                                    labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                    multiple={false}
-                                    clearable
-                                    value={receipt}
-                                    error={receiptError}
-                                    onChange={updateFeaturedImage}
-                                />
-                            )}
-                            <div className='col-span-2'>
-                                <Textarea
-                                    placeholder="Enter comments"
-                                    label="Comments"
-                                    error={commentError}
-                                    value={comment}
-                                    onChange={updateComment}
-                                    labelClassName="text-sm font-medium text-gray-600 mb-1"
-                                    inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
-                                />
-                            </div>
-                        </div>
-                    </div>
-
-                    {/* Search and Selection Section */}
-                    <div className="w-1/2 flex flex-col gap-4">
+                <div className="w-full flex flex-col gap-6">
+                    {/* Search and Selection Section (Info) - NOW FIRST */}
+                    <div className="w-full flex flex-col gap-4 transition-all duration-500 ease-in-out">
                         <div className="flex flex-col gap-2 w-full">
                             <h1 className="text-sm font-bold text-gray-700">Search by Flat No or Customer</h1>
                             <div className="flex gap-6">
@@ -611,7 +507,7 @@ function Editpaymentwrapper() {
                                     <span className="text-sm font-medium text-gray-600 opacity-60">Search by Customer</span>
                                 </label>
                             </div>
-                            <div className="flex flex-col gap-2 relative w-full max-w-md">
+                            <div className={`flex flex-col gap-2 relative w-full ${!selectedFlat ? 'max-w-2xl mx-auto' : 'w-full'}`}>
                                 <div className="text-sm font-medium text-gray-600">
                                     {searchType === 'flatNo' ? 'Search for Flat' : 'Search for Customer'}
                                 </div>
@@ -772,7 +668,6 @@ function Editpaymentwrapper() {
                                         </div>
                                     </>
                                 ) : selectedFlat && (
-                                    // Fallback if API fails but we have selectedFlat (legacy view or simple info)
                                     <div className="bg-white border border-[#ced4da] rounded-md p-4">
                                         <div className="text-lg font-semibold text-gray-800 mb-2">
                                             Flat No: {selectedFlat?.flat_no}
@@ -785,6 +680,152 @@ function Editpaymentwrapper() {
                             </div>
                         )}
                     </div>
+
+                    {/* Payment Form Fields - NOW SECOND */}
+                    {selectedFlat && (
+                        <div className="w-full animate-in slide-in-from-left duration-500">
+                            <div className='grid grid-cols-2 gap-2'>
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-medium text-gray-600">Amount</label>
+                                    <Input
+                                        placeholder="Enter Amount"
+                                        value={amount}
+                                        onChange={updateAmount}
+                                        className={`w-full px-3 py-2 border rounded-md focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none transition-colors duration-200 placeholder-gray-400 ${amountError ? 'border-red-500' : 'border-gray-300'}`}
+                                    />
+                                    {amountError && <p className="text-xs text-red-500">{amountError}</p>}
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-medium text-gray-600">Payment Type</label>
+                                    <Select value={paymentType || undefined} onValueChange={updatePaymentType}>
+                                        <SelectTrigger className={`w-full h-10 border rounded-md focus:border-black focus:ring-0 focus:ring-offset-0 focus:outline-none ${!paymentType ? 'text-gray-400' : ''} ${paymentTypeError ? 'border-red-500' : 'border-gray-300'}`}>
+                                            <SelectValue placeholder="Select Payment Type" />
+                                        </SelectTrigger>
+                                        <SelectContent className="border border-gray-200">
+                                            <SelectItem value="Customer Pay">Customer Pay</SelectItem>
+                                            <SelectItem value="Loan Pay">Loan Pay</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {paymentTypeError && <p className="text-xs text-red-500">{paymentTypeError}</p>}
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-medium text-gray-600">Payment Towards</label>
+                                    <Select value={paymentTowards || undefined} onValueChange={updatePaymentTowards}>
+                                        <SelectTrigger className={`w-full h-10 border rounded-md focus:border-black focus:ring-0 focus:ring-offset-0 focus:outline-none ${!paymentTowards ? 'text-gray-400' : ''} ${paymentTowardsError ? 'border-red-500' : 'border-gray-300'}`}>
+                                            <SelectValue placeholder="Select Payment Towards" />
+                                        </SelectTrigger>
+                                        <SelectContent className="border border-gray-200">
+                                            <SelectItem value="Flat">Flat</SelectItem>
+                                            <SelectItem value="GST">GST</SelectItem>
+                                            <SelectItem value="Corpus fund">Corpus fund</SelectItem>
+                                            <SelectItem value="Registration">Registration</SelectItem>
+                                            <SelectItem value="TDS">TDS</SelectItem>
+                                            <SelectItem value="Maintenance">Maintenance</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {paymentTowardsError && <p className="text-xs text-red-500">{paymentTowardsError}</p>}
+                                </div>
+
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-medium text-gray-600">Payment Method</label>
+                                    <Select value={paymentMethod || undefined} onValueChange={updatePaymentMethod}>
+                                        <SelectTrigger className={`w-full h-10 border rounded-md focus:border-black focus:ring-0 focus:ring-offset-0 focus:outline-none ${!paymentMethod ? 'text-gray-400' : ''} ${paymentMethodError ? 'border-red-500' : 'border-gray-300'}`}>
+                                            <SelectValue placeholder="Select Payment Method" />
+                                        </SelectTrigger>
+                                        <SelectContent className="border border-gray-200">
+                                            <SelectItem value="DD">DD</SelectItem>
+                                            <SelectItem value="UPI">UPI</SelectItem>
+                                            <SelectItem value="Bank Deposit">Bank Deposit</SelectItem>
+                                            <SelectItem value="Cheque">Cheque</SelectItem>
+                                            <SelectItem value="Online Transfer (IMPS, NFT)">Online Transfer (IMPS, NFT)</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    {paymentMethodError && <p className="text-xs text-red-500">{paymentMethodError}</p>}
+                                </div>
+                                {(paymentMethod === 'DD' || paymentMethod === 'Bank Deposit') && (
+                                    <div className="flex flex-col gap-1">
+                                        <label className="text-sm font-medium text-gray-600">Bank</label>
+                                        <Select value={bank || undefined} onValueChange={updateBank}>
+                                            <SelectTrigger className={`w-full h-10 border rounded-md focus:border-black focus:ring-0 focus:ring-offset-0 focus:outline-none ${!bank ? 'text-gray-400' : ''} ${bankError ? 'border-red-500' : 'border-gray-300'}`}>
+                                                <SelectValue placeholder="Select Bank" />
+                                            </SelectTrigger>
+                                            <SelectContent className="max-h-[300px] border border-gray-200">
+                                                {bankList.map((bankName) => (
+                                                    <SelectItem key={bankName} value={bankName}>{bankName}</SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                        {bankError && <p className="text-xs text-red-500">{bankError}</p>}
+                                    </div>
+                                )}
+                                <Datepicker
+                                    label="Date of Payment"
+                                    value={paymentDate}
+                                    onChange={updatePaymentDate}
+                                    error={paymentDateError}
+                                    labelClassName="!text-sm !font-medium !text-gray-600 !mb-[10px]"
+                                    inputClassName="2xl:py-3 2xl:text-[20px] !p-[9px] !bg-white !focus:border-black !focus:ring-0 !focus:ring-offset-0 !focus:outline-none"
+                                />
+                                <div className="flex flex-col gap-1">
+                                    <label className="text-sm font-medium text-gray-600">Transaction Id</label>
+                                    <Input
+                                        placeholder="Enter transaction id"
+                                        value={transactionId}
+                                        onChange={updateTransactionId}
+                                        className={`w-full px-3 py-2 border rounded-md focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none transition-colors duration-200 placeholder-gray-400 ${transactionIdError ? 'border-red-500' : 'border-gray-300'}`}
+                                    />
+                                    {transactionIdError && <p className="text-xs text-red-500">{transactionIdError}</p>}
+                                </div>
+                                {receiptUrl ? (
+                                    <div className="relative">
+                                        <p className="text-sm font-semibold text-gray-600 mb-1">Receipt</p>
+                                        <div className="relative flex items-center gap-2 justify-center border border-amber-50 rounded-md p-3 bg-gray-50">
+                                            <img
+                                                src={receiptFileType === 'pdf' ? pdficon : photo}
+                                                className={receiptFileType === 'pdf' ? 'h-[50px] w-[50px]' : 'h-[40px] w-[40px]'}
+                                                alt="Receipt"
+                                            />
+                                            <a
+                                                href={receiptUrl}
+                                                target="_blank"
+                                                rel="noopener noreferrer"
+                                                className="text-blue-600 text-sm font-medium truncate max-w-[200px]"
+                                            >
+                                                {receiptFileName || 'View Receipt'}
+                                            </a>
+                                            <div className="absolute right-2 top-2" onClick={removeReceipt}>
+                                                <IconX size={18} color="red" className="cursor-pointer" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                ) : (
+                                    <Fileinput
+                                        label="Receipt (optional)"
+                                        accept="image/*,application/pdf"
+                                        labelClassName="!text-sm !font-medium !text-gray-600 !mb-[10px]"
+                                        className="!bg-white !text-gray-500 !text-sm !p-[9px] !focus.border-black !focus.ring-0 !focus.ring-offset-0 !focus.outline-none"
+                                        multiple={false}
+                                        clearable
+                                        value={receipt}
+                                        error={receiptError}
+                                        onChange={updateFeaturedImage}
+                                    />
+                                )}
+                                <div className='col-span-2 flex flex-col gap-1'>
+                                    <label className="text-sm font-medium text-gray-600">Comments</label>
+                                    <Textarea
+                                        placeholder="Enter comments"
+                                        value={comment}
+                                        onChange={updateComment}
+                                        className={`w-full px-3 py-2 border rounded-md focus:border-black focus-visible:ring-0 focus-visible:ring-offset-0 focus:outline-none transition-colors duration-200 placeholder-gray-400 ${commentError ? 'border-red-500' : 'border-gray-300'}`}
+                                    />
+                                    {commentError && <p className="text-xs text-red-500">{commentError}</p>}
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
                 <div className="flex justify-end mt-4">
                     <button

@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import Settingsapi from '../../../api/Settingsapi';
 import Paymentapi from '../../../api/Paymentapi';
 import photo from '../../../../../public/assets/photo.png';
 import Errorpanel from '@/components/shared/Errorpanel.jsx';
@@ -23,14 +24,46 @@ function Editflatpayment({ flat_id, flatPaymentUUID, closeEditFlatPayment, refre
     const employeeId = employeeInfo?.id || null;
     const [errorMessage, setErrorMessage] = useState('');
     const [isLoadingEffect, setIsLoadingEffect] = useState(false);
+    const [bankList, setBankList] = useState([]);
+
+    useEffect(() => {
+        const fetchBanks = async () => {
+            try {
+                const response = await Settingsapi.get('/get-all-banks-list?limit=1000');
+                if (response.data.status === 'success') {
+                    setBankList(response.data.data.map(b => ({ value: b.name, label: b.name })));
+                }
+            } catch (e) {
+                console.error("Error fetching banks:", e);
+            }
+        };
+        fetchBanks();
+    }, []);
 
     const [amount, setAmount] = useState('');
     const [amountError, setAmountError] = useState('');
     const updateAmount = (e) => {
         const value = e.target.value;
-        if (isNaN(value)) return;
-        setAmount(value);
+        const cleanValue = value.replace(/,/g, ''); // Remove existing commas
+
+        // Allow only numbers and a single decimal point
+        if (!/^\d*\.?\d*$/.test(cleanValue)) return;
+
         setAmountError('');
+
+        if (cleanValue === '') {
+            setAmount('');
+            return;
+        }
+
+        const parts = cleanValue.split('.');
+        const integerPart = parts[0];
+        const decimalPart = parts.length > 1 ? '.' + parts[1] : '';
+
+        // Format integer part using Indian locale
+        const formattedInteger = integerPart ? parseInt(integerPart).toLocaleString('en-IN') : '';
+
+        setAmount(formattedInteger + decimalPart);
     };
 
     const [paymentType, setPaymentType] = useState(null);
@@ -57,8 +90,8 @@ function Editflatpayment({ flat_id, flatPaymentUUID, closeEditFlatPayment, refre
 
     const [bank, setBank] = useState('');
     const [bankError, setBankError] = useState('');
-    const updateBank = (e) => {
-        setBank(e.target.value);
+    const updateBank = (value) => {
+        setBank(value);
         setBankError('');
     };
 
@@ -119,7 +152,7 @@ function Editflatpayment({ flat_id, flatPaymentUUID, closeEditFlatPayment, refre
 
             if (data.payment_details) {
                 const payment = data.payment_details;
-                setAmount(payment?.amount ? payment?.amount.toString() : '');
+                setAmount(payment?.amount ? payment?.amount.toLocaleString('en-IN') : '');
                 setPaymentType(payment?.payment_type || null);
                 setPaymentTowards(payment?.payment_towards || null);
                 setPaymentMethod(payment?.payment_method || null);
@@ -210,7 +243,7 @@ function Editflatpayment({ flat_id, flatPaymentUUID, closeEditFlatPayment, refre
 
         const formdata = new FormData();
         formdata.append('payment_uid', flatPaymentUUID);
-        formdata.append('amount', amount);
+        formdata.append('amount', amount.replace(/,/g, ''));
         formdata.append('payment_type', paymentType);
         formdata.append('payment_towards', paymentTowards);
         formdata.append('payment_method', paymentMethod);
@@ -326,14 +359,18 @@ function Editflatpayment({ flat_id, flatPaymentUUID, closeEditFlatPayment, refre
                         ]}
                     />
                     {(paymentMethod === 'DD' || paymentMethod === 'Bank Deposit') && (
-                        <Textinput
-                            placeholder="Enter bank name"
+                        <Select
+                            placeholder="Select Bank"
                             label="Bank"
                             error={bankError}
                             value={bank}
                             onChange={updateBank}
-                            labelClassName="text-sm font-medium text-gray-600 mb-1"
+                            labelClass="text-sm font-medium text-gray-600 mb-1"
                             inputClassName="w-full px-3 py-2 border border-gray-300 rounded-md focus:border-[#044093] focus:outline-none transition-colors duration-200 placeholder-gray-400"
+                            className="w-full"
+                            dropdownClassName="max-h-48 border border-gray-300 rounded-md bg-white overflow-y-auto"
+                            selectWrapperClass="!shadow-none"
+                            data={bankList}
                         />
                     )}
                     <Datepicker

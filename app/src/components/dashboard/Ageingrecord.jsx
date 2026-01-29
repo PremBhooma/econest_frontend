@@ -107,13 +107,13 @@ const Ageingrecord = () => {
             <table className="w-full text-left text-sm">
               <thead className="bg-neutral-50 text-neutral-500 font-medium border-b border-neutral-100">
                 <tr>
-                  <th className="px-4 py-3 w-[16%]">Customer</th>
-                  <th className="px-4 py-3 w-[18%]">Flat Details</th>
+                  <th className="px-4 py-3 w-[17%]">Customer</th>
+                  <th className="px-4 py-3 w-[16%]">Flat Details</th>
                   <th className="px-4 py-3 w-[12%]">Booking Date</th>
-                  <th className="px-4 py-3 w-[6%]">Ageing</th>
-                  <th className="px-4 py-3 w-[14%]">Total Payment</th>
-                  <th className="px-4 py-3 w-[12%]">Loan Status</th>
-                  <th className="px-4 py-3 w-[14%]">Reg. Status</th>
+                  <th className="px-4 py-3 w-[5%]">Ageing</th>
+                  <th className="px-4 py-3 w-[13%]">Total Payment</th>
+                  <th className="px-4 py-3 w-[14%]">Loan Status</th>
+                  <th className="px-4 py-3 w-[15%]">Reg. Status</th>
                   {permissions?.ageing_page?.includes("view_ageing_details") && (
                     <th className="px-4 py-3 w-[6%] text-center">Action</th>
                   )}
@@ -128,10 +128,10 @@ const Ageingrecord = () => {
                           {record.customer?.first_name?.[0]}{record.customer?.last_name?.[0] || ''}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-neutral-900 text-xs truncate">
+                          <p className="font-medium text-neutral-900 text-xs break-words">
                             {record.customer?.first_name} {record.customer?.last_name}
                           </p>
-                          <p className="text-[11px] text-neutral-500 truncate">
+                          <p className="text-[11px] text-neutral-500 break-words">
                             +{record.customer?.phone_code} {record.customer?.phone_number}
                           </p>
                         </div>
@@ -143,7 +143,7 @@ const Ageingrecord = () => {
                           {record.flat?.flat_no || '-'}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium text-neutral-900 text-xs truncate">
+                          <p className="font-medium text-neutral-900 text-xs break-words">
                             {record.project?.project_name || '-'}
                           </p>
                           <p className="text-[11px] text-neutral-500 truncate">

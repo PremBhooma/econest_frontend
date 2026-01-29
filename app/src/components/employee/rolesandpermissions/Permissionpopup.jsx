@@ -64,6 +64,7 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
           'delete_folder_in_lead',
           'lead_notes',
           'add_notes_in_lead',
+          'generate_cost_sheet',
         ];
         setLeadsPage(prev => [...new Set([...prev, ...defaults])]);
       } else {
@@ -163,7 +164,9 @@ function Permissionpopup({ closePermissionsModel, roleId, reloadGetRolesInfo }) 
         const defaults = ['company_info_tab',
           'update_company_info',
           'project_tab',
+          'create_project',
           'update_project_info',
+          'delete_project',
           'blocks_tab',
           'amenities_tab',
           'add_amenities',

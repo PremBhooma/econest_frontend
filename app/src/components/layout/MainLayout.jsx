@@ -2,10 +2,33 @@ import React from 'react';
 import { useLocation } from 'react-router-dom';
 import Sidebar from '../sidebar/Sidebar';
 import Header from '../header/Header';
+import useSWR from 'swr';
+import Employeeapi from '../api/Employeeapi';
+import { useEmployeeDetails } from '../zustand/useEmployeeDetails';
 
 const MainLayout = ({ children }) => {
     const [isSidebarOpen, setIsSidebarOpen] = React.useState(false);
     const location = useLocation();
+
+    // Permission Syncing Logic
+    const updatePermissions = useEmployeeDetails(state => state.updatePermissions);
+    const fetcher = url => Employeeapi.get(url).then(res => res.data);
+
+    // Poll every 4 seconds
+    const { data } = useSWR('get-current-users-permissions', fetcher, {
+        refreshInterval: 4000,
+        revalidateOnFocus: true,
+    });
+
+    React.useEffect(() => {
+        if (data?.status === 'success' && data?.permissionsData) {
+            // Updating store only if data is successfully fetched
+            // We could add a check to see if deep equal to avoid re-renders, 
+            // but zustand might handle simple object replacements or we can rely on React processing.
+            // For now, simply updating.
+            updatePermissions(data.permissionsData);
+        }
+    }, [data, updatePermissions]);
 
     // Close sidebar on route change (mobile)
     React.useEffect(() => {

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { IconArrowLeft, IconEdit } from "@tabler/icons-react";
+import { IconArrowLeft, IconEdit, IconUser, IconMail, IconPhone, IconBriefcase, IconUserCheck, IconLock } from "@tabler/icons-react";
 import { Loadingoverlay, Modal } from "@nayeshdaggula/tailify";
 import { useParams, useNavigate, Link, NavLink } from "react-router-dom";
 import { useEmployeeDetails } from "../../zustand/useEmployeeDetails";
@@ -142,7 +142,7 @@ function SingleEmployeeview() {
                 </div>
               </div>
 
-              <div className="px-6 pb-6">
+              <div className="px-5 pb-4">
                 <div className="text-center mb-4">
                   <h2 className="text-xl font-semibold text-gray-900 mb-1 break-all">
                     {userdata?.name || "---"}
@@ -184,120 +184,148 @@ function SingleEmployeeview() {
 
             {/* Right Content Area */}
             <div className="relative w-[78%]">
-              <div className="mb-3 grid grid-cols-2 relative border border-[#ebecef] rounded-md bg-[#f1f1f1] p-2">
-                <button
-                  className={`py-2 px-2 font-medium relative cursor-pointer flex justify-center items-center rounded-md
-        transition duration-300 ease-in-out
-        ${activeTab === "personal-info"
-                      ? "text-[#0083bf] bg-white shadow-md"
-                      : "text-gray-900 bg-transparent"
-                    }`}
-                  onClick={() => setActiveTab("personal-info")}
-                >
-                  Personal Info
-                </button>
-
-                {permissions?.employee_page?.includes(
-                  "change_password_tab"
-                ) && (
+              {!isLoadingEffect &&
+                <>
+                  <div className="mb-3 p-1 grid grid-cols-2 gap-1 bg-gray-100/80 rounded-lg border border-gray-200">
                     <button
-                      className={`py-2 px-2 font-medium relative cursor-pointer flex justify-center items-center rounded-md
-          transition duration-300 ease-in-out
-          ${activeTab === "change-password"
-                          ? "text-[#0083bf] bg-white shadow-md"
-                          : "text-gray-900 bg-transparent"
+                      className={`flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-md transition-all duration-300
+                      ${activeTab === "personal-info"
+                          ? "bg-white text-blue-600 shadow-sm ring-1 ring-gray-200"
+                          : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
                         }`}
-                      onClick={() => setActiveTab("change-password")}
+                      onClick={() => setActiveTab("personal-info")}
                     >
-                      Change Password
+                      <IconUser size={18} />
+                      Personal Info
                     </button>
-                  )}
-              </div>
 
-              <div className="flex-1 p-6 bg-white rounded-xl shadow-xl">
-                {activeTab === "personal-info" && (
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center border-b pb-2">
-                      <h3 className="text-lg font-semibold">
-                        Additional Information
-                      </h3>
-                    </div>
-                    <div className="grid grid-cols-2 gap-4">
-                      <div className="flex flex-col">
-                        <span className="text-gray-600 text-sm">Name</span>
-                        <span className="font-medium">
-                          {userdata?.name || "---"}
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-gray-600 text-sm">Email</span>
-                        <NavLink to={`mailto:${userdata?.email}`}>
-                          <span className="font-medium">
-                            {userdata?.email || "---"}
-                          </span>
-                        </NavLink>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-gray-600 text-sm">Role</span>
-                        <span className="font-medium">
-                          {userdata?.role_name || "---"}
-                        </span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-gray-600 text-sm">
-                          Reporting Head
-                        </span>
-                        <span className="font-medium">
-                          {userdata?.reporting_head_name || "---"}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col">
-                        <span className="text-gray-600 text-sm">
-                          Phone Number
-                        </span>
-                        <NavLink
-                          to={`https://wa.me/${userdata?.phone_code || "+91"}${userdata?.phone
-                            }?text=Hello!%20I%27m%20interested%20in%20your%20service`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                        >
-                          <span className="font-medium">
-                            {userdata?.phone
-                              ? `+${userdata?.phone_code} ${userdata?.phone}`
-                              : "---"}
-                          </span>
-                        </NavLink>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {activeTab === "change-password" && (
-                  <div className="text-gray-500">
                     {permissions?.employee_page?.includes(
                       "change_password_tab"
-                    ) && <Changepassword singleUserid={userdata?.id} />}
+                    ) && (
+                        <button
+                          className={`flex items-center justify-center gap-2 py-2.5 px-4 text-sm font-semibold rounded-md transition-all duration-300
+                          ${activeTab === "change-password"
+                              ? "bg-white text-blue-600 shadow-sm ring-1 ring-gray-200"
+                              : "text-gray-500 hover:text-gray-700 hover:bg-gray-200/50"
+                            }`}
+                          onClick={() => setActiveTab("change-password")}
+                        >
+                          <IconLock size={18} />
+                          Change Password
+                        </button>
+                      )}
                   </div>
-                )}
-              </div>
+
+                  <div className="flex-1 p-6 bg-white rounded-xl shadow-xl">
+                    {activeTab === "personal-info" && (
+                      <div className="space-y-6">
+                        <div className="flex items-center gap-2 pb-4 border-b border-gray-100">
+                          <div className="p-2 bg-blue-50 rounded-full">
+                            <IconUser size={20} className="text-blue-600" />
+                          </div>
+                          <h3 className="text-lg font-bold text-gray-800">
+                            Employee Details
+                          </h3>
+                        </div>
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="flex group items-start gap-4 p-4 rounded-xl bg-gray-50 hover:bg-blue-50/50 transition-colors border border-transparent hover:border-blue-100">
+                            <div className="p-2.5 bg-white text-gray-500 group-hover:text-blue-600 rounded-lg shadow-sm ring-1 ring-gray-100">
+                              <IconUser size={20} stroke={1.5} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Full Name</p>
+                              <p className="text-sm font-semibold text-gray-900">{userdata?.name || "---"}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex group items-start gap-4 p-4 rounded-xl bg-gray-50 hover:bg-blue-50/50 transition-colors border border-transparent hover:border-blue-100">
+                            <div className="p-2.5 bg-white text-gray-500 group-hover:text-blue-600 rounded-lg shadow-sm ring-1 ring-gray-100">
+                              <IconMail size={20} stroke={1.5} />
+                            </div>
+                            <div className="w-full">
+                              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Email Address</p>
+                              <NavLink to={`mailto:${userdata?.email}`} className="block">
+                                <p className="text-sm font-semibold text-gray-900 hover:text-blue-600 transition-colors truncate">
+                                  {userdata?.email || "---"}
+                                </p>
+                              </NavLink>
+                            </div>
+                          </div>
+
+                          <div className="flex group items-start gap-4 p-4 rounded-xl bg-gray-50 hover:bg-blue-50/50 transition-colors border border-transparent hover:border-blue-100">
+                            <div className="p-2.5 bg-white text-gray-500 group-hover:text-blue-600 rounded-lg shadow-sm ring-1 ring-gray-100">
+                              <IconBriefcase size={20} stroke={1.5} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Designation / Role</p>
+                              <p className="text-sm font-semibold text-gray-900">{userdata?.role_name || "---"}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex group items-start gap-4 p-4 rounded-xl bg-gray-50 hover:bg-blue-50/50 transition-colors border border-transparent hover:border-blue-100">
+                            <div className="p-2.5 bg-white text-gray-500 group-hover:text-blue-600 rounded-lg shadow-sm ring-1 ring-gray-100">
+                              <IconUserCheck size={20} stroke={1.5} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Reporting Manager</p>
+                              <p className="text-sm font-semibold text-gray-900">{userdata?.reporting_head_name || "---"}</p>
+                            </div>
+                          </div>
+
+                          <div className="flex group items-start gap-4 p-4 rounded-xl bg-gray-50 hover:bg-blue-50/50 transition-colors border border-transparent hover:border-blue-100 md:col-span-2">
+                            <div className="p-2.5 bg-white text-gray-500 group-hover:text-green-600 rounded-lg shadow-sm ring-1 ring-gray-100">
+                              <IconPhone size={20} stroke={1.5} />
+                            </div>
+                            <div>
+                              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Contact Number</p>
+                              <NavLink
+                                to={`https://wa.me/${userdata?.phone_code || "+91"}${userdata?.phone}?text=Hello!`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-2 group/link"
+                              >
+                                <span className="text-sm font-semibold text-gray-900 group-hover/link:text-green-600 transition-colors">
+                                  {userdata?.phone ? `+${userdata?.phone_code} ${userdata?.phone}` : "---"}
+                                </span>
+                                {/* {userdata?.phone && (
+                                  <span className="text-[10px] px-1.5 py-0.5 rounded bg-green-100 text-green-700 font-medium group-hover/link:bg-green-200">
+                                    WhatsApp
+                                  </span>
+                                )} */}
+                              </NavLink>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    )}
+
+                    {activeTab === "change-password" && (
+                      <div className="text-gray-500">
+                        {permissions?.employee_page?.includes(
+                          "change_password_tab"
+                        ) && <Changepassword singleUserid={userdata?.id} />}
+                      </div>
+                    )}
+                  </div>
+                </>
+              }
             </div>
           </div>
         </div>
       </div>
 
-      {isLoadingEffect && (
-        <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50">
-          <Loadingoverlay visible={isLoadingEffect} overlayBg="" />
-        </div>
-      )}
+
+
+
 
       {errorMessage && (
         <Errorpanel
           errorMessages={errorMessage}
           setErrorMessages={setErrorMessage}
         />
-      )}
+      )
+      }
 
       <Modal
         open={uploadFileModal}

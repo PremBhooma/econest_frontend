@@ -202,22 +202,22 @@ function Leadview() {
 
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-4">
           <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">View Lead</h1>
+            <h1 className="text-xl font-bold">View Lead</h1>
 
             <div className="flex flex-wrap items-center gap-3">
-              <div className="flex items-center gap-2 px-3 py-1.5 bg-pink-50 text-pink-700 rounded-full border border-pink-100 text-sm font-medium">
-                <span className="w-2 h-2 rounded-full bg-pink-500"></span>
+              <div className="flex items-center gap-2 px-3 py-1 bg-pink-50 text-pink-700 rounded-full border border-pink-100 text-xs font-medium">
+                <span className="w-1.5 h-1.5 rounded-full bg-pink-500"></span>
                 <span>{leadData?.lead_stage_name || "Unknown Stage"}</span>
               </div>
 
               {leadData?.lead_assignee ? (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-green-50 text-green-700 rounded-full border border-green-100 text-sm font-medium">
-                  <span className="w-2 h-2 rounded-full bg-green-500"></span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-green-50 text-green-700 rounded-full border border-green-100 text-xs font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
                   <span>Assigned: {leadData.lead_assignee.name}</span>
                 </div>
               ) : (
-                <div className="flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-600 rounded-full border border-gray-200 text-sm font-medium">
-                  <span className="w-2 h-2 rounded-full bg-gray-400"></span>
+                <div className="flex items-center gap-2 px-3 py-1 bg-gray-100 text-gray-600 rounded-full border border-gray-200 text-xs font-medium">
+                  <span className="w-1.5 h-1.5 rounded-full bg-gray-400"></span>
                   <span>Unassigned</span>
                 </div>
               )}

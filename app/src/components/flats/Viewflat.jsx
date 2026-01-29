@@ -717,7 +717,7 @@ function Viewflat() {
                   {activeTab === "payments-tab" && (
                     <div className="text-center text-gray-500">
                       {permissions?.flats_page?.includes("payments_single_flat") && (
-                        <Paymentstab flat_id={flatDetails?.id} customerId={customerFlatDetails?.customer_id} />
+                        <Paymentstab flat_id={flatDetails?.id} customerId={customerFlatDetails?.customer_id} project_id={flatDetails?.project_id} />
                       )}
                     </div>
                   )}

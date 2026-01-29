@@ -4,10 +4,12 @@ import Customerapi from "../../api/Customerapi";
 import Errorpanel from "../../shared/Errorpanel";
 import noImageStaticImage from "../../../../public/assets/imageplaceholder.png";
 import dayjs from "dayjs";
+import { useEmployeeDetails } from "../../zustand/useEmployeeDetails";
 
 function Flatinfo({ customerUuid }) {
     const [errorMessage, setErrorMessage] = useState("");
     const [isLoadingEffect, setIsLoadingEffect] = useState(false);
+    const permissions = useEmployeeDetails((state) => state.permissions);
 
     const [customerFlatsData, setCustomerFlatsData] = useState({});
 
@@ -119,24 +121,41 @@ function Flatinfo({ customerUuid }) {
 
                                 {/* Header */}
                                 <div className="flex justify-between items-center">
-                                    <Link to={`/flats/view-flat/${flats?.uuid}`}>
-                                        <h2 className="text-base font-semibold text-gray-800 hover:text-[#0083bf]">
+                                    {permissions?.flats_page?.includes("view_flat") ? (
+                                        <Link to={`/flats/view-flat/${flats?.uuid}`}>
+                                            <h2 className="text-base font-semibold text-gray-800 hover:text-[#0083bf]">
+                                                <span className="text-indigo-600">{flats?.project_name}</span> - Flat No: {flats?.flat_no || "-"}
+                                            </h2>
+                                        </Link>
+                                    ) : (
+                                        <h2 className="text-base font-semibold text-gray-800">
                                             <span className="text-indigo-600">{flats?.project_name}</span> - Flat No: {flats?.flat_no || "-"}
                                         </h2>
-                                    </Link>
+                                    )}
                                     <h2 className="text-sm font-medium text-gray-600">{flats?.block || "-"}</h2>
                                 </div>
 
                                 {/* Flat image + details */}
                                 <div className="flex flex-col md:flex-row gap-4">
-                                    <Link to={`/flats/view-flat/${flats?.uuid}`} className="md:w-1/4">
-                                        <img
-                                            crossOrigin="anonymous"
-                                            src={flats?.flat_img_url || noImageStaticImage}
-                                            alt="Flat"
-                                            className="w-full h-[150px] object-cover rounded-md border border-[#ebecef]"
-                                        />
-                                    </Link>
+                                    {permissions?.flats_page?.includes("view_flat") ? (
+                                        <Link to={`/flats/view-flat/${flats?.uuid}`} className="md:w-1/4">
+                                            <img
+                                                crossOrigin="anonymous"
+                                                src={flats?.flat_img_url || noImageStaticImage}
+                                                alt="Flat"
+                                                className="w-full h-[150px] object-cover rounded-md border border-[#ebecef]"
+                                            />
+                                        </Link>
+                                    ) : (
+                                        <div className="md:w-1/4">
+                                            <img
+                                                crossOrigin="anonymous"
+                                                src={flats?.flat_img_url || noImageStaticImage}
+                                                alt="Flat"
+                                                className="w-full h-[150px] object-cover rounded-md border border-[#ebecef]"
+                                            />
+                                        </div>
+                                    )}
 
                                     <div className="w-full md:w-3/4 grid grid-cols-2 md:grid-cols-3 gap-3 mt-3">
                                         <Info label="Floor No" value={flats?.floor_no} />

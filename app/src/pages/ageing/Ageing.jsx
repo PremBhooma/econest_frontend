@@ -161,12 +161,12 @@ function Ageing() {
           <table className="w-full table-fixed text-left border-collapse">
             <thead className="bg-gray-50 border-b border-neutral-200">
               <tr>
-                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[160px] sticky left-0 z-20 bg-gray-50 border-b border-r border-neutral-200">Customer</th>
-                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[160px] border-b border-r border-neutral-200">Flat Details</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[150px] sticky left-0 z-20 bg-gray-50 border-b border-r border-neutral-200">Customer</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[150px] border-b border-r border-neutral-200">Flat Details</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[130px] border-b border-r border-neutral-200">Booking Date</th>
-                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[90px] border-b border-r border-neutral-200">Ageing</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[80px] border-b border-r border-neutral-200">Ageing</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[100px] border-b border-r border-neutral-200">Total Payment</th>
-                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[120px] border-b border-r border-neutral-200">Loan Status</th>
+                <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[140px] border-b border-r border-neutral-200">Loan Status</th>
                 <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[140px] border-b border-r border-neutral-200">Reg. Status</th>
                 {permissions?.ageing_page?.includes("view_ageing_details") && (
                   <th className="px-3 py-2 text-neutral-700 uppercase tracking-wider text-[12px] font-bold w-[75px] text-center sticky right-0 z-20 bg-gray-50 border-b border-l border-neutral-200">Action</th>

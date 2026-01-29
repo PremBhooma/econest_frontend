@@ -2,7 +2,9 @@ import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import React, { useEffect, useState } from 'react'
 import { Button } from '@nayeshdaggula/tailify';
+
 import Projectapi from "../api/Projectapi.jsx";
+import Settingsapi from '../api/Settingsapi.jsx';
 import dayjs from 'dayjs';
 
 function ExcelPaymentTemplate({ closeDownloadTemplate }) {
@@ -11,6 +13,22 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
     const [blocksData, setBlocksData] = useState([]);
 
     const [projectsData, setProjectsData] = useState([]);
+    const [bankList, setBankList] = useState([]);
+
+    async function getBanksData() {
+        try {
+            const response = await Settingsapi.get('/get-all-banks-list?limit=1000');
+            const data = response.data;
+            if (data.status === 'success') {
+                setBankList(data.data || []);
+            } else {
+                setBankList([]);
+            }
+        } catch (error) {
+            console.error("Error fetching banks:", error);
+            setBankList([]);
+        }
+    }
 
     async function getProjectsData() {
         try {
@@ -71,6 +89,7 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
     useEffect(() => {
         getBlocksData();
         getProjectsData();
+        getBanksData();
     }, []);
 
 
@@ -122,12 +141,18 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
         });
         projectSheet.state = 'veryHidden';
 
+        const bankSheet = workbook.addWorksheet('BankList');
+        bankList.forEach((bank, index) => {
+            bankSheet.getCell(`A${index + 1}`).value = bank.name;
+        });
+        bankSheet.state = 'veryHidden';
+
         worksheet.addRow([
             "10000",
             paymentTypes[0] || "",
             paymentTowards[0] || "",
             paymentMethods[0] || "",
-            "SBI",
+            bankList[0]?.name || "",
             dayjs(new Date()).format('DD-MM-YYYY'),
             "ABCDEFGH123456",
             "101",
@@ -166,7 +191,21 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
                 errorStyle: 'error',
                 errorTitle: 'Invalid Payment Method',
                 error: 'Please select a valid payment method from the dropdown list.',
+
             };
+
+            // ✅ Reference hidden BankList sheet
+            if (bankList.length > 0) {
+                worksheet.getCell(`E${i}`).dataValidation = {
+                    type: 'list',
+                    allowBlank: true,
+                    formulae: [`BankList!$A$1:$A$${bankList.length}`],
+                    showErrorMessage: true,
+                    errorStyle: 'error',
+                    errorTitle: 'Invalid Bank',
+                    error: 'Please select a valid Bank from the dropdown list.',
+                };
+            }
 
             // ✅ Reference hidden BlockList sheet
             worksheet.getCell(`I${i}`).dataValidation = {
@@ -222,6 +261,8 @@ function ExcelPaymentTemplate({ closeDownloadTemplate }) {
                     <li><span className="font-semibold text-gray-700">Payment Type:</span> Select from dropdown → Customer Pay, Loan Pay.</li>
                     <li><span className="font-semibold text-gray-700">Payment Towards:</span> Select from dropdown → Flat, GST, Corpus fund, Registration, TDS, Maintenance.</li>
                     <li><span className="font-semibold text-gray-700">Payment Method:</span> Select from dropdown → DD, UPI, Bank Deposit, Cheque, Online Transfer (IMPS, NFT).</li>
+
+                    <li><span className="font-semibold text-gray-700">Bank:</span> Select a valid Bank from the dropdown list.</li>
                     <li><span className="font-semibold text-gray-700">Block:</span> Select a valid block from the dropdown list.</li>
                     <li><span className="font-semibold text-gray-700">Project:</span> Select a valid Project from the dropdown list.</li>
                 </ul>
